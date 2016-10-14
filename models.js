@@ -26,8 +26,12 @@ module.exports = function(sequelize, DataTypes) {
        type: DataTypes.STRING
      },
      lastLoginFail: {
-       type: DataTypes.DATETIME
+       type: DataTypes.DATE
      }
    });
 
+   return {
+     sequelize: sequelize,
+     User: User
+   };
 };

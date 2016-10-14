@@ -1,8 +1,8 @@
 import {combineReducers, createStore} from 'redux';
-import loginReducer from './reducers/loginReducer';
+import connectReducer from './reducers/connectReducer';
 import vaultReducer from './reducers/vaultReducer';
 
 export default createStore(combineReducers({
-  login: loginReducer,
+  connect: connectReducer,
   vault: vaultReducer
 }));

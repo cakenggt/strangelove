@@ -3,6 +3,7 @@ const prefix = '/api/v1/';
 const bcrypt = require('bcrypt');
 const atob = require('atob');
 const jwt = require('jsonwebtoken');
+const ejwt = require('express-jwt');
 
 module.exports = function(options){
 
@@ -12,7 +13,7 @@ module.exports = function(options){
   let models = options.models;
 
   /* User logging in, this gives their store in the response */
-  app.get(prefix+'login', function(req, res){
+  app.post(prefix+'login', function(req, res){
     var resultJson = {
       errors: []
     };
@@ -38,11 +39,15 @@ module.exports = function(options){
         res.json(resultJson);
         return;
       }
-      bcrypt.compare(auth[1], plainUser.password, function(err, res){
-        if (res){
+      bcrypt.compare(auth[1], plainUser.password, function(err, result){
+        if (result){
           //correct, give them the store and jwt
           resultJson.store = plainUser.store;
-          resultJson.jwt = jwt.sign({email: auth[0]}, process.env.JWT_SECRET);
+          resultJson.jwt = jwt.sign(
+            {email: auth[0]},
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+          );
           res.json(resultJson);
         }
         else{
@@ -56,7 +61,7 @@ module.exports = function(options){
   });
 
   /* User registering, gives no store in response */
-  app.get(prefix+'register', function(req, res){
+  app.post(prefix+'register', function(req, res){
     var resultJson = {
       errors: []
     };
@@ -77,7 +82,16 @@ module.exports = function(options){
           return;
         }
         //give jwt
-        resultJson.jwt = jwt.sign({email: email}, process.env.JWT_SECRET);
+        resultJson.jwt = jwt.sign(
+          {email: email},
+          process.env.JWT_SECRET,
+          { expiresIn: '24h' }
+        );
+        res.json(resultJson);
+        res.end();
+      })
+      .catch(function(err){
+        resultJson.errors.push(err);
         res.json(resultJson);
         res.end();
       });
@@ -85,7 +99,7 @@ module.exports = function(options){
   });
 
   /* When user is updating their store */
-  app.post(prefix+'store', function(req, res){
+  app.post(prefix+'store', ejwt({secret: process.env.JWT_SECRET}), function(req, res){
     var user = req.user;//jwt data
   });
 

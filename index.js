@@ -8,7 +8,6 @@ const Sequelize = require('sequelize');
 const db = new Sequelize(process.env.DATABASE_URL, {
   logging: false
 });
-const jwt = require('express-jwt');
 
 const models = db.import(__dirname + '/models');
 
@@ -18,8 +17,7 @@ db.sync();
 //parse application/json
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(jwt({secret: process.env.JWT_SECRET})
-.unless({path: ['/api/v1/login', '/api/v1/register']}));
+
 //jwt invalid handler
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {

@@ -65,17 +65,30 @@
 	
 	var _crypto2 = _interopRequireDefault(_crypto);
 	
-	var _store = __webpack_require__(/*! ./store */ 576);
+	var _store = __webpack_require__(/*! ./store */ 575);
 	
 	var _store2 = _interopRequireDefault(_store);
 	
+	var _ConnectView = __webpack_require__(/*! ./components/ConnectView.jsx */ 578);
+	
+	var _ConnectView2 = _interopRequireDefault(_ConnectView);
+	
+	var _VaultView = __webpack_require__(/*! ./components/VaultView.jsx */ 581);
+	
+	var _VaultView2 = _interopRequireDefault(_VaultView);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var Index = (0, _reactRedux.connect)()(_react2.default.createClass({
+	var Index = (0, _reactRedux.connect)(function (state) {
+	  return {
+	    login: state.connect.login
+	  };
+	})(_react2.default.createClass({
 	  displayName: 'Index',
 	
 	  render: function render() {
-	    return _react2.default.createElement('div', null);
+	    var component = this.props.login == 'SUCCESS' ? _react2.default.createElement(_VaultView2.default, null) : _react2.default.createElement(_ConnectView2.default, null);
+	    return component;
 	  }
 	}));
 	
@@ -42267,8 +42280,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 554).Buffer))
 
 /***/ },
-/* 575 */,
-/* 576 */
+/* 575 */
 /*!**********************!*\
   !*** ./app/store.js ***!
   \**********************/
@@ -42282,29 +42294,30 @@
 	
 	var _redux = __webpack_require__(/*! redux */ 538);
 	
-	var _loginReducer = __webpack_require__(/*! ./reducers/loginReducer */ 577);
+	var _connectReducer = __webpack_require__(/*! ./reducers/connectReducer */ 582);
 	
-	var _loginReducer2 = _interopRequireDefault(_loginReducer);
+	var _connectReducer2 = _interopRequireDefault(_connectReducer);
 	
-	var _vaultReducer = __webpack_require__(/*! ./reducers/vaultReducer */ 578);
+	var _vaultReducer = __webpack_require__(/*! ./reducers/vaultReducer */ 577);
 	
 	var _vaultReducer2 = _interopRequireDefault(_vaultReducer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = (0, _redux.createStore)((0, _redux.combineReducers)({
-	  login: _loginReducer2.default,
+	  connect: _connectReducer2.default,
 	  vault: _vaultReducer2.default
 	}));
 
 /***/ },
+/* 576 */,
 /* 577 */
 /*!**************************************!*\
-  !*** ./app/reducers/loginReducer.js ***!
+  !*** ./app/reducers/vaultReducer.js ***!
   \**************************************/
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -42315,6 +42328,8 @@
 	  var action = arguments[1];
 	
 	  switch (action.type) {
+	    case 'LOGIN_SUCCESSFUL':
+	      return action.data.vault;
 	    default:
 	      return state;
 	  }
@@ -42322,25 +42337,339 @@
 
 /***/ },
 /* 578 */
+/*!****************************************!*\
+  !*** ./app/components/ConnectView.jsx ***!
+  \****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _RegisterView = __webpack_require__(/*! ./RegisterView.jsx */ 579);
+	
+	var _RegisterView2 = _interopRequireDefault(_RegisterView);
+	
+	var _LoginView = __webpack_require__(/*! ./LoginView.jsx */ 580);
+	
+	var _LoginView2 = _interopRequireDefault(_LoginView);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ConnectView = _react2.default.createClass({
+	  displayName: 'ConnectView',
+	
+	  render: function render() {
+	    var component = this.props.register ? _react2.default.createElement(_RegisterView2.default, {
+	      switchRegister: this.props.switchRegister,
+	      loginSuccess: this.props.loginSuccess }) : _react2.default.createElement(_LoginView2.default, {
+	      switchRegister: this.props.switchRegister,
+	      loginSuccess: this.props.loginSuccess });
+	    return component;
+	  }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    register: state.connect.register
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    switchRegister: function switchRegister(register) {
+	      dispatch({
+	        type: 'SWITCH_REGISTER',
+	        data: register
+	      });
+	    },
+	    loginSuccess: function loginSuccess(jwt, password, vault) {
+	      if (!vault) {
+	        vault = {};
+	      }
+	      dispatch({
+	        type: 'LOGIN_SUCCESSFUL',
+	        data: {
+	          jwt: jwt,
+	          password: password,
+	          vault: vault
+	        }
+	      });
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ConnectView);
+
+/***/ },
+/* 579 */
+/*!*****************************************!*\
+  !*** ./app/components/RegisterView.jsx ***!
+  \*****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var RegisterView = _react2.default.createClass({
+	  displayName: 'RegisterView',
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'h2',
+	        null,
+	        'Register'
+	      ),
+	      _react2.default.createElement('span', {
+	        id: 'error' }),
+	      _react2.default.createElement('input', {
+	        id: 'email',
+	        placeholder: 'email' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        id: 'password',
+	        type: 'password',
+	        placeholder: 'password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        id: 'confirmPassword',
+	        type: 'password',
+	        placeholder: 'confirm password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          onClick: function onClick() {
+	            _this.props.switchRegister(false);
+	          } },
+	        'Login'
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          onClick: this.register },
+	        'Register'
+	      )
+	    );
+	  },
+	  register: function register() {
+	    var _this2 = this;
+	
+	    var email = document.getElementById('email').value;
+	    var password = document.getElementById('password').value;
+	    var confirmPassword = document.getElementById('confirmPassword').value;
+	    fetch('/api/v1/register', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json'
+	      },
+	      method: 'POST',
+	      body: JSON.stringify({
+	        email: email,
+	        password: password
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      if (response.errors.length) {
+	        document.getElementById('error').innerHTML = JSON.stringify(response.errors);
+	      } else {
+	        _this2.props.loginSuccess(response.jwt, password, response.store);
+	      }
+	    });
+	  }
+	});
+	
+	exports.default = (0, _reactRedux.connect)()(RegisterView);
+
+/***/ },
+/* 580 */
 /*!**************************************!*\
-  !*** ./app/reducers/vaultReducer.js ***!
+  !*** ./app/components/LoginView.jsx ***!
   \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var LoginView = _react2.default.createClass({
+	  displayName: 'LoginView',
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'h2',
+	        null,
+	        'Login'
+	      ),
+	      _react2.default.createElement('input', {
+	        id: 'email',
+	        placeholder: 'email' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        id: 'password',
+	        placeholder: 'password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          onClick: this.login },
+	        'Login'
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          onClick: function onClick() {
+	            _this.props.switchRegister(true);
+	          } },
+	        'Register'
+	      )
+	    );
+	  },
+	  login: function login() {
+	    var _this2 = this;
+	
+	    var email = document.getElementById('email').value;
+	    var password = document.getElementById('password').value;
+	    fetch('/api/v1/login', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Authorization': 'Basic ' + btoa(email + ':' + password)
+	      },
+	      method: 'POST'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      _this2.props.loginSuccess(response.jwt, password, response.store);
+	    });
+	  }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {};
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(LoginView);
+
+/***/ },
+/* 581 */
+/*!**************************************!*\
+  !*** ./app/components/VaultView.jsx ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var VaultView = _react2.default.createClass({
+	  displayName: 'VaultView',
+	
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      'Vault'
+	    );
+	  }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    vault: state.vault
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(VaultView);
+
+/***/ },
+/* 582 */
+/*!****************************************!*\
+  !*** ./app/reducers/connectReducer.js ***!
+  \****************************************/
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
 	exports.default = function () {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultState;
 	  var action = arguments[1];
 	
 	  switch (action.type) {
+	    case 'SWITCH_REGISTER':
+	      return Object.assign({}, state, {
+	        register: action.data
+	      });
+	    case 'LOGIN_SUCCESSFUL':
+	      return Object.assign({}, state, {
+	        login: 'SUCCESS',
+	        password: action.data.password,
+	        jwt: action.data.jwt
+	      });
 	    default:
 	      return state;
 	  }
+	};
+	
+	/* jshint -W138 */
+	var defaultState = {
+	  password: '',
+	  login: 'PENDING',
+	  register: false,
+	  jwt: ''
 	};
 
 /***/ }
