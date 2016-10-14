@@ -54,6 +54,8 @@ module.exports = function(options){
           //incorrect, give error json
           resultJson.errors.push('Incorrect password');
           res.json(resultJson);
+          user.lastLoginFail = new Date();
+          user.save();
         }
         res.end();
       });
@@ -101,6 +103,23 @@ module.exports = function(options){
   /* When user is updating their store */
   app.post(prefix+'store', ejwt({secret: process.env.JWT_SECRET}), function(req, res){
     var user = req.user;//jwt data
+    var store = req.body.store;
+    var resultJson = {
+      errors: []
+    };
+    models.User.findOne({
+      where: {
+        email: user.email
+      }
+    })
+    .then(function(user){
+      user.store = store;
+      return user.save();
+    })
+    .then(function(){
+      res.json(resultJson);
+      res.end();
+    });
   });
 
 };

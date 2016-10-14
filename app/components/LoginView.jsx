@@ -6,6 +6,8 @@ var LoginView = React.createClass({
     return (
       <div>
         <h2>Login</h2>
+        <span
+          id="error"></span>
         <input
           id="email"
           placeholder="email"/><br/>
@@ -33,7 +35,12 @@ var LoginView = React.createClass({
       return response.json();
     })
     .then((response)=>{
-      this.props.loginSuccess(response.jwt, password, response.store);
+      if (response.errors.length){
+        document.getElementById('error').innerHTML = JSON.stringify(response.errors);
+      }
+      else{
+        this.props.loginSuccess(response.jwt, password, response.store);
+      }
     });
   }
 });

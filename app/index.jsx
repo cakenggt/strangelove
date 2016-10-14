@@ -3,7 +3,6 @@ import React from 'react';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {render} from 'react-dom';
 import {Provider, connect} from 'react-redux';
-import crypto from 'crypto';
 import store from './store';
 import ConnectView from './components/ConnectView.jsx';
 import VaultView from './components/VaultView.jsx';
