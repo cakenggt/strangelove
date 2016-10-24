@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const atob = require('atob');
 const jwt = require('jsonwebtoken');
 const ejwt = require('express-jwt');
+const sendRegistrationEmail = require('./managers/emailManager').sendRegistrationEmail;
 
 function createLoginJWT(email){
   return jwt.sign(
@@ -97,10 +98,14 @@ module.exports = function(options){
           res.end();
           return;
         }
-        //TODO send email with confirmation link
         let registrationJWT = createRegistrationJWT(email);
-        let link = process.env.URL + '/api/v1/confirm/'+registrationJWT;
-        console.log(link);
+        let link = process.env.URL + 'api/v1/confirm/'+registrationJWT;
+        sendRegistrationEmail(email, {
+          link: link
+        })
+        .catch(function(err){
+          console.log(err.response.body);
+        });
         res.json(resultJson);
         res.end();
       })

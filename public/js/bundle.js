@@ -96,10 +96,17 @@
 	    });
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      {
+	        className: 'content' },
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        'Frost'
+	      ),
 	      errors,
 	      _react2.default.createElement('br', null),
-	      component
+	      component,
+	      this.props.children
 	    );
 	  }
 	}));

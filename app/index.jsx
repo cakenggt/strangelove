@@ -27,9 +27,12 @@ var Index = connect(function(state){
       )
     });
     return (
-      <div>
+      <div
+        className="content">
+        <h1>Frost</h1>
         {errors}<br/>
         {component}
+        {this.props.children}
       </div>
     );
   }
