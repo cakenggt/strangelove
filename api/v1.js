@@ -5,6 +5,22 @@ const atob = require('atob');
 const jwt = require('jsonwebtoken');
 const ejwt = require('express-jwt');
 
+function createLoginJWT(email){
+  return jwt.sign(
+    {email: email},
+    process.env.JWT_SECRET,
+    { expiresIn: '24h' }
+  );
+}
+
+function createRegistrationJWT(email){
+  return jwt.sign(
+    {email: email},
+    process.env.JWT_SECRET,
+    { expiresIn: '3h' }
+  );
+}
+
 module.exports = function(options){
 
   //This is your express app object
@@ -20,7 +36,8 @@ module.exports = function(options){
     var auth = atob(req.get('Authorization').split(' ')[1]).split(':');
     models.User.findOne({
       where: {
-        email: auth[0]
+        email: auth[0],
+        status: 'ACTIVE'
       }
     })
     .then(function(user){
@@ -43,11 +60,7 @@ module.exports = function(options){
         if (result){
           //correct, give them the store and jwt
           resultJson.store = plainUser.store;
-          resultJson.jwt = jwt.sign(
-            {email: auth[0]},
-            process.env.JWT_SECRET,
-            { expiresIn: '24h' }
-          );
+          resultJson.jwt = createLoginJWT(auth[0]);
           res.json(resultJson);
         }
         else{
@@ -62,7 +75,7 @@ module.exports = function(options){
     });
   });
 
-  /* User registering, gives no store in response */
+  /* User registering, send email and create account */
   app.post(prefix+'register', function(req, res){
     var resultJson = {
       errors: []
@@ -73,7 +86,8 @@ module.exports = function(options){
       models.User.findOrCreate({
         where: {email: email},
         defaults: {
-          password: hash
+          password: hash,
+          status: 'PENDING'
         }
       })
       .spread(function(user, created) {
@@ -83,18 +97,42 @@ module.exports = function(options){
           res.end();
           return;
         }
-        //give jwt
-        resultJson.jwt = jwt.sign(
-          {email: email},
-          process.env.JWT_SECRET,
-          { expiresIn: '24h' }
-        );
+        //TODO send email with confirmation link
+        let registrationJWT = createRegistrationJWT(email);
+        let link = process.env.URL + '/api/v1/confirm/'+registrationJWT;
+        console.log(link);
         res.json(resultJson);
         res.end();
       })
       .catch(function(err){
         resultJson.errors.push(err);
         res.json(resultJson);
+        res.end();
+      });
+    });
+  });
+
+  /* Gets a confirmation code  */
+  app.get(prefix+'confirm/:code', function(req, res){
+    let code = req.params.code;
+    jwt.verify(code, process.env.JWT_SECRET, function(err, decoded){
+      if (err){
+        //TODO show error page
+        res.end();
+        return;
+      }
+      let email = decoded.email;
+      models.User.findOne({
+        where: {
+          email: email
+        }
+      })
+      .then(function(user){
+        user.status = 'ACTIVE';
+        return user.save();
+      })
+      .then(function(){
+        res.redirect('/');
         res.end();
       });
     });

@@ -8,11 +8,9 @@ var ConnectView = React.createClass({
   render: function() {
     var component = this.props.register ?
     <RegisterView
-      switchRegister={this.props.switchRegister}
-      loginSuccess={this.props.loginSuccess}/> :
+      switchRegister={this.props.switchRegister}/> :
     <LoginView
-      switchRegister={this.props.switchRegister}
-      loginSuccess={this.props.loginSuccess}/>;
+      switchRegister={this.props.switchRegister}/>;
     return component;
   }
 });
@@ -30,22 +28,6 @@ var mapDispatchToProps = (dispatch) => {
         type: 'SWITCH_REGISTER',
         data: register
       });
-    },
-    loginSuccess: function(jwt, password, vault){
-      if (!vault){
-        vault = {};
-      }
-      else{
-        vault = JSON.parse(sjcl.decrypt(password, vault));
-      }
-      dispatch({
-        type: 'LOGIN_SUCCESSFUL',
-        data: {
-          jwt: jwt,
-          password: password,
-          vault: vault
-        }
-      })
     }
   }
 }

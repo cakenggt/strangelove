@@ -9,14 +9,29 @@ import VaultView from './components/VaultView.jsx';
 
 var Index = connect(function(state){
   return {
-    login: state.connect.login
+    login: state.connect.login,
+    errors: state.errors
   }
 })(React.createClass({
   render: function() {
     var component = this.props.login == 'SUCCESS' ?
     <VaultView/> :
     <ConnectView/>;
-    return component;
+    var errors = this.props.errors.map(function(elem, i){
+      return (
+        <span
+          className="error"
+          key={i}>
+          {elem}
+        </span>
+      )
+    });
+    return (
+      <div>
+        {errors}<br/>
+        {component}
+      </div>
+    );
   }
 }));
 

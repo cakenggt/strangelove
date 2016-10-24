@@ -22,6 +22,10 @@ module.exports = function(sequelize, DataTypes) {
        type: DataTypes.STRING,
        allowNull: false
      },
+     status: {
+       type: DataTypes.ENUM('PENDING', 'ACTIVE'),
+       allowNull: false
+     },
      store: {
        type: DataTypes.STRING
      },

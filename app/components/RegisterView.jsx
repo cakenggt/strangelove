@@ -1,13 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {register} from '../actions';
 
 var RegisterView = React.createClass({
   render: function() {
     return (
       <div>
         <h2>Register</h2>
-        <span
-          id="error"></span>
         <input
           id="email"
           placeholder="email"/><br/>
@@ -30,29 +29,19 @@ var RegisterView = React.createClass({
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
     var confirmPassword = document.getElementById('confirmPassword').value;
-    fetch('/api/v1/register', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: JSON.stringify({
-        email: email,
-        password: password
-      })
-    })
-    .then(function(response){
-      return response.json();
-    })
-    .then((response)=>{
-      if (response.errors.length){
-        document.getElementById('error').innerHTML = JSON.stringify(response.errors);
-      }
-      else{
-        this.props.loginSuccess(response.jwt, password, response.store);
-      }
-    });
+    this.props.register(email, password, confirmPassword);
   }
 });
 
-export default connect()(RegisterView);
+var mapDispatchToProps = (dispatch) => {
+  return {
+    register: function(email, password, confirmPassword){
+      dispatch(register(email, password, confirmPassword));
+    }
+  }
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(RegisterView);
