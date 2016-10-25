@@ -17,6 +17,7 @@
     "express": "^4.14.0",
     "express-jwt": "^5.1.0",
     "pg": "^6.1.0",
+    "qrcode-js": "0.0.2",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-redux": "^4.4.5",
@@ -26,9 +27,10 @@
     "sendgrid": "^4.7.0",
     "sequelize": "^3.24.1",
     "sjcl": "^1.0.6",
+    "speakeasy": "^2.0.0",
     "webpack": "^1.13.2"
   },
-  "name": "strangelove",
+  "name": "frost-password-manager",
   "version": "1.0.0",
   "description": "Encrypted online password store",
   "keywords": [

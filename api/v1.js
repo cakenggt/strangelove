@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const atob = require('atob');
 const jwt = require('jsonwebtoken');
 const ejwt = require('express-jwt');
-const sendRegistrationEmail = require('./managers/emailManager').sendRegistrationEmail;
+const sendRegistrationEmail = require('../managers/emailManager').sendRegistrationEmail;
 
 function createLoginJWT(email){
   return jwt.sign(

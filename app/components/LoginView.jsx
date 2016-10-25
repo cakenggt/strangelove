@@ -12,11 +12,9 @@ var LoginView = React.createClass({
           placeholder="email"/><br/>
         <input
           id="password"
-          placeholder="password"/><br/>
-        <span
-          onClick={this.login}>Login</span>
-        <span
-          onClick={()=>{this.props.switchRegister(true)}}>Register</span>
+          placeholder="password"/>
+        <div
+          onClick={this.login}>Login</div>
       </div>
     );
   },

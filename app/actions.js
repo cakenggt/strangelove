@@ -63,6 +63,7 @@ export function login(email, password){
           type: 'LOGIN_SUCCESSFUL',
           data: {
             jwt: response.jwt,
+            email: email,
             password: password,
             vault: vault
           }
@@ -93,6 +94,12 @@ export function register(email, password, confirmPassword){
         dispatch({
           type: 'ADD_ERRORS',
           data: response.errors
+        });
+      }
+      else{
+        dispatch({
+          type: 'ADD_ERRORS',
+          data: ['Successfully Registered! Look for a confirmation email']
         });
       }
     });

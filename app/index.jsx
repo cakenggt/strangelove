@@ -1,10 +1,11 @@
 import 'babel-polyfill';
 import React from 'react';
-import {Router, Route, IndexRoute, browserHistory} from 'react-router';
+import {Router, Route, IndexRoute, browserHistory, Link, IndexLink} from 'react-router';
 import {render} from 'react-dom';
 import {Provider, connect} from 'react-redux';
 import store from './store';
-import ConnectView from './components/ConnectView.jsx';
+import RegisterView from './components/RegisterView.jsx';
+import LoginView from './components/LoginView.jsx';
 import VaultView from './components/VaultView.jsx';
 
 var Index = connect(function(state){
@@ -14,9 +15,6 @@ var Index = connect(function(state){
   }
 })(React.createClass({
   render: function() {
-    var component = this.props.login == 'SUCCESS' ?
-    <VaultView/> :
-    <ConnectView/>;
     var errors = this.props.errors.map(function(elem, i){
       return (
         <span
@@ -26,22 +24,80 @@ var Index = connect(function(state){
         </span>
       )
     });
+    var defaultLinks = [
+
+    ];
+    var loggedInLinks = [
+      {
+        display: 'Vault',
+        value: '/'
+      }
+    ];
+    var loggedOutLinks = [
+      {
+        display: 'Login',
+        value: '/login'
+      },
+      {
+        display: 'Register',
+        value: '/register'
+      }
+    ];
+    var links = defaultLinks.map(function(elem, i){
+      return <Link
+        to={elem.value}
+        key={i}
+        className="link"
+        activeClassName="active">{elem.display}</Link>;
+    });
+    var arr = this.props.login ? loggedInLinks : loggedOutLinks;
+    var additionalLinks = arr.map(function(elem, i){
+      if (elem.value == '/'){
+        return <IndexLink
+          to={elem.value}
+          key={links.length+i}
+          className="link"
+          activeClassName="active">{elem.display}</IndexLink>;
+      }
+      else{
+        return <Link
+          to={elem.value}
+          key={links.length+i}
+          className="link"
+          activeClassName="active">{elem.display}</Link>;
+      }
+    });
+    links = [...additionalLinks, ...links];
     return (
       <div
         className="content">
         <h1>Frost</h1>
-        {errors}<br/>
-        {component}
+        <div
+          className="nav">
+          {links}
+        </div>
+        <div
+          className="errors">
+          {errors}
+        </div>
         {this.props.children}
       </div>
     );
   }
 }));
 
+const loginCheck = function(nextState, replace){
+  if (!store.getState().connect.login){
+    replace('/login');
+  }
+}
+
 var router = (
   <Router history={browserHistory}>
-    <Route path="/" >
-      <IndexRoute component={Index}/>
+    <Route path="/" component={Index}>
+      <IndexRoute component={VaultView} onEnter={loginCheck}/>
+      <Route path="/login" component={LoginView}/>
+      <Route path="/register" component={RegisterView}/>
     </Route>
   </Router>
 );

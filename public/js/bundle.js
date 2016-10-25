@@ -65,15 +65,21 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _ConnectView = __webpack_require__(/*! ./components/ConnectView.jsx */ 558);
+	var _RegisterView = __webpack_require__(/*! ./components/RegisterView.jsx */ 583);
 	
-	var _ConnectView2 = _interopRequireDefault(_ConnectView);
+	var _RegisterView2 = _interopRequireDefault(_RegisterView);
 	
-	var _VaultView = __webpack_require__(/*! ./components/VaultView.jsx */ 585);
+	var _LoginView = __webpack_require__(/*! ./components/LoginView.jsx */ 584);
+	
+	var _LoginView2 = _interopRequireDefault(_LoginView);
+	
+	var _VaultView = __webpack_require__(/*! ./components/VaultView.jsx */ 558);
 	
 	var _VaultView2 = _interopRequireDefault(_VaultView);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	var Index = (0, _reactRedux.connect)(function (state) {
 	  return {
@@ -84,7 +90,6 @@
 	  displayName: 'Index',
 	
 	  render: function render() {
-	    var component = this.props.login == 'SUCCESS' ? _react2.default.createElement(_VaultView2.default, null) : _react2.default.createElement(_ConnectView2.default, null);
 	    var errors = this.props.errors.map(function (elem, i) {
 	      return _react2.default.createElement(
 	        'span',
@@ -94,6 +99,54 @@
 	        elem
 	      );
 	    });
+	    var defaultLinks = [];
+	    var loggedInLinks = [{
+	      display: 'Vault',
+	      value: '/'
+	    }];
+	    var loggedOutLinks = [{
+	      display: 'Login',
+	      value: '/login'
+	    }, {
+	      display: 'Register',
+	      value: '/register'
+	    }];
+	    var links = defaultLinks.map(function (elem, i) {
+	      return _react2.default.createElement(
+	        _reactRouter.Link,
+	        {
+	          to: elem.value,
+	          key: i,
+	          className: 'link',
+	          activeClassName: 'active' },
+	        elem.display
+	      );
+	    });
+	    var arr = this.props.login ? loggedInLinks : loggedOutLinks;
+	    var additionalLinks = arr.map(function (elem, i) {
+	      if (elem.value == '/') {
+	        return _react2.default.createElement(
+	          _reactRouter.IndexLink,
+	          {
+	            to: elem.value,
+	            key: links.length + i,
+	            className: 'link',
+	            activeClassName: 'active' },
+	          elem.display
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          _reactRouter.Link,
+	          {
+	            to: elem.value,
+	            key: links.length + i,
+	            className: 'link',
+	            activeClassName: 'active' },
+	          elem.display
+	        );
+	      }
+	    });
+	    links = [].concat(_toConsumableArray(additionalLinks), _toConsumableArray(links));
 	    return _react2.default.createElement(
 	      'div',
 	      {
@@ -103,21 +156,38 @@
 	        null,
 	        'Frost'
 	      ),
-	      errors,
-	      _react2.default.createElement('br', null),
-	      component,
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: 'nav' },
+	        links
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: 'errors' },
+	        errors
+	      ),
 	      this.props.children
 	    );
 	  }
 	}));
+	
+	var loginCheck = function loginCheck(nextState, replace) {
+	  if (!_store2.default.getState().connect.login) {
+	    replace('/login');
+	  }
+	};
 	
 	var router = _react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: _reactRouter.browserHistory },
 	  _react2.default.createElement(
 	    _reactRouter.Route,
-	    { path: '/' },
-	    _react2.default.createElement(_reactRouter.IndexRoute, { component: Index })
+	    { path: '/', component: Index },
+	    _react2.default.createElement(_reactRouter.IndexRoute, { component: _VaultView2.default, onEnter: loginCheck }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginView2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/register', component: _RegisterView2.default })
 	  )
 	);
 	
@@ -38313,13 +38383,10 @@
 	  var action = arguments[1];
 	
 	  switch (action.type) {
-	    case 'SWITCH_REGISTER':
-	      return Object.assign({}, state, {
-	        register: action.data
-	      });
 	    case 'LOGIN_SUCCESSFUL':
 	      return Object.assign({}, state, {
-	        login: 'SUCCESS',
+	        login: true,
+	        email: action.data.email,
 	        password: action.data.password,
 	        jwt: action.data.jwt
 	      });
@@ -38330,9 +38397,9 @@
 	
 	/* jshint -W138 */
 	var defaultState = {
+	  email: '',
 	  password: '',
-	  login: 'PENDING',
-	  register: false,
+	  login: false,
 	  jwt: ''
 	};
 
@@ -38392,156 +38459,8 @@
 
 /***/ },
 /* 558 */
-/*!****************************************!*\
-  !*** ./app/components/ConnectView.jsx ***!
-  \****************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 298);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
-	
-	var _RegisterView = __webpack_require__(/*! ./RegisterView.jsx */ 559);
-	
-	var _RegisterView2 = _interopRequireDefault(_RegisterView);
-	
-	var _LoginView = __webpack_require__(/*! ./LoginView.jsx */ 560);
-	
-	var _LoginView2 = _interopRequireDefault(_LoginView);
-	
-	var _sjcl = __webpack_require__(/*! sjcl */ 562);
-	
-	var _sjcl2 = _interopRequireDefault(_sjcl);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var ConnectView = _react2.default.createClass({
-	  displayName: 'ConnectView',
-	
-	  render: function render() {
-	    var component = this.props.register ? _react2.default.createElement(_RegisterView2.default, {
-	      switchRegister: this.props.switchRegister }) : _react2.default.createElement(_LoginView2.default, {
-	      switchRegister: this.props.switchRegister });
-	    return component;
-	  }
-	});
-	
-	var mapStateToProps = function mapStateToProps(state) {
-	  return {
-	    register: state.connect.register
-	  };
-	};
-	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    switchRegister: function switchRegister(register) {
-	      dispatch({
-	        type: 'SWITCH_REGISTER',
-	        data: register
-	      });
-	    }
-	  };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ConnectView);
-
-/***/ },
-/* 559 */
-/*!*****************************************!*\
-  !*** ./app/components/RegisterView.jsx ***!
-  \*****************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 298);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
-	
-	var _actions = __webpack_require__(/*! ../actions */ 561);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var RegisterView = _react2.default.createClass({
-	  displayName: 'RegisterView',
-	
-	  render: function render() {
-	    var _this = this;
-	
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'Register'
-	      ),
-	      _react2.default.createElement('input', {
-	        id: 'email',
-	        placeholder: 'email' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        id: 'password',
-	        type: 'password',
-	        placeholder: 'password' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        id: 'confirmPassword',
-	        type: 'password',
-	        placeholder: 'confirm password' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement(
-	        'span',
-	        {
-	          onClick: function onClick() {
-	            _this.props.switchRegister(false);
-	          } },
-	        'Login'
-	      ),
-	      _react2.default.createElement(
-	        'span',
-	        {
-	          onClick: this.register },
-	        'Register'
-	      )
-	    );
-	  },
-	  register: function register() {
-	    var email = document.getElementById('email').value;
-	    var password = document.getElementById('password').value;
-	    var confirmPassword = document.getElementById('confirmPassword').value;
-	    this.props.register(email, password, confirmPassword);
-	  }
-	});
-	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    register: function register(email, password, confirmPassword) {
-	      dispatch((0, _actions.register)(email, password, confirmPassword));
-	    }
-	  };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(RegisterView);
-
-/***/ },
-/* 560 */
 /*!**************************************!*\
-  !*** ./app/components/LoginView.jsx ***!
+  !*** ./app/components/VaultView.jsx ***!
   \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -38557,181 +38476,55 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
 	
-	var _actions = __webpack_require__(/*! ../actions */ 561);
+	var _sjcl = __webpack_require__(/*! sjcl */ 559);
+	
+	var _sjcl2 = _interopRequireDefault(_sjcl);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 582);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var LoginView = _react2.default.createClass({
-	  displayName: 'LoginView',
+	var VaultView = _react2.default.createClass({
+	  displayName: 'VaultView',
 	
 	  render: function render() {
-	    var _this = this;
-	
 	    return _react2.default.createElement(
 	      'div',
 	      null,
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'Login'
-	      ),
-	      _react2.default.createElement('input', {
-	        id: 'email',
-	        placeholder: 'email' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        id: 'password',
-	        placeholder: 'password' }),
-	      _react2.default.createElement('br', null),
+	      'Vault',
 	      _react2.default.createElement(
 	        'span',
 	        {
-	          onClick: this.login },
-	        'Login'
-	      ),
-	      _react2.default.createElement(
-	        'span',
-	        {
-	          onClick: function onClick() {
-	            _this.props.switchRegister(true);
-	          } },
-	        'Register'
+	          onClick: this.uploadVault },
+	        'Upload'
 	      )
 	    );
 	  },
-	  login: function login() {
-	    var email = document.getElementById('email').value;
-	    var password = document.getElementById('password').value;
-	    this.props.login(email, password);
+	  uploadVault: function uploadVault() {
+	    this.props.uploadVault(this.props.vault, this.props.password, this.props.jwt);
 	  }
 	});
 	
 	var mapStateToProps = function mapStateToProps(state) {
-	  return {};
+	  return {
+	    vault: state.vault,
+	    jwt: state.connect.jwt,
+	    password: state.connect.password
+	  };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
-	    login: function login(email, password) {
-	      dispatch((0, _actions.login)(email, password));
+	    uploadVault: function uploadVault(vault, password, jwt) {
+	      dispatch((0, _actions.uploadVault)(vault, password, jwt));
 	    }
 	  };
 	};
 	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LoginView);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(VaultView);
 
 /***/ },
-/* 561 */
-/*!************************!*\
-  !*** ./app/actions.js ***!
-  \************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.uploadVault = uploadVault;
-	exports.login = login;
-	exports.register = register;
-	
-	var _sjcl = __webpack_require__(/*! sjcl */ 562);
-	
-	var _sjcl2 = _interopRequireDefault(_sjcl);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/* Uploads vault and returns a Promise<JSON> */
-	function uploadVault(vault, password, jwt) {
-	  return function (dispatch) {
-	    var encrypted = _sjcl2.default.encrypt(password, JSON.stringify(vault));
-	    return fetch('/api/v1/store', {
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json',
-	        'Authorization': 'Bearer ' + jwt
-	      },
-	      method: 'POST',
-	      body: JSON.stringify({
-	        store: encrypted
-	      })
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      if (response.errors.length) {
-	        dispatch({
-	          type: 'ADD_ERRORS',
-	          data: response.errors
-	        });
-	      }
-	    });
-	  };
-	}
-	
-	function login(email, password) {
-	  return function (dispatch) {
-	    fetch('/api/v1/login', {
-	      headers: {
-	        'Accept': 'application/json',
-	        'Authorization': 'Basic ' + btoa(email + ':' + password)
-	      },
-	      method: 'POST'
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      var vault = response.store;
-	      if (response.errors.length) {
-	        dispatch({
-	          type: 'ADD_ERRORS',
-	          data: response.errors
-	        });
-	      } else {
-	        if (!vault) {
-	          vault = {};
-	        } else {
-	          vault = JSON.parse(_sjcl2.default.decrypt(password, response.store));
-	        }
-	        dispatch({
-	          type: 'LOGIN_SUCCESSFUL',
-	          data: {
-	            jwt: response.jwt,
-	            password: password,
-	            vault: vault
-	          }
-	        });
-	      }
-	    });
-	  };
-	}
-	
-	function register(email, password, confirmPassword) {
-	  return function (dispatch) {
-	    fetch('/api/v1/register', {
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json'
-	      },
-	      method: 'POST',
-	      body: JSON.stringify({
-	        email: email,
-	        password: password
-	      })
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      if (response.errors.length) {
-	        dispatch({
-	          type: 'ADD_ERRORS',
-	          data: response.errors
-	        });
-	      }
-	    });
-	  };
-	}
-
-/***/ },
-/* 562 */
+/* 559 */
 /*!************************!*\
   !*** ./~/sjcl/sjcl.js ***!
   \************************/
@@ -38786,7 +38579,7 @@
 	a.touches[0]||a.changedTouches[0];this.addEntropy([a.pageX||a.clientX,a.pageY||a.clientY],1,"touch");C(this,0)},ma:function(){C(this,2)},ea:function(a){a=a.accelerationIncludingGravity.x||a.accelerationIncludingGravity.y||a.accelerationIncludingGravity.z;if(window.orientation){var b=window.orientation;"number"===typeof b&&this.addEntropy(b,1,"accelerometer")}a&&this.addEntropy(a,2,"accelerometer");C(this,0)}};
 	function A(a,b){var c,d=sjcl.random.K[a],e=[];for(c in d)d.hasOwnProperty(c)&&e.push(d[c]);for(c=0;c<e.length;c++)e[c](b)}function C(a,b){"undefined"!==typeof window&&window.performance&&"function"===typeof window.performance.now?a.addEntropy(window.performance.now(),b,"loadtime"):a.addEntropy((new Date).valueOf(),b,"loadtime")}function y(a){a.b=z(a).concat(z(a));a.L=new sjcl.cipher.aes(a.b)}function z(a){for(var b=0;4>b&&(a.h[b]=a.h[b]+1|0,!a.h[b]);b++);return a.L.encrypt(a.h)}
 	function B(a,b){return function(){b.apply(a,arguments)}}sjcl.random=new sjcl.prng(6);
-	a:try{var D,E,F,G;if(G="undefined"!==typeof module&&module.exports){var H;try{H=__webpack_require__(/*! crypto */ 563)}catch(a){H=null}G=E=H}if(G&&E.randomBytes)D=E.randomBytes(128),D=new Uint32Array((new Uint8Array(D)).buffer),sjcl.random.addEntropy(D,1024,"crypto['randomBytes']");else if("undefined"!==typeof window&&"undefined"!==typeof Uint32Array){F=new Uint32Array(32);if(window.crypto&&window.crypto.getRandomValues)window.crypto.getRandomValues(F);else if(window.msCrypto&&window.msCrypto.getRandomValues)window.msCrypto.getRandomValues(F);
+	a:try{var D,E,F,G;if(G="undefined"!==typeof module&&module.exports){var H;try{H=__webpack_require__(/*! crypto */ 560)}catch(a){H=null}G=E=H}if(G&&E.randomBytes)D=E.randomBytes(128),D=new Uint32Array((new Uint8Array(D)).buffer),sjcl.random.addEntropy(D,1024,"crypto['randomBytes']");else if("undefined"!==typeof window&&"undefined"!==typeof Uint32Array){F=new Uint32Array(32);if(window.crypto&&window.crypto.getRandomValues)window.crypto.getRandomValues(F);else if(window.msCrypto&&window.msCrypto.getRandomValues)window.msCrypto.getRandomValues(F);
 	else break a;sjcl.random.addEntropy(F,1024,"crypto['getRandomValues']")}}catch(a){"undefined"!==typeof window&&window.console&&(console.log("There was an error collecting entropy from the browser:"),console.log(a))}
 	sjcl.json={defaults:{v:1,iter:1E4,ks:128,ts:64,mode:"ccm",adata:"",cipher:"aes"},ja:function(a,b,c,d){c=c||{};d=d||{};var e=sjcl.json,f=e.g({iv:sjcl.random.randomWords(4,0)},e.defaults),g;e.g(f,c);c=f.adata;"string"===typeof f.salt&&(f.salt=sjcl.codec.base64.toBits(f.salt));"string"===typeof f.iv&&(f.iv=sjcl.codec.base64.toBits(f.iv));if(!sjcl.mode[f.mode]||!sjcl.cipher[f.cipher]||"string"===typeof a&&100>=f.iter||64!==f.ts&&96!==f.ts&&128!==f.ts||128!==f.ks&&192!==f.ks&&0x100!==f.ks||2>f.iv.length||
 	4<f.iv.length)throw new sjcl.exception.invalid("json encrypt: invalid parameters");"string"===typeof a?(g=sjcl.misc.cachedPbkdf2(a,f),a=g.key.slice(0,f.ks/32),f.salt=g.salt):sjcl.ecc&&a instanceof sjcl.ecc.elGamal.publicKey&&(g=a.kem(),f.kemtag=g.tag,a=g.key.slice(0,f.ks/32));"string"===typeof b&&(b=sjcl.codec.utf8String.toBits(b));"string"===typeof c&&(f.adata=c=sjcl.codec.utf8String.toBits(c));g=new sjcl.cipher[f.cipher](a);e.g(d,f);d.key=a;f.ct="ccm"===f.mode&&sjcl.arrayBuffer&&sjcl.arrayBuffer.ccm&&
@@ -38800,13 +38593,13 @@
 
 
 /***/ },
-/* 563 */
+/* 560 */
 /*!**************************************!*\
   !*** ./~/crypto-browserify/index.js ***!
   \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {var rng = __webpack_require__(/*! ./rng */ 568)
+	/* WEBPACK VAR INJECTION */(function(Buffer) {var rng = __webpack_require__(/*! ./rng */ 565)
 	
 	function error () {
 	  var m = [].slice.call(arguments).join(' ')
@@ -38817,9 +38610,9 @@
 	    ].join('\n'))
 	}
 	
-	exports.createHash = __webpack_require__(/*! ./create-hash */ 570)
+	exports.createHash = __webpack_require__(/*! ./create-hash */ 567)
 	
-	exports.createHmac = __webpack_require__(/*! ./create-hmac */ 582)
+	exports.createHmac = __webpack_require__(/*! ./create-hmac */ 579)
 	
 	exports.randomBytes = function(size, callback) {
 	  if (callback && callback.call) {
@@ -38840,7 +38633,7 @@
 	  return ['sha1', 'sha256', 'sha512', 'md5', 'rmd160']
 	}
 	
-	var p = __webpack_require__(/*! ./pbkdf2 */ 583)(exports)
+	var p = __webpack_require__(/*! ./pbkdf2 */ 580)(exports)
 	exports.pbkdf2 = p.pbkdf2
 	exports.pbkdf2Sync = p.pbkdf2Sync
 	
@@ -38860,10 +38653,10 @@
 	  }
 	})
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 564).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
 
 /***/ },
-/* 564 */
+/* 561 */
 /*!***************************!*\
   !*** ./~/buffer/index.js ***!
   \***************************/
@@ -38879,9 +38672,9 @@
 	
 	'use strict'
 	
-	var base64 = __webpack_require__(/*! base64-js */ 565)
-	var ieee754 = __webpack_require__(/*! ieee754 */ 566)
-	var isArray = __webpack_require__(/*! isarray */ 567)
+	var base64 = __webpack_require__(/*! base64-js */ 562)
+	var ieee754 = __webpack_require__(/*! ieee754 */ 563)
+	var isArray = __webpack_require__(/*! isarray */ 564)
 	
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -40659,10 +40452,10 @@
 	  return val !== val // eslint-disable-line no-self-compare
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 564).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 565 */
+/* 562 */
 /*!******************************!*\
   !*** ./~/base64-js/index.js ***!
   \******************************/
@@ -40785,7 +40578,7 @@
 
 
 /***/ },
-/* 566 */
+/* 563 */
 /*!****************************!*\
   !*** ./~/ieee754/index.js ***!
   \****************************/
@@ -40878,7 +40671,7 @@
 
 
 /***/ },
-/* 567 */
+/* 564 */
 /*!****************************!*\
   !*** ./~/isarray/index.js ***!
   \****************************/
@@ -40892,7 +40685,7 @@
 
 
 /***/ },
-/* 568 */
+/* 565 */
 /*!************************************!*\
   !*** ./~/crypto-browserify/rng.js ***!
   \************************************/
@@ -40901,7 +40694,7 @@
 	/* WEBPACK VAR INJECTION */(function(global, Buffer) {(function() {
 	  var g = ('undefined' === typeof window ? global : window) || {}
 	  _crypto = (
-	    g.crypto || g.msCrypto || __webpack_require__(/*! crypto */ 569)
+	    g.crypto || g.msCrypto || __webpack_require__(/*! crypto */ 566)
 	  )
 	  module.exports = function(size) {
 	    // Modern Browsers
@@ -40925,10 +40718,10 @@
 	  }
 	}())
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/buffer/index.js */ 564).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
 
 /***/ },
-/* 569 */
+/* 566 */
 /*!************************!*\
   !*** crypto (ignored) ***!
   \************************/
@@ -40937,16 +40730,16 @@
 	/* (ignored) */
 
 /***/ },
-/* 570 */
+/* 567 */
 /*!********************************************!*\
   !*** ./~/crypto-browserify/create-hash.js ***!
   \********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(/*! sha.js */ 571)
+	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(/*! sha.js */ 568)
 	
-	var md5 = toConstructor(__webpack_require__(/*! ./md5 */ 579))
-	var rmd160 = toConstructor(__webpack_require__(/*! ripemd160 */ 581))
+	var md5 = toConstructor(__webpack_require__(/*! ./md5 */ 576))
+	var rmd160 = toConstructor(__webpack_require__(/*! ripemd160 */ 578))
 	
 	function toConstructor (fn) {
 	  return function () {
@@ -40974,10 +40767,10 @@
 	  return createHash(alg)
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 564).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
 
 /***/ },
-/* 571 */
+/* 568 */
 /*!***************************!*\
   !*** ./~/sha.js/index.js ***!
   \***************************/
@@ -40989,16 +40782,16 @@
 	  return new Alg()
 	}
 	
-	var Buffer = __webpack_require__(/*! buffer */ 564).Buffer
-	var Hash   = __webpack_require__(/*! ./hash */ 572)(Buffer)
+	var Buffer = __webpack_require__(/*! buffer */ 561).Buffer
+	var Hash   = __webpack_require__(/*! ./hash */ 569)(Buffer)
 	
-	exports.sha1 = __webpack_require__(/*! ./sha1 */ 573)(Buffer, Hash)
-	exports.sha256 = __webpack_require__(/*! ./sha256 */ 577)(Buffer, Hash)
-	exports.sha512 = __webpack_require__(/*! ./sha512 */ 578)(Buffer, Hash)
+	exports.sha1 = __webpack_require__(/*! ./sha1 */ 570)(Buffer, Hash)
+	exports.sha256 = __webpack_require__(/*! ./sha256 */ 574)(Buffer, Hash)
+	exports.sha512 = __webpack_require__(/*! ./sha512 */ 575)(Buffer, Hash)
 
 
 /***/ },
-/* 572 */
+/* 569 */
 /*!**************************!*\
   !*** ./~/sha.js/hash.js ***!
   \**************************/
@@ -41084,7 +40877,7 @@
 
 
 /***/ },
-/* 573 */
+/* 570 */
 /*!**************************!*\
   !*** ./~/sha.js/sha1.js ***!
   \**************************/
@@ -41099,7 +40892,7 @@
 	 * See http://pajhome.org.uk/crypt/md5 for details.
 	 */
 	
-	var inherits = __webpack_require__(/*! util */ 574).inherits
+	var inherits = __webpack_require__(/*! util */ 571).inherits
 	
 	module.exports = function (Buffer, Hash) {
 	
@@ -41231,7 +41024,7 @@
 
 
 /***/ },
-/* 574 */
+/* 571 */
 /*!************************!*\
   !*** ./~/util/util.js ***!
   \************************/
@@ -41762,7 +41555,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 	
-	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 575);
+	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 572);
 	
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -41806,7 +41599,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(/*! inherits */ 576);
+	exports.inherits = __webpack_require__(/*! inherits */ 573);
 	
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -41827,7 +41620,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 294)))
 
 /***/ },
-/* 575 */
+/* 572 */
 /*!*******************************************!*\
   !*** ./~/util/support/isBufferBrowser.js ***!
   \*******************************************/
@@ -41841,7 +41634,7 @@
 	}
 
 /***/ },
-/* 576 */
+/* 573 */
 /*!****************************************!*\
   !*** ./~/inherits/inherits_browser.js ***!
   \****************************************/
@@ -41873,7 +41666,7 @@
 
 
 /***/ },
-/* 577 */
+/* 574 */
 /*!****************************!*\
   !*** ./~/sha.js/sha256.js ***!
   \****************************/
@@ -41888,7 +41681,7 @@
 	 *
 	 */
 	
-	var inherits = __webpack_require__(/*! util */ 574).inherits
+	var inherits = __webpack_require__(/*! util */ 571).inherits
 	
 	module.exports = function (Buffer, Hash) {
 	
@@ -42029,13 +41822,13 @@
 
 
 /***/ },
-/* 578 */
+/* 575 */
 /*!****************************!*\
   !*** ./~/sha.js/sha512.js ***!
   \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var inherits = __webpack_require__(/*! util */ 574).inherits
+	var inherits = __webpack_require__(/*! util */ 571).inherits
 	
 	module.exports = function (Buffer, Hash) {
 	  var K = [
@@ -42282,7 +42075,7 @@
 
 
 /***/ },
-/* 579 */
+/* 576 */
 /*!************************************!*\
   !*** ./~/crypto-browserify/md5.js ***!
   \************************************/
@@ -42297,7 +42090,7 @@
 	 * See http://pajhome.org.uk/crypt/md5 for more info.
 	 */
 	
-	var helpers = __webpack_require__(/*! ./helpers */ 580);
+	var helpers = __webpack_require__(/*! ./helpers */ 577);
 	
 	/*
 	 * Calculate the MD5 of an array of little-endian words, and a bit length
@@ -42446,7 +42239,7 @@
 
 
 /***/ },
-/* 580 */
+/* 577 */
 /*!****************************************!*\
   !*** ./~/crypto-browserify/helpers.js ***!
   \****************************************/
@@ -42487,10 +42280,10 @@
 	
 	module.exports = { hash: hash };
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 564).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
 
 /***/ },
-/* 581 */
+/* 578 */
 /*!**************************************!*\
   !*** ./~/ripemd160/lib/ripemd160.js ***!
   \**************************************/
@@ -42702,16 +42495,16 @@
 	
 	
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 564).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
 
 /***/ },
-/* 582 */
+/* 579 */
 /*!********************************************!*\
   !*** ./~/crypto-browserify/create-hmac.js ***!
   \********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(/*! ./create-hash */ 570)
+	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(/*! ./create-hash */ 567)
 	
 	var zeroBuffer = new Buffer(128)
 	zeroBuffer.fill(0)
@@ -42755,16 +42548,16 @@
 	}
 	
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 564).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
 
 /***/ },
-/* 583 */
+/* 580 */
 /*!***************************************!*\
   !*** ./~/crypto-browserify/pbkdf2.js ***!
   \***************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var pbkdf2Export = __webpack_require__(/*! pbkdf2-compat/pbkdf2 */ 584)
+	var pbkdf2Export = __webpack_require__(/*! pbkdf2-compat/pbkdf2 */ 581)
 	
 	module.exports = function (crypto, exports) {
 	  exports = exports || {}
@@ -42779,7 +42572,7 @@
 
 
 /***/ },
-/* 584 */
+/* 581 */
 /*!***********************************!*\
   !*** ./~/pbkdf2-compat/pbkdf2.js ***!
   \***********************************/
@@ -42870,12 +42663,202 @@
 	  }
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 564).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
 
 /***/ },
-/* 585 */
+/* 582 */
+/*!************************!*\
+  !*** ./app/actions.js ***!
+  \************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.uploadVault = uploadVault;
+	exports.login = login;
+	exports.register = register;
+	
+	var _sjcl = __webpack_require__(/*! sjcl */ 559);
+	
+	var _sjcl2 = _interopRequireDefault(_sjcl);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/* Uploads vault and returns a Promise<JSON> */
+	function uploadVault(vault, password, jwt) {
+	  return function (dispatch) {
+	    var encrypted = _sjcl2.default.encrypt(password, JSON.stringify(vault));
+	    return fetch('/api/v1/store', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json',
+	        'Authorization': 'Bearer ' + jwt
+	      },
+	      method: 'POST',
+	      body: JSON.stringify({
+	        store: encrypted
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      if (response.errors.length) {
+	        dispatch({
+	          type: 'ADD_ERRORS',
+	          data: response.errors
+	        });
+	      }
+	    });
+	  };
+	}
+	
+	function login(email, password) {
+	  return function (dispatch) {
+	    fetch('/api/v1/login', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Authorization': 'Basic ' + btoa(email + ':' + password)
+	      },
+	      method: 'POST'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      var vault = response.store;
+	      if (response.errors.length) {
+	        dispatch({
+	          type: 'ADD_ERRORS',
+	          data: response.errors
+	        });
+	      } else {
+	        if (!vault) {
+	          vault = {};
+	        } else {
+	          vault = JSON.parse(_sjcl2.default.decrypt(password, response.store));
+	        }
+	        dispatch({
+	          type: 'LOGIN_SUCCESSFUL',
+	          data: {
+	            jwt: response.jwt,
+	            email: email,
+	            password: password,
+	            vault: vault
+	          }
+	        });
+	      }
+	    });
+	  };
+	}
+	
+	function register(email, password, confirmPassword) {
+	  return function (dispatch) {
+	    fetch('/api/v1/register', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json'
+	      },
+	      method: 'POST',
+	      body: JSON.stringify({
+	        email: email,
+	        password: password
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      if (response.errors.length) {
+	        dispatch({
+	          type: 'ADD_ERRORS',
+	          data: response.errors
+	        });
+	      } else {
+	        dispatch({
+	          type: 'ADD_ERRORS',
+	          data: ['Successfully Registered! Look for a confirmation email']
+	        });
+	      }
+	    });
+	  };
+	}
+
+/***/ },
+/* 583 */
+/*!*****************************************!*\
+  !*** ./app/components/RegisterView.jsx ***!
+  \*****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 582);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var RegisterView = _react2.default.createClass({
+	  displayName: 'RegisterView',
+	
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'h2',
+	        null,
+	        'Register'
+	      ),
+	      _react2.default.createElement('input', {
+	        id: 'email',
+	        placeholder: 'email' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        id: 'password',
+	        type: 'password',
+	        placeholder: 'password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        id: 'confirmPassword',
+	        type: 'password',
+	        placeholder: 'confirm password' }),
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          onClick: this.register },
+	        'Register'
+	      )
+	    );
+	  },
+	  register: function register() {
+	    var email = document.getElementById('email').value;
+	    var password = document.getElementById('password').value;
+	    var confirmPassword = document.getElementById('confirmPassword').value;
+	    this.props.register(email, password, confirmPassword);
+	  }
+	});
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    register: function register(email, password, confirmPassword) {
+	      dispatch((0, _actions.register)(email, password, confirmPassword));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(RegisterView);
+
+/***/ },
+/* 584 */
 /*!**************************************!*\
-  !*** ./app/components/VaultView.jsx ***!
+  !*** ./app/components/LoginView.jsx ***!
   \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -42891,52 +42874,57 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
 	
-	var _sjcl = __webpack_require__(/*! sjcl */ 562);
-	
-	var _sjcl2 = _interopRequireDefault(_sjcl);
-	
-	var _actions = __webpack_require__(/*! ../actions */ 561);
+	var _actions = __webpack_require__(/*! ../actions */ 582);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var VaultView = _react2.default.createClass({
-	  displayName: 'VaultView',
+	var LoginView = _react2.default.createClass({
+	  displayName: 'LoginView',
 	
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
 	      null,
-	      'Vault',
 	      _react2.default.createElement(
-	        'span',
+	        'h2',
+	        null,
+	        'Login'
+	      ),
+	      _react2.default.createElement('input', {
+	        id: 'email',
+	        placeholder: 'email' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        id: 'password',
+	        placeholder: 'password' }),
+	      _react2.default.createElement(
+	        'div',
 	        {
-	          onClick: this.uploadVault },
-	        'Upload'
+	          onClick: this.login },
+	        'Login'
 	      )
 	    );
 	  },
-	  uploadVault: function uploadVault() {
-	    this.props.uploadVault(this.props.vault, this.props.password, this.props.jwt);
+	  login: function login() {
+	    var email = document.getElementById('email').value;
+	    var password = document.getElementById('password').value;
+	    this.props.login(email, password);
 	  }
 	});
 	
 	var mapStateToProps = function mapStateToProps(state) {
-	  return {
-	    vault: state.vault,
-	    jwt: state.connect.jwt,
-	    password: state.connect.password
-	  };
+	  return {};
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
-	    uploadVault: function uploadVault(vault, password, jwt) {
-	      dispatch((0, _actions.uploadVault)(vault, password, jwt));
+	    login: function login(email, password) {
+	      dispatch((0, _actions.login)(email, password));
 	    }
 	  };
 	};
 	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(VaultView);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LoginView);
 
 /***/ }
 /******/ ]);

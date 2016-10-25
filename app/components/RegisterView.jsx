@@ -17,11 +17,9 @@ var RegisterView = React.createClass({
         <input
           id="confirmPassword"
           type="password"
-          placeholder="confirm password"/><br/>
-        <span
-          onClick={()=>{this.props.switchRegister(false)}}>Login</span>
-        <span
-          onClick={this.register}>Register</span>
+          placeholder="confirm password"/>
+        <div
+          onClick={this.register}>Register</div>
       </div>
     );
   },
