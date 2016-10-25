@@ -7,6 +7,8 @@ import store from './store';
 import RegisterView from './components/RegisterView.jsx';
 import LoginView from './components/LoginView.jsx';
 import VaultView from './components/VaultView.jsx';
+import LogoutView from './components/LogoutView.jsx';
+import SettingsView from './components/SettingsView.jsx';
 
 var Index = connect(function(state){
   return {
@@ -31,6 +33,14 @@ var Index = connect(function(state){
       {
         display: 'Vault',
         value: '/'
+      },
+      {
+        display: 'Logout',
+        value: '/logout'
+      },
+      {
+        display: 'Settings',
+        value: '/settings'
       }
     ];
     var loggedOutLinks = [
@@ -98,6 +108,8 @@ var router = (
       <IndexRoute component={VaultView} onEnter={loginCheck}/>
       <Route path="/login" component={LoginView}/>
       <Route path="/register" component={RegisterView}/>
+      <Route path="/logout" component={LogoutView} onEnter={loginCheck}/>
+      <Route path="/settings" component={SettingsView} onEnter={loginCheck}/>
     </Route>
   </Router>
 );

@@ -1,8 +1,9 @@
 import React from 'react';
+import {withRouter} from 'react-router';
 import {connect} from 'react-redux';
 import {login} from '../actions';
 
-var LoginView = React.createClass({
+var LoginView = withRouter(React.createClass({
   render: function() {
     return (
       <div>
@@ -12,7 +13,8 @@ var LoginView = React.createClass({
           placeholder="email"/><br/>
         <input
           id="password"
-          placeholder="password"/>
+          placeholder="password"
+          type="password"/>
         <div
           onClick={this.login}>Login</div>
       </div>
@@ -21,9 +23,9 @@ var LoginView = React.createClass({
   login: function(){
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
-    this.props.login(email, password);
+    this.props.login(email, password, this.props.router);
   }
-});
+}));
 
 var mapStateToProps = (state) => {
   return {
@@ -33,8 +35,8 @@ var mapStateToProps = (state) => {
 
 var mapDispatchToProps = (dispatch) => {
   return {
-    login: function(email, password){
-      dispatch(login(email, password));
+    login: function(email, password, router){
+      dispatch(login(email, password, router));
     }
   }
 }

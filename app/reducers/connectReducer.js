@@ -3,7 +3,8 @@ var defaultState = {
   email: '',
   password: '',
   login: false,
-  jwt: ''
+  jwt: '',
+  needsTotp: false
 };
 
 export default function(state = defaultState, action){
@@ -13,7 +14,14 @@ export default function(state = defaultState, action){
         login: true,
         email: action.data.email,
         password: action.data.password,
-        jwt: action.data.jwt
+        jwt: action.data.jwt,
+        needsTotp: action.data.needsTotp
+      });
+    case 'LOGOUT':
+      return defaultState;
+    case 'SET_NEEDS_TOTP':
+      return Object.assign({}, state, {
+        needsTotp: action.data
       });
     default:
       return state;

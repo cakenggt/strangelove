@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const atob = require('atob');
 const jwt = require('jsonwebtoken');
 const ejwt = require('express-jwt');
+const speakeasy = require('speakeasy');
+const qrcode = require('qrcode-npm');
 const sendRegistrationEmail = require('../managers/emailManager').sendRegistrationEmail;
 
 function createLoginJWT(email){
@@ -35,6 +37,7 @@ module.exports = function(options){
       errors: []
     };
     var auth = atob(req.get('Authorization').split(' ')[1]).split(':');
+    var totp = req.body.totp;
     models.User.findOne({
       where: {
         email: auth[0],
@@ -59,9 +62,33 @@ module.exports = function(options){
       }
       bcrypt.compare(auth[1], plainUser.password, function(err, result){
         if (result){
-          //correct, give them the store and jwt
-          resultJson.store = plainUser.store;
-          resultJson.jwt = createLoginJWT(auth[0]);
+          //correct, check for existence of totpSecret
+          if (plainUser.totpSecret){
+            resultJson.needsTotp = true;
+            if (totp){
+              //check totp for correctness
+              var verified = speakeasy.totp.verify({
+                secret: plainUser.totpSecret,
+                encoding: 'base32',
+                token: totp
+              });
+              if (verified){
+                //verified totp
+                resultJson.store = plainUser.store;
+                resultJson.jwt = createLoginJWT(auth[0]);
+              }
+              else{
+                //incorrect totp
+                resultJson.errors.push('Incorrect totp code');
+              }
+            }
+          }
+          else{
+            //no totpSecret
+            resultJson.store = plainUser.store;
+            resultJson.jwt = createLoginJWT(auth[0]);
+            resultJson.needsTotp = false;
+          }
           res.json(resultJson);
         }
         else{
@@ -160,6 +187,65 @@ module.exports = function(options){
       return user.save();
     })
     .then(function(){
+      res.json(resultJson);
+      res.end();
+    });
+  });
+
+  /* Create totp code for user if it doesn't exist, and return dataUrl code */
+  app.get(prefix+'totp', ejwt({secret: process.env.JWT_SECRET}), function(req, res){
+    var user = req.user;//jwt data
+    models.User.findOne({
+      where: {
+        email: user.email
+      }
+    })
+    .then(function(user){
+      if (!user){
+        res.end();
+        return;
+      }
+      let totpSecret = user.totpSecret;
+      if (!user.totpSecret){
+        //generate and save
+        totpSecret = speakeasy.generateSecret({length: 20}).base32;
+        user.totpSecret = totpSecret;
+        user.save();
+      }
+      let url = speakeasy.otpauthURL({
+        secret: totpSecret,
+        label: "Frost ("+user.email+")"
+      });
+      var qr = qrcode.qrcode(10, 'L');
+      qr.addData(url);
+      qr.make();
+      var imgTag = qr.createImgTag();
+      res.json({
+        errors: [],
+        imgTag: imgTag
+      });
+      res.end();
+    });
+  });
+
+  /* Delete current totp secret for user on record */
+  app.delete(prefix+'totp', ejwt({secret: process.env.JWT_SECRET}), function(req, res){
+    var user = req.user;//jwt data
+    models.User.findOne({
+      where: {
+        email: user.email
+      }
+    })
+    .then(function(user){
+      if (!user){
+        res.end();
+        return;
+      }
+      var resultJson = {
+        errors: []
+      };
+      user.totpSecret = null;
+      user.save();
       res.json(resultJson);
       res.end();
     });

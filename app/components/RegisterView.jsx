@@ -1,8 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
 import {register} from '../actions';
 
-var RegisterView = React.createClass({
+var RegisterView = withRouter(React.createClass({
   render: function() {
     return (
       <div>
@@ -27,14 +28,14 @@ var RegisterView = React.createClass({
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
     var confirmPassword = document.getElementById('confirmPassword').value;
-    this.props.register(email, password, confirmPassword);
+    this.props.register(email, password, confirmPassword, this.props.router);
   }
-});
+}));
 
 var mapDispatchToProps = (dispatch) => {
   return {
-    register: function(email, password, confirmPassword){
-      dispatch(register(email, password, confirmPassword));
+    register: function(email, password, confirmPassword, router){
+      dispatch(register(email, password, confirmPassword, router));
     }
   }
 };
