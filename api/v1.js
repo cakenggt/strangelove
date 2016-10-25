@@ -24,6 +24,22 @@ function createRegistrationJWT(email){
   );
 }
 
+function createQRCodeImgTag(url){
+  var size = 4;
+  while(true && size <= 40){
+    try{
+      var qr = qrcode.qrcode(size, 'L');
+      qr.addData(url);
+      qr.make();
+      return qr.createImgTag();
+    }
+    catch(err){
+      size++;
+    }
+  }
+  throw new Error('QR Code unable to be created');
+}
+
 module.exports = function(options){
 
   //This is your express app object
@@ -205,6 +221,9 @@ module.exports = function(options){
         res.end();
         return;
       }
+      var resultJson = {
+        errors: []
+      };
       let totpSecret = user.totpSecret;
       if (!user.totpSecret){
         //generate and save
@@ -216,14 +235,15 @@ module.exports = function(options){
         secret: totpSecret,
         label: "Frost ("+user.email+")"
       });
-      var qr = qrcode.qrcode(10, 'L');
-      qr.addData(url);
-      qr.make();
-      var imgTag = qr.createImgTag();
-      res.json({
-        errors: [],
-        imgTag: imgTag
-      });
+      try{
+        var imgTag = createQRCodeImgTag(url);
+        resultJson.imgTag = imgTag;
+      }
+      catch(err){
+        resultJson.imgTag = '';
+        resultJson.errors.push(err.message);
+      }
+      res.json(resultJson);
       res.end();
     });
   });
