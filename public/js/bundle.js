@@ -73,6 +73,10 @@
 	
 	var _LoginView2 = _interopRequireDefault(_LoginView);
 	
+	var _TOTPView = __webpack_require__(/*! ./components/TOTPView.jsx */ 587);
+	
+	var _TOTPView2 = _interopRequireDefault(_TOTPView);
+	
 	var _VaultView = __webpack_require__(/*! ./components/VaultView.jsx */ 558);
 	
 	var _VaultView2 = _interopRequireDefault(_VaultView);
@@ -200,7 +204,11 @@
 	    _reactRouter.Route,
 	    { path: '/', component: Index },
 	    _react2.default.createElement(_reactRouter.IndexRoute, { component: _VaultView2.default, onEnter: loginCheck }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _LoginView2.default }),
+	    _react2.default.createElement(
+	      _reactRouter.Route,
+	      { path: '/login', component: _LoginView2.default },
+	      _react2.default.createElement(_reactRouter.Route, { path: '/login/totp', component: _TOTPView2.default })
+	    ),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/register', component: _RegisterView2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/logout', component: _LogoutView2.default, onEnter: loginCheck }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/settings', component: _SettingsView2.default, onEnter: loginCheck })
@@ -42928,28 +42936,35 @@
 	  displayName: 'LoginView',
 	
 	  render: function render() {
+	    var className = this.props.children ? 'focus blur' : 'focus';
 	    return _react2.default.createElement(
 	      'div',
 	      null,
 	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'Login'
-	      ),
-	      _react2.default.createElement('input', {
-	        id: 'email',
-	        placeholder: 'email' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        id: 'password',
-	        placeholder: 'password',
-	        type: 'password' }),
-	      _react2.default.createElement(
 	        'div',
 	        {
-	          onClick: this.login },
-	        'Login'
-	      )
+	          className: className },
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Login'
+	        ),
+	        _react2.default.createElement('input', {
+	          id: 'email',
+	          placeholder: 'email' }),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement('input', {
+	          id: 'password',
+	          placeholder: 'password',
+	          type: 'password' }),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            onClick: this.login },
+	          'Login'
+	        )
+	      ),
+	      this.props.children
 	    );
 	  },
 	  login: function login() {
@@ -43140,6 +43155,82 @@
 	};
 	
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SettingsView);
+
+/***/ },
+/* 587 */
+/*!*************************************!*\
+  !*** ./app/components/TOTPView.jsx ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 582);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var TOTPView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'TOTPView',
+	
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      {
+	        className: 'modal' },
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: 'modal-content' },
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'TOTP'
+	        ),
+	        _react2.default.createElement('input', {
+	          id: 'totp',
+	          placeholder: 'TOTP Code' }),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            onClick: this.login },
+	          'Login'
+	        )
+	      )
+	    );
+	  },
+	  login: function login() {
+	    var email = document.getElementById('email').value;
+	    var password = document.getElementById('password').value;
+	    var totp = document.getElementById('totp').value;
+	    this.props.login(email, password, this.props.router, totp);
+	  }
+	}));
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {};
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    login: function login(email, password, router, totp) {
+	      dispatch((0, _actions.login)(email, password, router, totp));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TOTPView);
 
 /***/ }
 /******/ ]);

@@ -3,34 +3,28 @@ import {withRouter} from 'react-router';
 import {connect} from 'react-redux';
 import {login} from '../actions';
 
-var LoginView = withRouter(React.createClass({
+var TOTPView = withRouter(React.createClass({
   render: function() {
-    var className = this.props.children ?
-      'focus blur' :
-      'focus';
     return (
-      <div>
+      <div
+        className="modal">
         <div
-          className={className}>
-          <h2>Login</h2>
+          className="modal-content">
+          <h2>TOTP</h2>
           <input
-            id="email"
-            placeholder="email"/><br/>
-          <input
-            id="password"
-            placeholder="password"
-            type="password"/>
+            id="totp"
+            placeholder="TOTP Code"/>
           <div
             onClick={this.login}>Login</div>
         </div>
-        {this.props.children}
       </div>
     );
   },
   login: function(){
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
-    this.props.login(email, password, this.props.router);
+    var totp = document.getElementById('totp').value;
+    this.props.login(email, password, this.props.router, totp);
   }
 }));
 
@@ -42,8 +36,8 @@ var mapStateToProps = (state) => {
 
 var mapDispatchToProps = (dispatch) => {
   return {
-    login: function(email, password, router){
-      dispatch(login(email, password, router));
+    login: function(email, password, router, totp){
+      dispatch(login(email, password, router, totp));
     }
   }
 }
@@ -51,4 +45,4 @@ var mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(LoginView);
+)(TOTPView);

@@ -6,6 +6,7 @@ import {Provider, connect} from 'react-redux';
 import store from './store';
 import RegisterView from './components/RegisterView.jsx';
 import LoginView from './components/LoginView.jsx';
+import TOTPView from './components/TOTPView.jsx';
 import VaultView from './components/VaultView.jsx';
 import LogoutView from './components/LogoutView.jsx';
 import SettingsView from './components/SettingsView.jsx';
@@ -106,7 +107,9 @@ var router = (
   <Router history={browserHistory}>
     <Route path="/" component={Index}>
       <IndexRoute component={VaultView} onEnter={loginCheck}/>
-      <Route path="/login" component={LoginView}/>
+      <Route path="/login" component={LoginView}>
+        <Route path="/login/totp" component={TOTPView}/>
+      </Route>
       <Route path="/register" component={RegisterView}/>
       <Route path="/logout" component={LogoutView} onEnter={loginCheck}/>
       <Route path="/settings" component={SettingsView} onEnter={loginCheck}/>
