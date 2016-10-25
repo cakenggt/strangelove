@@ -86,7 +86,8 @@ module.exports = function(options){
               var verified = speakeasy.totp.verify({
                 secret: plainUser.totpSecret,
                 encoding: 'base32',
-                token: totp
+                token: totp,
+                window: 5
               });
               if (verified){
                 //verified totp
@@ -233,7 +234,8 @@ module.exports = function(options){
       }
       let url = speakeasy.otpauthURL({
         secret: totpSecret,
-        label: "Frost ("+user.email+")"
+        label: "Frost ("+user.email+")",
+        encoding: 'base32'
       });
       try{
         var imgTag = createQRCodeImgTag(url);

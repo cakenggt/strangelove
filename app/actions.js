@@ -37,6 +37,7 @@ export function login(email, password, router, totp){
     fetch('/api/v1/login', {
       headers: {
         'Accept': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': 'Basic '+btoa(email+':'+password)
       },
       method: 'POST',
