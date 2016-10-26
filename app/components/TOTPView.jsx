@@ -7,7 +7,8 @@ var TOTPView = withRouter(React.createClass({
   render: function() {
     return (
       <div
-        className="modal">
+        className="modal"
+        key="totp">
         <div
           className="modal-content">
           <h2>TOTP</h2>

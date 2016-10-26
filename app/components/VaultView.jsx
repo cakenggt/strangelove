@@ -1,15 +1,27 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {Link, IndexLink} from 'react-router';
 import sjcl from 'sjcl';
 import {uploadVault} from '../actions';
+import FocusComponent from './FocusComponent.jsx';
 
 var VaultView = React.createClass({
   render: function() {
+    var className = this.props.children ?
+      'focus blur' :
+      'focus';
     return (
       <div>
-        Vault
-        <span
-          onClick={this.uploadVault}>Upload</span>
+        <div
+          className={className}>
+          Vault
+          <div
+            onClick={this.uploadVault}>Upload</div>
+          <Link to="/vault/item/x">Add Item</Link>
+        </div>
+        <FocusComponent>
+          {this.props.children}
+        </FocusComponent>
       </div>
     );
   },

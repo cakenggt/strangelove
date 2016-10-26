@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import React from 'react';
-import {Router, Route, IndexRoute, browserHistory, Link, IndexLink} from 'react-router';
+import {Router, Route, IndexRedirect, browserHistory, Link, IndexLink} from 'react-router';
 import {render} from 'react-dom';
 import {Provider, connect} from 'react-redux';
 import store from './store';
@@ -8,6 +8,7 @@ import RegisterView from './components/RegisterView.jsx';
 import LoginView from './components/LoginView.jsx';
 import TOTPView from './components/TOTPView.jsx';
 import VaultView from './components/VaultView.jsx';
+import VaultItemView from './components/VaultItemView.jsx';
 import LogoutView from './components/LogoutView.jsx';
 import SettingsView from './components/SettingsView.jsx';
 
@@ -106,13 +107,16 @@ const loginCheck = function(nextState, replace){
 var router = (
   <Router history={browserHistory}>
     <Route path="/" component={Index}>
-      <IndexRoute component={VaultView} onEnter={loginCheck}/>
-      <Route path="/login" component={LoginView}>
-        <Route path="/login/totp" component={TOTPView}/>
+      <IndexRedirect to="/vault" />
+      <Route path="vault" component={VaultView} onEnter={loginCheck}>
+        <Route path="item/:itemId" component={VaultItemView}/>
       </Route>
-      <Route path="/register" component={RegisterView}/>
-      <Route path="/logout" component={LogoutView} onEnter={loginCheck}/>
-      <Route path="/settings" component={SettingsView} onEnter={loginCheck}/>
+      <Route path="login" component={LoginView}>
+        <Route path="totp" component={TOTPView}/>
+      </Route>
+      <Route path="register" component={RegisterView}/>
+      <Route path="logout" component={LogoutView} onEnter={loginCheck}/>
+      <Route path="settings" component={SettingsView} onEnter={loginCheck}/>
     </Route>
   </Router>
 );

@@ -2,6 +2,7 @@ import React from 'react';
 import {withRouter} from 'react-router';
 import {connect} from 'react-redux';
 import {login} from '../actions';
+import FocusComponent from './FocusComponent.jsx';
 
 var LoginView = withRouter(React.createClass({
   render: function() {
@@ -23,7 +24,9 @@ var LoginView = withRouter(React.createClass({
           <div
             onClick={this.login}>Login</div>
         </div>
-        {this.props.children}
+        <FocusComponent>
+          {this.props.children}
+        </FocusComponent>
       </div>
     );
   },

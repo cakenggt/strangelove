@@ -65,27 +65,31 @@
 	
 	var _store2 = _interopRequireDefault(_store);
 	
-	var _RegisterView = __webpack_require__(/*! ./components/RegisterView.jsx */ 583);
+	var _RegisterView = __webpack_require__(/*! ./components/RegisterView.jsx */ 558);
 	
 	var _RegisterView2 = _interopRequireDefault(_RegisterView);
 	
-	var _LoginView = __webpack_require__(/*! ./components/LoginView.jsx */ 584);
+	var _LoginView = __webpack_require__(/*! ./components/LoginView.jsx */ 583);
 	
 	var _LoginView2 = _interopRequireDefault(_LoginView);
 	
-	var _TOTPView = __webpack_require__(/*! ./components/TOTPView.jsx */ 587);
+	var _TOTPView = __webpack_require__(/*! ./components/TOTPView.jsx */ 584);
 	
 	var _TOTPView2 = _interopRequireDefault(_TOTPView);
 	
-	var _VaultView = __webpack_require__(/*! ./components/VaultView.jsx */ 558);
+	var _VaultView = __webpack_require__(/*! ./components/VaultView.jsx */ 585);
 	
 	var _VaultView2 = _interopRequireDefault(_VaultView);
 	
-	var _LogoutView = __webpack_require__(/*! ./components/LogoutView.jsx */ 585);
+	var _VaultItemView = __webpack_require__(/*! ./components/VaultItemView.jsx */ 586);
+	
+	var _VaultItemView2 = _interopRequireDefault(_VaultItemView);
+	
+	var _LogoutView = __webpack_require__(/*! ./components/LogoutView.jsx */ 587);
 	
 	var _LogoutView2 = _interopRequireDefault(_LogoutView);
 	
-	var _SettingsView = __webpack_require__(/*! ./components/SettingsView.jsx */ 586);
+	var _SettingsView = __webpack_require__(/*! ./components/SettingsView.jsx */ 588);
 	
 	var _SettingsView2 = _interopRequireDefault(_SettingsView);
 	
@@ -203,15 +207,20 @@
 	  _react2.default.createElement(
 	    _reactRouter.Route,
 	    { path: '/', component: Index },
-	    _react2.default.createElement(_reactRouter.IndexRoute, { component: _VaultView2.default, onEnter: loginCheck }),
+	    _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/vault' }),
 	    _react2.default.createElement(
 	      _reactRouter.Route,
-	      { path: '/login', component: _LoginView2.default },
-	      _react2.default.createElement(_reactRouter.Route, { path: '/login/totp', component: _TOTPView2.default })
+	      { path: 'vault', component: _VaultView2.default, onEnter: loginCheck },
+	      _react2.default.createElement(_reactRouter.Route, { path: 'item/:itemId', component: _VaultItemView2.default })
 	    ),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/register', component: _RegisterView2.default }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/logout', component: _LogoutView2.default, onEnter: loginCheck }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/settings', component: _SettingsView2.default, onEnter: loginCheck })
+	    _react2.default.createElement(
+	      _reactRouter.Route,
+	      { path: 'login', component: _LoginView2.default },
+	      _react2.default.createElement(_reactRouter.Route, { path: 'totp', component: _TOTPView2.default })
+	    ),
+	    _react2.default.createElement(_reactRouter.Route, { path: 'register', component: _RegisterView2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: 'logout', component: _LogoutView2.default, onEnter: loginCheck }),
+	    _react2.default.createElement(_reactRouter.Route, { path: 'settings', component: _SettingsView2.default, onEnter: loginCheck })
 	  )
 	);
 	
@@ -38491,9 +38500,9 @@
 
 /***/ },
 /* 558 */
-/*!**************************************!*\
-  !*** ./app/components/VaultView.jsx ***!
-  \**************************************/
+/*!*****************************************!*\
+  !*** ./app/components/RegisterView.jsx ***!
+  \*****************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38508,55 +38517,200 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
 	
-	var _sjcl = __webpack_require__(/*! sjcl */ 559);
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
 	
-	var _sjcl2 = _interopRequireDefault(_sjcl);
-	
-	var _actions = __webpack_require__(/*! ../actions */ 582);
+	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var VaultView = _react2.default.createClass({
-	  displayName: 'VaultView',
+	var RegisterView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'RegisterView',
 	
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
 	      null,
-	      'Vault',
 	      _react2.default.createElement(
-	        'span',
+	        'h2',
+	        null,
+	        'Register'
+	      ),
+	      _react2.default.createElement('input', {
+	        id: 'email',
+	        placeholder: 'email' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        id: 'password',
+	        type: 'password',
+	        placeholder: 'password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        id: 'confirmPassword',
+	        type: 'password',
+	        placeholder: 'confirm password' }),
+	      _react2.default.createElement(
+	        'div',
 	        {
-	          onClick: this.uploadVault },
-	        'Upload'
+	          onClick: this.register },
+	        'Register'
 	      )
 	    );
 	  },
-	  uploadVault: function uploadVault() {
-	    this.props.uploadVault(this.props.vault, this.props.password, this.props.jwt);
+	  register: function register() {
+	    var email = document.getElementById('email').value;
+	    var password = document.getElementById('password').value;
+	    var confirmPassword = document.getElementById('confirmPassword').value;
+	    this.props.register(email, password, confirmPassword, this.props.router);
 	  }
-	});
-	
-	var mapStateToProps = function mapStateToProps(state) {
-	  return {
-	    vault: state.vault,
-	    jwt: state.connect.jwt,
-	    password: state.connect.password
-	  };
-	};
+	}));
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
-	    uploadVault: function uploadVault(vault, password, jwt) {
-	      dispatch((0, _actions.uploadVault)(vault, password, jwt));
+	    register: function register(email, password, confirmPassword, router) {
+	      dispatch((0, _actions.register)(email, password, confirmPassword, router));
 	    }
 	  };
 	};
 	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(VaultView);
+	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(RegisterView);
 
 /***/ },
 /* 559 */
+/*!************************!*\
+  !*** ./app/actions.js ***!
+  \************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.uploadVault = uploadVault;
+	exports.login = login;
+	exports.register = register;
+	
+	var _sjcl = __webpack_require__(/*! sjcl */ 560);
+	
+	var _sjcl2 = _interopRequireDefault(_sjcl);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/* Uploads vault and returns a Promise<JSON> */
+	function uploadVault(vault, password, jwt) {
+	  return function (dispatch) {
+	    var encrypted = _sjcl2.default.encrypt(password, JSON.stringify(vault));
+	    return fetch('/api/v1/store', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json',
+	        'Authorization': 'Bearer ' + jwt
+	      },
+	      method: 'POST',
+	      body: JSON.stringify({
+	        store: encrypted
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      if (response.errors.length) {
+	        dispatch({
+	          type: 'ADD_ERRORS',
+	          data: response.errors
+	        });
+	      }
+	    });
+	  };
+	}
+	
+	function login(email, password, router, totp) {
+	  return function (dispatch) {
+	    fetch('/api/v1/login', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json',
+	        'Authorization': 'Basic ' + btoa(email + ':' + password)
+	      },
+	      method: 'POST',
+	      body: JSON.stringify({
+	        totp: totp
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      if (response.needsTotp && !totp) {
+	        //need to get TOTP
+	        router.push('/login/totp');
+	        return;
+	      }
+	      var vault = response.store;
+	      if (response.errors.length) {
+	        dispatch({
+	          type: 'ADD_ERRORS',
+	          data: response.errors
+	        });
+	      } else {
+	        if (!vault) {
+	          vault = {};
+	        } else {
+	          vault = JSON.parse(_sjcl2.default.decrypt(password, response.store));
+	        }
+	        dispatch({
+	          type: 'LOGIN_SUCCESSFUL',
+	          data: {
+	            jwt: response.jwt,
+	            email: email,
+	            password: password,
+	            vault: vault,
+	            needsTotp: response.needsTotp
+	          }
+	        });
+	        router.push('/');
+	      }
+	    });
+	  };
+	}
+	
+	function register(email, password, confirmPassword, router) {
+	  return function (dispatch) {
+	    if (password != confirmPassword) {
+	      dispatch({
+	        type: 'ADD_ERRORS',
+	        data: ['The two passwords to not match']
+	      });
+	      return;
+	    }
+	    fetch('/api/v1/register', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json'
+	      },
+	      method: 'POST',
+	      body: JSON.stringify({
+	        email: email,
+	        password: password
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      if (response.errors.length) {
+	        dispatch({
+	          type: 'ADD_ERRORS',
+	          data: response.errors
+	        });
+	      } else {
+	        dispatch({
+	          type: 'ADD_ERRORS',
+	          data: ['Successfully Registered! Look for a confirmation email']
+	        });
+	        router.push('/login');
+	      }
+	    });
+	  };
+	}
+
+/***/ },
+/* 560 */
 /*!************************!*\
   !*** ./~/sjcl/sjcl.js ***!
   \************************/
@@ -38611,7 +38765,7 @@
 	a.touches[0]||a.changedTouches[0];this.addEntropy([a.pageX||a.clientX,a.pageY||a.clientY],1,"touch");C(this,0)},ma:function(){C(this,2)},ea:function(a){a=a.accelerationIncludingGravity.x||a.accelerationIncludingGravity.y||a.accelerationIncludingGravity.z;if(window.orientation){var b=window.orientation;"number"===typeof b&&this.addEntropy(b,1,"accelerometer")}a&&this.addEntropy(a,2,"accelerometer");C(this,0)}};
 	function A(a,b){var c,d=sjcl.random.K[a],e=[];for(c in d)d.hasOwnProperty(c)&&e.push(d[c]);for(c=0;c<e.length;c++)e[c](b)}function C(a,b){"undefined"!==typeof window&&window.performance&&"function"===typeof window.performance.now?a.addEntropy(window.performance.now(),b,"loadtime"):a.addEntropy((new Date).valueOf(),b,"loadtime")}function y(a){a.b=z(a).concat(z(a));a.L=new sjcl.cipher.aes(a.b)}function z(a){for(var b=0;4>b&&(a.h[b]=a.h[b]+1|0,!a.h[b]);b++);return a.L.encrypt(a.h)}
 	function B(a,b){return function(){b.apply(a,arguments)}}sjcl.random=new sjcl.prng(6);
-	a:try{var D,E,F,G;if(G="undefined"!==typeof module&&module.exports){var H;try{H=__webpack_require__(/*! crypto */ 560)}catch(a){H=null}G=E=H}if(G&&E.randomBytes)D=E.randomBytes(128),D=new Uint32Array((new Uint8Array(D)).buffer),sjcl.random.addEntropy(D,1024,"crypto['randomBytes']");else if("undefined"!==typeof window&&"undefined"!==typeof Uint32Array){F=new Uint32Array(32);if(window.crypto&&window.crypto.getRandomValues)window.crypto.getRandomValues(F);else if(window.msCrypto&&window.msCrypto.getRandomValues)window.msCrypto.getRandomValues(F);
+	a:try{var D,E,F,G;if(G="undefined"!==typeof module&&module.exports){var H;try{H=__webpack_require__(/*! crypto */ 561)}catch(a){H=null}G=E=H}if(G&&E.randomBytes)D=E.randomBytes(128),D=new Uint32Array((new Uint8Array(D)).buffer),sjcl.random.addEntropy(D,1024,"crypto['randomBytes']");else if("undefined"!==typeof window&&"undefined"!==typeof Uint32Array){F=new Uint32Array(32);if(window.crypto&&window.crypto.getRandomValues)window.crypto.getRandomValues(F);else if(window.msCrypto&&window.msCrypto.getRandomValues)window.msCrypto.getRandomValues(F);
 	else break a;sjcl.random.addEntropy(F,1024,"crypto['getRandomValues']")}}catch(a){"undefined"!==typeof window&&window.console&&(console.log("There was an error collecting entropy from the browser:"),console.log(a))}
 	sjcl.json={defaults:{v:1,iter:1E4,ks:128,ts:64,mode:"ccm",adata:"",cipher:"aes"},ja:function(a,b,c,d){c=c||{};d=d||{};var e=sjcl.json,f=e.g({iv:sjcl.random.randomWords(4,0)},e.defaults),g;e.g(f,c);c=f.adata;"string"===typeof f.salt&&(f.salt=sjcl.codec.base64.toBits(f.salt));"string"===typeof f.iv&&(f.iv=sjcl.codec.base64.toBits(f.iv));if(!sjcl.mode[f.mode]||!sjcl.cipher[f.cipher]||"string"===typeof a&&100>=f.iter||64!==f.ts&&96!==f.ts&&128!==f.ts||128!==f.ks&&192!==f.ks&&0x100!==f.ks||2>f.iv.length||
 	4<f.iv.length)throw new sjcl.exception.invalid("json encrypt: invalid parameters");"string"===typeof a?(g=sjcl.misc.cachedPbkdf2(a,f),a=g.key.slice(0,f.ks/32),f.salt=g.salt):sjcl.ecc&&a instanceof sjcl.ecc.elGamal.publicKey&&(g=a.kem(),f.kemtag=g.tag,a=g.key.slice(0,f.ks/32));"string"===typeof b&&(b=sjcl.codec.utf8String.toBits(b));"string"===typeof c&&(f.adata=c=sjcl.codec.utf8String.toBits(c));g=new sjcl.cipher[f.cipher](a);e.g(d,f);d.key=a;f.ct="ccm"===f.mode&&sjcl.arrayBuffer&&sjcl.arrayBuffer.ccm&&
@@ -38625,13 +38779,13 @@
 
 
 /***/ },
-/* 560 */
+/* 561 */
 /*!**************************************!*\
   !*** ./~/crypto-browserify/index.js ***!
   \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {var rng = __webpack_require__(/*! ./rng */ 565)
+	/* WEBPACK VAR INJECTION */(function(Buffer) {var rng = __webpack_require__(/*! ./rng */ 566)
 	
 	function error () {
 	  var m = [].slice.call(arguments).join(' ')
@@ -38642,9 +38796,9 @@
 	    ].join('\n'))
 	}
 	
-	exports.createHash = __webpack_require__(/*! ./create-hash */ 567)
+	exports.createHash = __webpack_require__(/*! ./create-hash */ 568)
 	
-	exports.createHmac = __webpack_require__(/*! ./create-hmac */ 579)
+	exports.createHmac = __webpack_require__(/*! ./create-hmac */ 580)
 	
 	exports.randomBytes = function(size, callback) {
 	  if (callback && callback.call) {
@@ -38665,7 +38819,7 @@
 	  return ['sha1', 'sha256', 'sha512', 'md5', 'rmd160']
 	}
 	
-	var p = __webpack_require__(/*! ./pbkdf2 */ 580)(exports)
+	var p = __webpack_require__(/*! ./pbkdf2 */ 581)(exports)
 	exports.pbkdf2 = p.pbkdf2
 	exports.pbkdf2Sync = p.pbkdf2Sync
 	
@@ -38685,10 +38839,10 @@
 	  }
 	})
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 562).Buffer))
 
 /***/ },
-/* 561 */
+/* 562 */
 /*!***************************!*\
   !*** ./~/buffer/index.js ***!
   \***************************/
@@ -38704,9 +38858,9 @@
 	
 	'use strict'
 	
-	var base64 = __webpack_require__(/*! base64-js */ 562)
-	var ieee754 = __webpack_require__(/*! ieee754 */ 563)
-	var isArray = __webpack_require__(/*! isarray */ 564)
+	var base64 = __webpack_require__(/*! base64-js */ 563)
+	var ieee754 = __webpack_require__(/*! ieee754 */ 564)
+	var isArray = __webpack_require__(/*! isarray */ 565)
 	
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -40484,10 +40638,10 @@
 	  return val !== val // eslint-disable-line no-self-compare
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 562).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 562 */
+/* 563 */
 /*!******************************!*\
   !*** ./~/base64-js/index.js ***!
   \******************************/
@@ -40610,7 +40764,7 @@
 
 
 /***/ },
-/* 563 */
+/* 564 */
 /*!****************************!*\
   !*** ./~/ieee754/index.js ***!
   \****************************/
@@ -40703,7 +40857,7 @@
 
 
 /***/ },
-/* 564 */
+/* 565 */
 /*!****************************!*\
   !*** ./~/isarray/index.js ***!
   \****************************/
@@ -40717,7 +40871,7 @@
 
 
 /***/ },
-/* 565 */
+/* 566 */
 /*!************************************!*\
   !*** ./~/crypto-browserify/rng.js ***!
   \************************************/
@@ -40726,7 +40880,7 @@
 	/* WEBPACK VAR INJECTION */(function(global, Buffer) {(function() {
 	  var g = ('undefined' === typeof window ? global : window) || {}
 	  _crypto = (
-	    g.crypto || g.msCrypto || __webpack_require__(/*! crypto */ 566)
+	    g.crypto || g.msCrypto || __webpack_require__(/*! crypto */ 567)
 	  )
 	  module.exports = function(size) {
 	    // Modern Browsers
@@ -40750,10 +40904,10 @@
 	  }
 	}())
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/buffer/index.js */ 562).Buffer))
 
 /***/ },
-/* 566 */
+/* 567 */
 /*!************************!*\
   !*** crypto (ignored) ***!
   \************************/
@@ -40762,16 +40916,16 @@
 	/* (ignored) */
 
 /***/ },
-/* 567 */
+/* 568 */
 /*!********************************************!*\
   !*** ./~/crypto-browserify/create-hash.js ***!
   \********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(/*! sha.js */ 568)
+	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(/*! sha.js */ 569)
 	
-	var md5 = toConstructor(__webpack_require__(/*! ./md5 */ 576))
-	var rmd160 = toConstructor(__webpack_require__(/*! ripemd160 */ 578))
+	var md5 = toConstructor(__webpack_require__(/*! ./md5 */ 577))
+	var rmd160 = toConstructor(__webpack_require__(/*! ripemd160 */ 579))
 	
 	function toConstructor (fn) {
 	  return function () {
@@ -40799,10 +40953,10 @@
 	  return createHash(alg)
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 562).Buffer))
 
 /***/ },
-/* 568 */
+/* 569 */
 /*!***************************!*\
   !*** ./~/sha.js/index.js ***!
   \***************************/
@@ -40814,16 +40968,16 @@
 	  return new Alg()
 	}
 	
-	var Buffer = __webpack_require__(/*! buffer */ 561).Buffer
-	var Hash   = __webpack_require__(/*! ./hash */ 569)(Buffer)
+	var Buffer = __webpack_require__(/*! buffer */ 562).Buffer
+	var Hash   = __webpack_require__(/*! ./hash */ 570)(Buffer)
 	
-	exports.sha1 = __webpack_require__(/*! ./sha1 */ 570)(Buffer, Hash)
-	exports.sha256 = __webpack_require__(/*! ./sha256 */ 574)(Buffer, Hash)
-	exports.sha512 = __webpack_require__(/*! ./sha512 */ 575)(Buffer, Hash)
+	exports.sha1 = __webpack_require__(/*! ./sha1 */ 571)(Buffer, Hash)
+	exports.sha256 = __webpack_require__(/*! ./sha256 */ 575)(Buffer, Hash)
+	exports.sha512 = __webpack_require__(/*! ./sha512 */ 576)(Buffer, Hash)
 
 
 /***/ },
-/* 569 */
+/* 570 */
 /*!**************************!*\
   !*** ./~/sha.js/hash.js ***!
   \**************************/
@@ -40909,7 +41063,7 @@
 
 
 /***/ },
-/* 570 */
+/* 571 */
 /*!**************************!*\
   !*** ./~/sha.js/sha1.js ***!
   \**************************/
@@ -40924,7 +41078,7 @@
 	 * See http://pajhome.org.uk/crypt/md5 for details.
 	 */
 	
-	var inherits = __webpack_require__(/*! util */ 571).inherits
+	var inherits = __webpack_require__(/*! util */ 572).inherits
 	
 	module.exports = function (Buffer, Hash) {
 	
@@ -41056,7 +41210,7 @@
 
 
 /***/ },
-/* 571 */
+/* 572 */
 /*!************************!*\
   !*** ./~/util/util.js ***!
   \************************/
@@ -41587,7 +41741,7 @@
 	}
 	exports.isPrimitive = isPrimitive;
 	
-	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 572);
+	exports.isBuffer = __webpack_require__(/*! ./support/isBuffer */ 573);
 	
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -41631,7 +41785,7 @@
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(/*! inherits */ 573);
+	exports.inherits = __webpack_require__(/*! inherits */ 574);
 	
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -41652,7 +41806,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./~/process/browser.js */ 294)))
 
 /***/ },
-/* 572 */
+/* 573 */
 /*!*******************************************!*\
   !*** ./~/util/support/isBufferBrowser.js ***!
   \*******************************************/
@@ -41666,7 +41820,7 @@
 	}
 
 /***/ },
-/* 573 */
+/* 574 */
 /*!****************************************!*\
   !*** ./~/inherits/inherits_browser.js ***!
   \****************************************/
@@ -41698,7 +41852,7 @@
 
 
 /***/ },
-/* 574 */
+/* 575 */
 /*!****************************!*\
   !*** ./~/sha.js/sha256.js ***!
   \****************************/
@@ -41713,7 +41867,7 @@
 	 *
 	 */
 	
-	var inherits = __webpack_require__(/*! util */ 571).inherits
+	var inherits = __webpack_require__(/*! util */ 572).inherits
 	
 	module.exports = function (Buffer, Hash) {
 	
@@ -41854,13 +42008,13 @@
 
 
 /***/ },
-/* 575 */
+/* 576 */
 /*!****************************!*\
   !*** ./~/sha.js/sha512.js ***!
   \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var inherits = __webpack_require__(/*! util */ 571).inherits
+	var inherits = __webpack_require__(/*! util */ 572).inherits
 	
 	module.exports = function (Buffer, Hash) {
 	  var K = [
@@ -42107,7 +42261,7 @@
 
 
 /***/ },
-/* 576 */
+/* 577 */
 /*!************************************!*\
   !*** ./~/crypto-browserify/md5.js ***!
   \************************************/
@@ -42122,7 +42276,7 @@
 	 * See http://pajhome.org.uk/crypt/md5 for more info.
 	 */
 	
-	var helpers = __webpack_require__(/*! ./helpers */ 577);
+	var helpers = __webpack_require__(/*! ./helpers */ 578);
 	
 	/*
 	 * Calculate the MD5 of an array of little-endian words, and a bit length
@@ -42271,7 +42425,7 @@
 
 
 /***/ },
-/* 577 */
+/* 578 */
 /*!****************************************!*\
   !*** ./~/crypto-browserify/helpers.js ***!
   \****************************************/
@@ -42312,10 +42466,10 @@
 	
 	module.exports = { hash: hash };
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 562).Buffer))
 
 /***/ },
-/* 578 */
+/* 579 */
 /*!**************************************!*\
   !*** ./~/ripemd160/lib/ripemd160.js ***!
   \**************************************/
@@ -42527,16 +42681,16 @@
 	
 	
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 562).Buffer))
 
 /***/ },
-/* 579 */
+/* 580 */
 /*!********************************************!*\
   !*** ./~/crypto-browserify/create-hmac.js ***!
   \********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(/*! ./create-hash */ 567)
+	/* WEBPACK VAR INJECTION */(function(Buffer) {var createHash = __webpack_require__(/*! ./create-hash */ 568)
 	
 	var zeroBuffer = new Buffer(128)
 	zeroBuffer.fill(0)
@@ -42580,16 +42734,16 @@
 	}
 	
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 562).Buffer))
 
 /***/ },
-/* 580 */
+/* 581 */
 /*!***************************************!*\
   !*** ./~/crypto-browserify/pbkdf2.js ***!
   \***************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var pbkdf2Export = __webpack_require__(/*! pbkdf2-compat/pbkdf2 */ 581)
+	var pbkdf2Export = __webpack_require__(/*! pbkdf2-compat/pbkdf2 */ 582)
 	
 	module.exports = function (crypto, exports) {
 	  exports = exports || {}
@@ -42604,7 +42758,7 @@
 
 
 /***/ },
-/* 581 */
+/* 582 */
 /*!***********************************!*\
   !*** ./~/pbkdf2-compat/pbkdf2.js ***!
   \***********************************/
@@ -42695,221 +42849,10 @@
 	  }
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 561).Buffer))
-
-/***/ },
-/* 582 */
-/*!************************!*\
-  !*** ./app/actions.js ***!
-  \************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.uploadVault = uploadVault;
-	exports.login = login;
-	exports.register = register;
-	
-	var _sjcl = __webpack_require__(/*! sjcl */ 559);
-	
-	var _sjcl2 = _interopRequireDefault(_sjcl);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/* Uploads vault and returns a Promise<JSON> */
-	function uploadVault(vault, password, jwt) {
-	  return function (dispatch) {
-	    var encrypted = _sjcl2.default.encrypt(password, JSON.stringify(vault));
-	    return fetch('/api/v1/store', {
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json',
-	        'Authorization': 'Bearer ' + jwt
-	      },
-	      method: 'POST',
-	      body: JSON.stringify({
-	        store: encrypted
-	      })
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      if (response.errors.length) {
-	        dispatch({
-	          type: 'ADD_ERRORS',
-	          data: response.errors
-	        });
-	      }
-	    });
-	  };
-	}
-	
-	function login(email, password, router, totp) {
-	  return function (dispatch) {
-	    fetch('/api/v1/login', {
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json',
-	        'Authorization': 'Basic ' + btoa(email + ':' + password)
-	      },
-	      method: 'POST',
-	      body: JSON.stringify({
-	        totp: totp
-	      })
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      if (response.needsTotp && !totp) {
-	        //need to get TOTP
-	        router.push('/login/totp');
-	        return;
-	      }
-	      var vault = response.store;
-	      if (response.errors.length) {
-	        dispatch({
-	          type: 'ADD_ERRORS',
-	          data: response.errors
-	        });
-	      } else {
-	        if (!vault) {
-	          vault = {};
-	        } else {
-	          vault = JSON.parse(_sjcl2.default.decrypt(password, response.store));
-	        }
-	        dispatch({
-	          type: 'LOGIN_SUCCESSFUL',
-	          data: {
-	            jwt: response.jwt,
-	            email: email,
-	            password: password,
-	            vault: vault,
-	            needsTotp: response.needsTotp
-	          }
-	        });
-	        router.push('/');
-	      }
-	    });
-	  };
-	}
-	
-	function register(email, password, confirmPassword, router) {
-	  return function (dispatch) {
-	    if (password != confirmPassword) {
-	      dispatch({
-	        type: 'ADD_ERRORS',
-	        data: ['The two passwords to not match']
-	      });
-	      return;
-	    }
-	    fetch('/api/v1/register', {
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json'
-	      },
-	      method: 'POST',
-	      body: JSON.stringify({
-	        email: email,
-	        password: password
-	      })
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      if (response.errors.length) {
-	        dispatch({
-	          type: 'ADD_ERRORS',
-	          data: response.errors
-	        });
-	      } else {
-	        dispatch({
-	          type: 'ADD_ERRORS',
-	          data: ['Successfully Registered! Look for a confirmation email']
-	        });
-	        router.push('/login');
-	      }
-	    });
-	  };
-	}
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/buffer/index.js */ 562).Buffer))
 
 /***/ },
 /* 583 */
-/*!*****************************************!*\
-  !*** ./app/components/RegisterView.jsx ***!
-  \*****************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 298);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 330);
-	
-	var _actions = __webpack_require__(/*! ../actions */ 582);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var RegisterView = (0, _reactRouter.withRouter)(_react2.default.createClass({
-	  displayName: 'RegisterView',
-	
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'Register'
-	      ),
-	      _react2.default.createElement('input', {
-	        id: 'email',
-	        placeholder: 'email' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        id: 'password',
-	        type: 'password',
-	        placeholder: 'password' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        id: 'confirmPassword',
-	        type: 'password',
-	        placeholder: 'confirm password' }),
-	      _react2.default.createElement(
-	        'div',
-	        {
-	          onClick: this.register },
-	        'Register'
-	      )
-	    );
-	  },
-	  register: function register() {
-	    var email = document.getElementById('email').value;
-	    var password = document.getElementById('password').value;
-	    var confirmPassword = document.getElementById('confirmPassword').value;
-	    this.props.register(email, password, confirmPassword, this.props.router);
-	  }
-	}));
-	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    register: function register(email, password, confirmPassword, router) {
-	      dispatch((0, _actions.register)(email, password, confirmPassword, router));
-	    }
-	  };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(RegisterView);
-
-/***/ },
-/* 584 */
 /*!**************************************!*\
   !*** ./app/components/LoginView.jsx ***!
   \**************************************/
@@ -42929,7 +42872,11 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
 	
-	var _actions = __webpack_require__(/*! ../actions */ 582);
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
+	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 589);
+	
+	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -42965,7 +42912,11 @@
 	          'Login'
 	        )
 	      ),
-	      this.props.children
+	      _react2.default.createElement(
+	        _FocusComponent2.default,
+	        null,
+	        this.props.children
+	      )
 	    );
 	  },
 	  login: function login() {
@@ -42990,7 +42941,272 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(LoginView);
 
 /***/ },
+/* 584 */
+/*!*************************************!*\
+  !*** ./app/components/TOTPView.jsx ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var TOTPView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'TOTPView',
+	
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      {
+	        className: 'modal',
+	        key: 'totp' },
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: 'modal-content' },
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'TOTP'
+	        ),
+	        _react2.default.createElement('input', {
+	          id: 'totp',
+	          placeholder: 'TOTP Code' }),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            onClick: this.login },
+	          'Login'
+	        )
+	      )
+	    );
+	  },
+	  login: function login() {
+	    var email = document.getElementById('email').value;
+	    var password = document.getElementById('password').value;
+	    var totp = document.getElementById('totp').value;
+	    this.props.login(email, password, this.props.router, totp);
+	  }
+	}));
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {};
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    login: function login(email, password, router, totp) {
+	      dispatch((0, _actions.login)(email, password, router, totp));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TOTPView);
+
+/***/ },
 /* 585 */
+/*!**************************************!*\
+  !*** ./app/components/VaultView.jsx ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _sjcl = __webpack_require__(/*! sjcl */ 560);
+	
+	var _sjcl2 = _interopRequireDefault(_sjcl);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
+	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 589);
+	
+	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var VaultView = _react2.default.createClass({
+	  displayName: 'VaultView',
+	
+	  render: function render() {
+	    var className = this.props.children ? 'focus blur' : 'focus';
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: className },
+	        'Vault',
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            onClick: this.uploadVault },
+	          'Upload'
+	        ),
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/vault/item/x' },
+	          'Add Item'
+	        )
+	      ),
+	      _react2.default.createElement(
+	        _FocusComponent2.default,
+	        null,
+	        this.props.children
+	      )
+	    );
+	  },
+	  uploadVault: function uploadVault() {
+	    this.props.uploadVault(this.props.vault, this.props.password, this.props.jwt);
+	  }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    vault: state.vault,
+	    jwt: state.connect.jwt,
+	    password: state.connect.password
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    uploadVault: function uploadVault(vault, password, jwt) {
+	      dispatch((0, _actions.uploadVault)(vault, password, jwt));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(VaultView);
+
+/***/ },
+/* 586 */
+/*!******************************************!*\
+  !*** ./app/components/VaultItemView.jsx ***!
+  \******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var VaultItemView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'VaultItemView',
+	
+	  propTypes: {
+	    vault: _react2.default.PropTypes.object
+	  },
+	  render: function render() {
+	    var item = this.props.vault[this.props.params.itemId];
+	    if (!item) {
+	      item = {
+	        name: '',
+	        passwordArray: [],
+	        username: ''
+	      };
+	    }
+	    var key = this.props.params.itemId ? this.props.params.itemId : 'newVaultItem';
+	    return _react2.default.createElement(
+	      'div',
+	      {
+	        className: 'modal',
+	        key: key },
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: 'modal-content' },
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          'Name: ',
+	          item.name
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          'Password: ',
+	          item.passwordArray[item.passwordArray.length - 1]
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          'Password Array: ',
+	          item.passwordArray
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          'Username: ',
+	          item.username
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            onClick: this.cancel },
+	          'Cancel'
+	        )
+	      )
+	    );
+	  },
+	  cancel: function cancel() {
+	    this.props.router.goBack();
+	  },
+	  save: function save() {
+	    //TODO if no itemId is given, then create a new entry, else modify old one
+	    //Then modify state and upload vault using an action creator
+	  }
+	}));
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    vault: state.vault
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(VaultItemView);
+
+/***/ },
+/* 587 */
 /*!***************************************!*\
   !*** ./app/components/LogoutView.jsx ***!
   \***************************************/
@@ -43037,7 +43253,7 @@
 	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(LoginView);
 
 /***/ },
-/* 586 */
+/* 588 */
 /*!*****************************************!*\
   !*** ./app/components/SettingsView.jsx ***!
   \*****************************************/
@@ -43158,10 +43374,10 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SettingsView);
 
 /***/ },
-/* 587 */
-/*!*************************************!*\
-  !*** ./app/components/TOTPView.jsx ***!
-  \*************************************/
+/* 589 */
+/*!*******************************************!*\
+  !*** ./app/components/FocusComponent.jsx ***!
+  \*******************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43174,64 +43390,884 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	var _reactAddonsCssTransitionGroup = __webpack_require__(/*! react-addons-css-transition-group */ 590);
 	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
-	
-	var _actions = __webpack_require__(/*! ../actions */ 582);
+	var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var TOTPView = (0, _reactRouter.withRouter)(_react2.default.createClass({
-	  displayName: 'TOTPView',
+	exports.default = _react2.default.createClass({
+	  displayName: 'FocusComponent',
 	
 	  render: function render() {
+	    var transitionMs = 500;
 	    return _react2.default.createElement(
-	      'div',
+	      _reactAddonsCssTransitionGroup2.default,
 	      {
-	        className: 'modal' },
-	      _react2.default.createElement(
-	        'div',
-	        {
-	          className: 'modal-content' },
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'TOTP'
-	        ),
-	        _react2.default.createElement('input', {
-	          id: 'totp',
-	          placeholder: 'TOTP Code' }),
-	        _react2.default.createElement(
-	          'div',
-	          {
-	            onClick: this.login },
-	          'Login'
-	        )
-	      )
+	        transitionName: 'focus-component',
+	        transitionEnterTimeout: transitionMs,
+	        transitionLeaveTimeout: transitionMs },
+	      this.props.children
 	    );
-	  },
-	  login: function login() {
-	    var email = document.getElementById('email').value;
-	    var password = document.getElementById('password').value;
-	    var totp = document.getElementById('totp').value;
-	    this.props.login(email, password, this.props.router, totp);
 	  }
-	}));
+	});
+
+/***/ },
+/* 590 */
+/*!******************************************************!*\
+  !*** ./~/react-addons-css-transition-group/index.js ***!
+  \******************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(/*! react/lib/ReactCSSTransitionGroup */ 591);
+
+/***/ },
+/* 591 */
+/*!************************************************!*\
+  !*** ./~/react/lib/ReactCSSTransitionGroup.js ***!
+  \************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactCSSTransitionGroup
+	 */
 	
-	var mapStateToProps = function mapStateToProps(state) {
-	  return {};
-	};
+	'use strict';
 	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    login: function login(email, password, router, totp) {
-	      dispatch((0, _actions.login)(email, password, router, totp));
+	var _assign = __webpack_require__(/*! object-assign */ 300);
+	
+	var React = __webpack_require__(/*! ./React */ 299);
+	
+	var ReactTransitionGroup = __webpack_require__(/*! ./ReactTransitionGroup */ 592);
+	var ReactCSSTransitionGroupChild = __webpack_require__(/*! ./ReactCSSTransitionGroupChild */ 594);
+	
+	function createTransitionTimeoutPropValidator(transitionType) {
+	  var timeoutPropName = 'transition' + transitionType + 'Timeout';
+	  var enabledPropName = 'transition' + transitionType;
+	
+	  return function (props) {
+	    // If the transition is enabled
+	    if (props[enabledPropName]) {
+	      // If no timeout duration is provided
+	      if (props[timeoutPropName] == null) {
+	        return new Error(timeoutPropName + ' wasn\'t supplied to ReactCSSTransitionGroup: ' + 'this can cause unreliable animations and won\'t be supported in ' + 'a future version of React. See ' + 'https://fb.me/react-animation-transition-group-timeout for more ' + 'information.');
+	
+	        // If the duration isn't a number
+	      } else if (typeof props[timeoutPropName] !== 'number') {
+	          return new Error(timeoutPropName + ' must be a number (in milliseconds)');
+	        }
 	    }
 	  };
+	}
+	
+	/**
+	 * An easy way to perform CSS transitions and animations when a React component
+	 * enters or leaves the DOM.
+	 * See https://facebook.github.io/react/docs/animation.html#high-level-api-reactcsstransitiongroup
+	 */
+	var ReactCSSTransitionGroup = React.createClass({
+	  displayName: 'ReactCSSTransitionGroup',
+	
+	  propTypes: {
+	    transitionName: ReactCSSTransitionGroupChild.propTypes.name,
+	
+	    transitionAppear: React.PropTypes.bool,
+	    transitionEnter: React.PropTypes.bool,
+	    transitionLeave: React.PropTypes.bool,
+	    transitionAppearTimeout: createTransitionTimeoutPropValidator('Appear'),
+	    transitionEnterTimeout: createTransitionTimeoutPropValidator('Enter'),
+	    transitionLeaveTimeout: createTransitionTimeoutPropValidator('Leave')
+	  },
+	
+	  getDefaultProps: function () {
+	    return {
+	      transitionAppear: false,
+	      transitionEnter: true,
+	      transitionLeave: true
+	    };
+	  },
+	
+	  _wrapChild: function (child) {
+	    // We need to provide this childFactory so that
+	    // ReactCSSTransitionGroupChild can receive updates to name, enter, and
+	    // leave while it is leaving.
+	    return React.createElement(ReactCSSTransitionGroupChild, {
+	      name: this.props.transitionName,
+	      appear: this.props.transitionAppear,
+	      enter: this.props.transitionEnter,
+	      leave: this.props.transitionLeave,
+	      appearTimeout: this.props.transitionAppearTimeout,
+	      enterTimeout: this.props.transitionEnterTimeout,
+	      leaveTimeout: this.props.transitionLeaveTimeout
+	    }, child);
+	  },
+	
+	  render: function () {
+	    return React.createElement(ReactTransitionGroup, _assign({}, this.props, { childFactory: this._wrapChild }));
+	  }
+	});
+	
+	module.exports = ReactCSSTransitionGroup;
+
+/***/ },
+/* 592 */
+/*!*********************************************!*\
+  !*** ./~/react/lib/ReactTransitionGroup.js ***!
+  \*********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactTransitionGroup
+	 */
+	
+	'use strict';
+	
+	var _assign = __webpack_require__(/*! object-assign */ 300);
+	
+	var React = __webpack_require__(/*! ./React */ 299);
+	var ReactInstanceMap = __webpack_require__(/*! ./ReactInstanceMap */ 478);
+	var ReactTransitionChildMapping = __webpack_require__(/*! ./ReactTransitionChildMapping */ 593);
+	
+	var emptyFunction = __webpack_require__(/*! fbjs/lib/emptyFunction */ 308);
+	
+	/**
+	 * A basis for animations. When children are declaratively added or removed,
+	 * special lifecycle hooks are called.
+	 * See https://facebook.github.io/react/docs/animation.html#low-level-api-reacttransitiongroup
+	 */
+	var ReactTransitionGroup = React.createClass({
+	  displayName: 'ReactTransitionGroup',
+	
+	  propTypes: {
+	    component: React.PropTypes.any,
+	    childFactory: React.PropTypes.func
+	  },
+	
+	  getDefaultProps: function () {
+	    return {
+	      component: 'span',
+	      childFactory: emptyFunction.thatReturnsArgument
+	    };
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      // TODO: can we get useful debug information to show at this point?
+	      children: ReactTransitionChildMapping.getChildMapping(this.props.children)
+	    };
+	  },
+	
+	  componentWillMount: function () {
+	    this.currentlyTransitioningKeys = {};
+	    this.keysToEnter = [];
+	    this.keysToLeave = [];
+	  },
+	
+	  componentDidMount: function () {
+	    var initialChildMapping = this.state.children;
+	    for (var key in initialChildMapping) {
+	      if (initialChildMapping[key]) {
+	        this.performAppear(key);
+	      }
+	    }
+	  },
+	
+	  componentWillReceiveProps: function (nextProps) {
+	    var nextChildMapping;
+	    if (process.env.NODE_ENV !== 'production') {
+	      nextChildMapping = ReactTransitionChildMapping.getChildMapping(nextProps.children, ReactInstanceMap.get(this)._debugID);
+	    } else {
+	      nextChildMapping = ReactTransitionChildMapping.getChildMapping(nextProps.children);
+	    }
+	    var prevChildMapping = this.state.children;
+	
+	    this.setState({
+	      children: ReactTransitionChildMapping.mergeChildMappings(prevChildMapping, nextChildMapping)
+	    });
+	
+	    var key;
+	
+	    for (key in nextChildMapping) {
+	      var hasPrev = prevChildMapping && prevChildMapping.hasOwnProperty(key);
+	      if (nextChildMapping[key] && !hasPrev && !this.currentlyTransitioningKeys[key]) {
+	        this.keysToEnter.push(key);
+	      }
+	    }
+	
+	    for (key in prevChildMapping) {
+	      var hasNext = nextChildMapping && nextChildMapping.hasOwnProperty(key);
+	      if (prevChildMapping[key] && !hasNext && !this.currentlyTransitioningKeys[key]) {
+	        this.keysToLeave.push(key);
+	      }
+	    }
+	
+	    // If we want to someday check for reordering, we could do it here.
+	  },
+	
+	  componentDidUpdate: function () {
+	    var keysToEnter = this.keysToEnter;
+	    this.keysToEnter = [];
+	    keysToEnter.forEach(this.performEnter);
+	
+	    var keysToLeave = this.keysToLeave;
+	    this.keysToLeave = [];
+	    keysToLeave.forEach(this.performLeave);
+	  },
+	
+	  performAppear: function (key) {
+	    this.currentlyTransitioningKeys[key] = true;
+	
+	    var component = this.refs[key];
+	
+	    if (component.componentWillAppear) {
+	      component.componentWillAppear(this._handleDoneAppearing.bind(this, key));
+	    } else {
+	      this._handleDoneAppearing(key);
+	    }
+	  },
+	
+	  _handleDoneAppearing: function (key) {
+	    var component = this.refs[key];
+	    if (component.componentDidAppear) {
+	      component.componentDidAppear();
+	    }
+	
+	    delete this.currentlyTransitioningKeys[key];
+	
+	    var currentChildMapping;
+	    if (process.env.NODE_ENV !== 'production') {
+	      currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children, ReactInstanceMap.get(this)._debugID);
+	    } else {
+	      currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
+	    }
+	
+	    if (!currentChildMapping || !currentChildMapping.hasOwnProperty(key)) {
+	      // This was removed before it had fully appeared. Remove it.
+	      this.performLeave(key);
+	    }
+	  },
+	
+	  performEnter: function (key) {
+	    this.currentlyTransitioningKeys[key] = true;
+	
+	    var component = this.refs[key];
+	
+	    if (component.componentWillEnter) {
+	      component.componentWillEnter(this._handleDoneEntering.bind(this, key));
+	    } else {
+	      this._handleDoneEntering(key);
+	    }
+	  },
+	
+	  _handleDoneEntering: function (key) {
+	    var component = this.refs[key];
+	    if (component.componentDidEnter) {
+	      component.componentDidEnter();
+	    }
+	
+	    delete this.currentlyTransitioningKeys[key];
+	
+	    var currentChildMapping;
+	    if (process.env.NODE_ENV !== 'production') {
+	      currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children, ReactInstanceMap.get(this)._debugID);
+	    } else {
+	      currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
+	    }
+	
+	    if (!currentChildMapping || !currentChildMapping.hasOwnProperty(key)) {
+	      // This was removed before it had fully entered. Remove it.
+	      this.performLeave(key);
+	    }
+	  },
+	
+	  performLeave: function (key) {
+	    this.currentlyTransitioningKeys[key] = true;
+	
+	    var component = this.refs[key];
+	    if (component.componentWillLeave) {
+	      component.componentWillLeave(this._handleDoneLeaving.bind(this, key));
+	    } else {
+	      // Note that this is somewhat dangerous b/c it calls setState()
+	      // again, effectively mutating the component before all the work
+	      // is done.
+	      this._handleDoneLeaving(key);
+	    }
+	  },
+	
+	  _handleDoneLeaving: function (key) {
+	    var component = this.refs[key];
+	
+	    if (component.componentDidLeave) {
+	      component.componentDidLeave();
+	    }
+	
+	    delete this.currentlyTransitioningKeys[key];
+	
+	    var currentChildMapping;
+	    if (process.env.NODE_ENV !== 'production') {
+	      currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children, ReactInstanceMap.get(this)._debugID);
+	    } else {
+	      currentChildMapping = ReactTransitionChildMapping.getChildMapping(this.props.children);
+	    }
+	
+	    if (currentChildMapping && currentChildMapping.hasOwnProperty(key)) {
+	      // This entered again before it fully left. Add it again.
+	      this.performEnter(key);
+	    } else {
+	      this.setState(function (state) {
+	        var newChildren = _assign({}, state.children);
+	        delete newChildren[key];
+	        return { children: newChildren };
+	      });
+	    }
+	  },
+	
+	  render: function () {
+	    // TODO: we could get rid of the need for the wrapper node
+	    // by cloning a single child
+	    var childrenToRender = [];
+	    for (var key in this.state.children) {
+	      var child = this.state.children[key];
+	      if (child) {
+	        // You may need to apply reactive updates to a child as it is leaving.
+	        // The normal React way to do it won't work since the child will have
+	        // already been removed. In case you need this behavior you can provide
+	        // a childFactory function to wrap every child, even the ones that are
+	        // leaving.
+	        childrenToRender.push(React.cloneElement(this.props.childFactory(child), { ref: key, key: key }));
+	      }
+	    }
+	
+	    // Do not forward ReactTransitionGroup props to primitive DOM nodes
+	    var props = _assign({}, this.props);
+	    delete props.transitionLeave;
+	    delete props.transitionName;
+	    delete props.transitionAppear;
+	    delete props.transitionEnter;
+	    delete props.childFactory;
+	    delete props.transitionLeaveTimeout;
+	    delete props.transitionEnterTimeout;
+	    delete props.transitionAppearTimeout;
+	    delete props.component;
+	
+	    return React.createElement(this.props.component, props, childrenToRender);
+	  }
+	});
+	
+	module.exports = ReactTransitionGroup;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 294)))
+
+/***/ },
+/* 593 */
+/*!****************************************************!*\
+  !*** ./~/react/lib/ReactTransitionChildMapping.js ***!
+  \****************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactTransitionChildMapping
+	 */
+	
+	'use strict';
+	
+	var flattenChildren = __webpack_require__(/*! ./flattenChildren */ 487);
+	
+	var ReactTransitionChildMapping = {
+	  /**
+	   * Given `this.props.children`, return an object mapping key to child. Just
+	   * simple syntactic sugar around flattenChildren().
+	   *
+	   * @param {*} children `this.props.children`
+	   * @param {number=} selfDebugID Optional debugID of the current internal instance.
+	   * @return {object} Mapping of key to child
+	   */
+	  getChildMapping: function (children, selfDebugID) {
+	    if (!children) {
+	      return children;
+	    }
+	
+	    if (process.env.NODE_ENV !== 'production') {
+	      return flattenChildren(children, selfDebugID);
+	    }
+	
+	    return flattenChildren(children);
+	  },
+	
+	  /**
+	   * When you're adding or removing children some may be added or removed in the
+	   * same render pass. We want to show *both* since we want to simultaneously
+	   * animate elements in and out. This function takes a previous set of keys
+	   * and a new set of keys and merges them with its best guess of the correct
+	   * ordering. In the future we may expose some of the utilities in
+	   * ReactMultiChild to make this easy, but for now React itself does not
+	   * directly have this concept of the union of prevChildren and nextChildren
+	   * so we implement it here.
+	   *
+	   * @param {object} prev prev children as returned from
+	   * `ReactTransitionChildMapping.getChildMapping()`.
+	   * @param {object} next next children as returned from
+	   * `ReactTransitionChildMapping.getChildMapping()`.
+	   * @return {object} a key set that contains all keys in `prev` and all keys
+	   * in `next` in a reasonable order.
+	   */
+	  mergeChildMappings: function (prev, next) {
+	    prev = prev || {};
+	    next = next || {};
+	
+	    function getValueForKey(key) {
+	      if (next.hasOwnProperty(key)) {
+	        return next[key];
+	      } else {
+	        return prev[key];
+	      }
+	    }
+	
+	    // For each key of `next`, the list of keys to insert before that key in
+	    // the combined list
+	    var nextKeysPending = {};
+	
+	    var pendingKeys = [];
+	    for (var prevKey in prev) {
+	      if (next.hasOwnProperty(prevKey)) {
+	        if (pendingKeys.length) {
+	          nextKeysPending[prevKey] = pendingKeys;
+	          pendingKeys = [];
+	        }
+	      } else {
+	        pendingKeys.push(prevKey);
+	      }
+	    }
+	
+	    var i;
+	    var childMapping = {};
+	    for (var nextKey in next) {
+	      if (nextKeysPending.hasOwnProperty(nextKey)) {
+	        for (i = 0; i < nextKeysPending[nextKey].length; i++) {
+	          var pendingNextKey = nextKeysPending[nextKey][i];
+	          childMapping[nextKeysPending[nextKey][i]] = getValueForKey(pendingNextKey);
+	        }
+	      }
+	      childMapping[nextKey] = getValueForKey(nextKey);
+	    }
+	
+	    // Finally, add the keys which didn't appear before any key in `next`
+	    for (i = 0; i < pendingKeys.length; i++) {
+	      childMapping[pendingKeys[i]] = getValueForKey(pendingKeys[i]);
+	    }
+	
+	    return childMapping;
+	  }
 	};
 	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TOTPView);
+	module.exports = ReactTransitionChildMapping;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 294)))
+
+/***/ },
+/* 594 */
+/*!*****************************************************!*\
+  !*** ./~/react/lib/ReactCSSTransitionGroupChild.js ***!
+  \*****************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactCSSTransitionGroupChild
+	 */
+	
+	'use strict';
+	
+	var React = __webpack_require__(/*! ./React */ 299);
+	var ReactDOM = __webpack_require__(/*! ./ReactDOM */ 394);
+	
+	var CSSCore = __webpack_require__(/*! fbjs/lib/CSSCore */ 595);
+	var ReactTransitionEvents = __webpack_require__(/*! ./ReactTransitionEvents */ 596);
+	
+	var onlyChild = __webpack_require__(/*! ./onlyChild */ 329);
+	
+	var TICK = 17;
+	
+	var ReactCSSTransitionGroupChild = React.createClass({
+	  displayName: 'ReactCSSTransitionGroupChild',
+	
+	  propTypes: {
+	    name: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.shape({
+	      enter: React.PropTypes.string,
+	      leave: React.PropTypes.string,
+	      active: React.PropTypes.string
+	    }), React.PropTypes.shape({
+	      enter: React.PropTypes.string,
+	      enterActive: React.PropTypes.string,
+	      leave: React.PropTypes.string,
+	      leaveActive: React.PropTypes.string,
+	      appear: React.PropTypes.string,
+	      appearActive: React.PropTypes.string
+	    })]).isRequired,
+	
+	    // Once we require timeouts to be specified, we can remove the
+	    // boolean flags (appear etc.) and just accept a number
+	    // or a bool for the timeout flags (appearTimeout etc.)
+	    appear: React.PropTypes.bool,
+	    enter: React.PropTypes.bool,
+	    leave: React.PropTypes.bool,
+	    appearTimeout: React.PropTypes.number,
+	    enterTimeout: React.PropTypes.number,
+	    leaveTimeout: React.PropTypes.number
+	  },
+	
+	  transition: function (animationType, finishCallback, userSpecifiedDelay) {
+	    var node = ReactDOM.findDOMNode(this);
+	
+	    if (!node) {
+	      if (finishCallback) {
+	        finishCallback();
+	      }
+	      return;
+	    }
+	
+	    var className = this.props.name[animationType] || this.props.name + '-' + animationType;
+	    var activeClassName = this.props.name[animationType + 'Active'] || className + '-active';
+	    var timeout = null;
+	
+	    var endListener = function (e) {
+	      if (e && e.target !== node) {
+	        return;
+	      }
+	
+	      clearTimeout(timeout);
+	
+	      CSSCore.removeClass(node, className);
+	      CSSCore.removeClass(node, activeClassName);
+	
+	      ReactTransitionEvents.removeEndEventListener(node, endListener);
+	
+	      // Usually this optional callback is used for informing an owner of
+	      // a leave animation and telling it to remove the child.
+	      if (finishCallback) {
+	        finishCallback();
+	      }
+	    };
+	
+	    CSSCore.addClass(node, className);
+	
+	    // Need to do this to actually trigger a transition.
+	    this.queueClassAndNode(activeClassName, node);
+	
+	    // If the user specified a timeout delay.
+	    if (userSpecifiedDelay) {
+	      // Clean-up the animation after the specified delay
+	      timeout = setTimeout(endListener, userSpecifiedDelay);
+	      this.transitionTimeouts.push(timeout);
+	    } else {
+	      // DEPRECATED: this listener will be removed in a future version of react
+	      ReactTransitionEvents.addEndEventListener(node, endListener);
+	    }
+	  },
+	
+	  queueClassAndNode: function (className, node) {
+	    this.classNameAndNodeQueue.push({
+	      className: className,
+	      node: node
+	    });
+	
+	    if (!this.timeout) {
+	      this.timeout = setTimeout(this.flushClassNameAndNodeQueue, TICK);
+	    }
+	  },
+	
+	  flushClassNameAndNodeQueue: function () {
+	    if (this.isMounted()) {
+	      this.classNameAndNodeQueue.forEach(function (obj) {
+	        CSSCore.addClass(obj.node, obj.className);
+	      });
+	    }
+	    this.classNameAndNodeQueue.length = 0;
+	    this.timeout = null;
+	  },
+	
+	  componentWillMount: function () {
+	    this.classNameAndNodeQueue = [];
+	    this.transitionTimeouts = [];
+	  },
+	
+	  componentWillUnmount: function () {
+	    if (this.timeout) {
+	      clearTimeout(this.timeout);
+	    }
+	    this.transitionTimeouts.forEach(function (timeout) {
+	      clearTimeout(timeout);
+	    });
+	
+	    this.classNameAndNodeQueue.length = 0;
+	  },
+	
+	  componentWillAppear: function (done) {
+	    if (this.props.appear) {
+	      this.transition('appear', done, this.props.appearTimeout);
+	    } else {
+	      done();
+	    }
+	  },
+	
+	  componentWillEnter: function (done) {
+	    if (this.props.enter) {
+	      this.transition('enter', done, this.props.enterTimeout);
+	    } else {
+	      done();
+	    }
+	  },
+	
+	  componentWillLeave: function (done) {
+	    if (this.props.leave) {
+	      this.transition('leave', done, this.props.leaveTimeout);
+	    } else {
+	      done();
+	    }
+	  },
+	
+	  render: function () {
+	    return onlyChild(this.props.children);
+	  }
+	});
+	
+	module.exports = ReactCSSTransitionGroupChild;
+
+/***/ },
+/* 595 */
+/*!*******************************!*\
+  !*** ./~/fbjs/lib/CSSCore.js ***!
+  \*******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @typechecks
+	 */
+	
+	var invariant = __webpack_require__(/*! ./invariant */ 304);
+	
+	/**
+	 * The CSSCore module specifies the API (and implements most of the methods)
+	 * that should be used when dealing with the display of elements (via their
+	 * CSS classes and visibility on screen. It is an API focused on mutating the
+	 * display and not reading it as no logical state should be encoded in the
+	 * display of elements.
+	 */
+	
+	/* Slow implementation for browsers that don't natively support .matches() */
+	function matchesSelector_SLOW(element, selector) {
+	  var root = element;
+	  while (root.parentNode) {
+	    root = root.parentNode;
+	  }
+	
+	  var all = root.querySelectorAll(selector);
+	  return Array.prototype.indexOf.call(all, element) !== -1;
+	}
+	
+	var CSSCore = {
+	
+	  /**
+	   * Adds the class passed in to the element if it doesn't already have it.
+	   *
+	   * @param {DOMElement} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @return {DOMElement} the element passed in
+	   */
+	  addClass: function addClass(element, className) {
+	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSSCore.addClass takes only a single class name. "%s" contains ' + 'multiple classes.', className) : invariant(false) : void 0;
+	
+	    if (className) {
+	      if (element.classList) {
+	        element.classList.add(className);
+	      } else if (!CSSCore.hasClass(element, className)) {
+	        element.className = element.className + ' ' + className;
+	      }
+	    }
+	    return element;
+	  },
+	
+	  /**
+	   * Removes the class passed in from the element
+	   *
+	   * @param {DOMElement} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @return {DOMElement} the element passed in
+	   */
+	  removeClass: function removeClass(element, className) {
+	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSSCore.removeClass takes only a single class name. "%s" contains ' + 'multiple classes.', className) : invariant(false) : void 0;
+	
+	    if (className) {
+	      if (element.classList) {
+	        element.classList.remove(className);
+	      } else if (CSSCore.hasClass(element, className)) {
+	        element.className = element.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)', 'g'), '$1').replace(/\s+/g, ' ') // multiple spaces to one
+	        .replace(/^\s*|\s*$/g, ''); // trim the ends
+	      }
+	    }
+	    return element;
+	  },
+	
+	  /**
+	   * Helper to add or remove a class from an element based on a condition.
+	   *
+	   * @param {DOMElement} element the element to set the class on
+	   * @param {string} className the CSS className
+	   * @param {*} bool condition to whether to add or remove the class
+	   * @return {DOMElement} the element passed in
+	   */
+	  conditionClass: function conditionClass(element, className, bool) {
+	    return (bool ? CSSCore.addClass : CSSCore.removeClass)(element, className);
+	  },
+	
+	  /**
+	   * Tests whether the element has the class specified.
+	   *
+	   * @param {DOMNode|DOMWindow} element the element to check the class on
+	   * @param {string} className the CSS className
+	   * @return {boolean} true if the element has the class, false if not
+	   */
+	  hasClass: function hasClass(element, className) {
+	    !!/\s/.test(className) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'CSS.hasClass takes only a single class name.') : invariant(false) : void 0;
+	    if (element.classList) {
+	      return !!className && element.classList.contains(className);
+	    }
+	    return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
+	  },
+	
+	  /**
+	   * Tests whether the element matches the selector specified
+	   *
+	   * @param {DOMNode|DOMWindow} element the element that we are querying
+	   * @param {string} selector the CSS selector
+	   * @return {boolean} true if the element matches the selector, false if not
+	   */
+	  matchesSelector: function matchesSelector(element, selector) {
+	    var matchesImpl = element.matches || element.webkitMatchesSelector || element.mozMatchesSelector || element.msMatchesSelector || function (s) {
+	      return matchesSelector_SLOW(element, s);
+	    };
+	    return matchesImpl.call(element, selector);
+	  }
+	
+	};
+	
+	module.exports = CSSCore;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 294)))
+
+/***/ },
+/* 596 */
+/*!**********************************************!*\
+  !*** ./~/react/lib/ReactTransitionEvents.js ***!
+  \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactTransitionEvents
+	 */
+	
+	'use strict';
+	
+	var ExecutionEnvironment = __webpack_require__(/*! fbjs/lib/ExecutionEnvironment */ 408);
+	
+	var getVendorPrefixedEventName = __webpack_require__(/*! ./getVendorPrefixedEventName */ 468);
+	
+	var endEvents = [];
+	
+	function detectEvents() {
+	  var animEnd = getVendorPrefixedEventName('animationend');
+	  var transEnd = getVendorPrefixedEventName('transitionend');
+	
+	  if (animEnd) {
+	    endEvents.push(animEnd);
+	  }
+	
+	  if (transEnd) {
+	    endEvents.push(transEnd);
+	  }
+	}
+	
+	if (ExecutionEnvironment.canUseDOM) {
+	  detectEvents();
+	}
+	
+	// We use the raw {add|remove}EventListener() call because EventListener
+	// does not know how to remove event listeners and we really should
+	// clean up. Also, these events are not triggered in older browsers
+	// so we should be A-OK here.
+	
+	function addEventListener(node, eventName, eventListener) {
+	  node.addEventListener(eventName, eventListener, false);
+	}
+	
+	function removeEventListener(node, eventName, eventListener) {
+	  node.removeEventListener(eventName, eventListener, false);
+	}
+	
+	var ReactTransitionEvents = {
+	  addEndEventListener: function (node, eventListener) {
+	    if (endEvents.length === 0) {
+	      // If CSS transitions are not supported, trigger an "end animation"
+	      // event immediately.
+	      window.setTimeout(eventListener, 0);
+	      return;
+	    }
+	    endEvents.forEach(function (endEvent) {
+	      addEventListener(node, endEvent, eventListener);
+	    });
+	  },
+	
+	  removeEndEventListener: function (node, eventListener) {
+	    if (endEvents.length === 0) {
+	      return;
+	    }
+	    endEvents.forEach(function (endEvent) {
+	      removeEventListener(node, endEvent, eventListener);
+	    });
+	  }
+	};
+	
+	module.exports = ReactTransitionEvents;
 
 /***/ }
 /******/ ]);
