@@ -42985,6 +42985,10 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
 	
+	var _ModalView = __webpack_require__(/*! ./ModalView.jsx */ 599);
+	
+	var _ModalView2 = _interopRequireDefault(_ModalView);
+	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -42994,28 +42998,22 @@
 	
 	  render: function render() {
 	    return _react2.default.createElement(
-	      'div',
+	      _ModalView2.default,
 	      {
-	        className: 'modal',
 	        key: 'totp' },
+	      _react2.default.createElement(
+	        'h2',
+	        null,
+	        'TOTP'
+	      ),
+	      _react2.default.createElement('input', {
+	        id: 'totp',
+	        placeholder: 'TOTP Code' }),
 	      _react2.default.createElement(
 	        'div',
 	        {
-	          className: 'modal-content' },
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'TOTP'
-	        ),
-	        _react2.default.createElement('input', {
-	          id: 'totp',
-	          placeholder: 'TOTP Code' }),
-	        _react2.default.createElement(
-	          'div',
-	          {
-	            onClick: this.login },
-	          'Login'
-	        )
+	          onClick: this.login },
+	        'Login'
 	      )
 	    );
 	  },
@@ -43173,6 +43171,10 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 330);
 	
+	var _ModalView = __webpack_require__(/*! ./ModalView.jsx */ 599);
+	
+	var _ModalView2 = _interopRequireDefault(_ModalView);
+	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
 	var _uuid = __webpack_require__(/*! uuid */ 597);
@@ -43214,60 +43216,54 @@
 	      };
 	    };
 	    return _react2.default.createElement(
-	      'div',
+	      _ModalView2.default,
 	      {
-	        className: 'modal',
 	        key: key },
 	      _react2.default.createElement(
 	        'div',
-	        {
-	          className: 'modal-content' },
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          'Name',
-	          _react2.default.createElement('input', {
-	            value: this.state.name,
-	            onChange: controlledComponentGenerator('name') })
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          'Password:',
-	          _react2.default.createElement('input', {
-	            value: this.state.password,
-	            onChange: controlledComponentGenerator('password') })
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          'Password History: ',
-	          _react2.default.createElement(
-	            'span',
-	            null,
-	            JSON.stringify(this.state.passwordArray)
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          'Username:',
-	          _react2.default.createElement('input', {
-	            value: this.state.username,
-	            onChange: controlledComponentGenerator('username') })
-	        ),
+	        null,
+	        'Name',
+	        _react2.default.createElement('input', {
+	          value: this.state.name,
+	          onChange: controlledComponentGenerator('name') })
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        null,
+	        'Password:',
+	        _react2.default.createElement('input', {
+	          value: this.state.password,
+	          onChange: controlledComponentGenerator('password') })
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        null,
+	        'Password History: ',
 	        _react2.default.createElement(
 	          'span',
-	          {
-	            onClick: this.cancel },
-	          'Cancel'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          {
-	            onClick: this.save },
-	          'Save'
+	          null,
+	          JSON.stringify(this.state.passwordArray)
 	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        null,
+	        'Username:',
+	        _react2.default.createElement('input', {
+	          value: this.state.username,
+	          onChange: controlledComponentGenerator('username') })
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          onClick: this.cancel },
+	        'Cancel'
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          onClick: this.save },
+	        'Save'
 	      )
 	    );
 	  },
@@ -43385,11 +43381,22 @@
 	  },
 	  render: function render() {
 	    var totpButton = this.props.needsTotp ? _react2.default.createElement(
-	      'span',
-	      {
-	        className: 'button',
-	        onClick: this.deleteTotp },
-	      'Delete TOTP'
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          className: 'button',
+	          onClick: this.requireTotp },
+	        'Show TOTP'
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          className: 'button',
+	          onClick: this.deleteTotp },
+	        'Delete TOTP'
+	      )
 	    ) : _react2.default.createElement(
 	      'span',
 	      {
@@ -44604,6 +44611,55 @@
 	
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 599 */
+/*!**************************************!*\
+  !*** ./app/components/ModalView.jsx ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ModalView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'ModalView',
+	
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      {
+	        className: 'modal',
+	        onClick: this.goBack },
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: 'modal-content',
+	          onClick: this.stopProp },
+	        this.props.children
+	      )
+	    );
+	  },
+	  goBack: function goBack() {
+	    this.props.router.goBack();
+	  },
+	  stopProp: function stopProp(e) {
+	    e.stopPropagation();
+	  }
+	}));
+	
+	exports.default = ModalView;
 
 /***/ }
 /******/ ]);

@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
+import ModalView from './ModalView.jsx';
 import {saveVaultItem} from '../actions';
 import uuid from 'uuid';
 
@@ -34,38 +35,34 @@ var VaultItemView = withRouter(React.createClass({
       };
     };
     return (
-      <div
-        className="modal"
+      <ModalView
         key={key}>
-        <div
-          className="modal-content">
-          <div>
-            Name
-            <input
-              value={this.state.name}
-              onChange={controlledComponentGenerator('name')}/>
-          </div>
-          <div>
-            Password:
-            <input
-              value={this.state.password}
-              onChange={controlledComponentGenerator('password')}/>
-          </div>
-          <div>
-            Password History: <span>{JSON.stringify(this.state.passwordArray)}</span>
-          </div>
-          <div>
-            Username:
-            <input
-              value={this.state.username}
-              onChange={controlledComponentGenerator('username')}/>
-          </div>
-          <span
-            onClick={this.cancel}>Cancel</span>
-          <span
-            onClick={this.save}>Save</span>
+        <div>
+          Name
+          <input
+            value={this.state.name}
+            onChange={controlledComponentGenerator('name')}/>
         </div>
-      </div>
+        <div>
+          Password:
+          <input
+            value={this.state.password}
+            onChange={controlledComponentGenerator('password')}/>
+        </div>
+        <div>
+          Password History: <span>{JSON.stringify(this.state.passwordArray)}</span>
+        </div>
+        <div>
+          Username:
+          <input
+            value={this.state.username}
+            onChange={controlledComponentGenerator('username')}/>
+        </div>
+        <span
+          onClick={this.cancel}>Cancel</span>
+        <span
+          onClick={this.save}>Save</span>
+      </ModalView>
     );
   },
   cancel: function(){

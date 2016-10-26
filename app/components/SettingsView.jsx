@@ -9,9 +9,14 @@ var SettingsView = React.createClass({
   },
   render: function(){
     let totpButton = this.props.needsTotp?
-      <span
-        className="button"
-        onClick={this.deleteTotp}>Delete TOTP</span>:
+      <div>
+        <span
+          className="button"
+          onClick={this.requireTotp}>Show TOTP</span>
+        <span
+          className="button"
+          onClick={this.deleteTotp}>Delete TOTP</span>
+      </div>:
       <span
         className="button"
         onClick={this.requireTotp}>Require TOTP</span>;

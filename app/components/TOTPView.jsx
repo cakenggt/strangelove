@@ -1,24 +1,21 @@
 import React from 'react';
 import {withRouter} from 'react-router';
 import {connect} from 'react-redux';
+import ModalView from './ModalView.jsx';
 import {login} from '../actions';
 
 var TOTPView = withRouter(React.createClass({
   render: function() {
     return (
-      <div
-        className="modal"
+      <ModalView
         key="totp">
+        <h2>TOTP</h2>
+        <input
+          id="totp"
+          placeholder="TOTP Code"/>
         <div
-          className="modal-content">
-          <h2>TOTP</h2>
-          <input
-            id="totp"
-            placeholder="TOTP Code"/>
-          <div
-            onClick={this.login}>Login</div>
-        </div>
-      </div>
+          onClick={this.login}>Login</div>
+      </ModalView>
     );
   },
   login: function(){
