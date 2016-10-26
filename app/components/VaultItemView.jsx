@@ -1,36 +1,69 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import {uploadVault} from '../actions';
+import {saveVaultItem} from '../actions';
+import uuid from 'uuid';
 
 var VaultItemView = withRouter(React.createClass({
   propTypes: {
     vault: React.PropTypes.object
   },
-  render: function(){
+  getInitialState: function(){
     var item = this.props.vault[this.props.params.itemId];
     if (!item){
       item = {
         name: '',
         passwordArray: [],
+        password: '',
         username: ''
       };
     }
-    var key = this.props.params.itemId ?
-      this.props.params.itemId :
-      'newVaultItem';
+    else{
+      //populate virtual password field
+      item.password = item.passwordArray[item.passwordArray.length-1];
+    }
+    return item;
+  },
+  render: function(){
+    var key = this.props.params.itemId;
+    var controlledComponentGenerator = (stateAttr) => {
+      return (event) => {
+        let newState = {};
+        newState[stateAttr] = event.target.value;
+        this.setState(newState);
+      };
+    };
     return (
       <div
         className="modal"
         key={key}>
         <div
           className="modal-content">
-          <div>Name: {item.name}</div>
-          <div>Password: {item.passwordArray[item.passwordArray.length-1]}</div>
-          <div>Password Array: {item.passwordArray}</div>
-          <div>Username: {item.username}</div>
-          <div
-            onClick={this.cancel}>Cancel</div>
+          <div>
+            Name
+            <input
+              value={this.state.name}
+              onChange={controlledComponentGenerator('name')}/>
+          </div>
+          <div>
+            Password:
+            <input
+              value={this.state.password}
+              onChange={controlledComponentGenerator('password')}/>
+          </div>
+          <div>
+            Password History: <span>{JSON.stringify(this.state.passwordArray)}</span>
+          </div>
+          <div>
+            Username:
+            <input
+              value={this.state.username}
+              onChange={controlledComponentGenerator('username')}/>
+          </div>
+          <span
+            onClick={this.cancel}>Cancel</span>
+          <span
+            onClick={this.save}>Save</span>
         </div>
       </div>
     );
@@ -39,8 +72,19 @@ var VaultItemView = withRouter(React.createClass({
     this.props.router.goBack();
   },
   save: function(){
-    //TODO if no itemId is given, then create a new entry, else modify old one
-    //Then modify state and upload vault using an action creator
+    var itemId = this.props.params.itemId;
+    var item = Object.assign({}, this.state);
+    //push password onto passwordArray and delete virtual attribute
+    var lastPassword = item.passwordArray[item.passwordArray.length-1];
+    if (lastPassword != item.password){
+      item.passwordArray.push(item.password);
+    }
+    delete item.password;
+    if (itemId == 'NEW'){
+      itemId = uuid.v4();
+    }
+    this.props.saveVaultItem(itemId, item);
+    this.props.router.goBack();
   }
 }));
 
@@ -50,6 +94,15 @@ var mapStateToProps = function(state){
   }
 }
 
+var mapDispatchToProps = function(dispatch){
+  return {
+    saveVaultItem: function(itemId, item){
+      dispatch(saveVaultItem(itemId, item));
+    }
+  };
+}
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(VaultItemView);

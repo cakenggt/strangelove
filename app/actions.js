@@ -1,8 +1,12 @@
 import sjcl from 'sjcl';
 
 /* Uploads vault and returns a Promise<JSON> */
-export function uploadVault(vault, password, jwt){
-  return function(dispatch){
+export function uploadVault(){
+  return function(dispatch, getState){
+    var state = getState();
+    var vault = state.vault;
+    var password = state.connect.password;
+    var jwt = state.connect.jwt;
     var encrypted = sjcl.encrypt(
       password,
       JSON.stringify(vault)
@@ -29,6 +33,19 @@ export function uploadVault(vault, password, jwt){
         });
       }
     });
+  };
+}
+
+export function saveVaultItem(itemId, item){
+  return function(dispatch){
+    dispatch({
+      type: 'SAVE_VAULT_ITEM',
+      data: {
+        item: item,
+        itemId: itemId
+      }
+    });
+    dispatch(uploadVault());
   };
 }
 

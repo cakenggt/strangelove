@@ -30,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
        allowNull: false
      },
      store: {
-       type: DataTypes.STRING
+       type: DataTypes.TEXT
      },
      lastLoginFail: {
        type: DataTypes.DATE
