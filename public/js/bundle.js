@@ -38430,6 +38430,10 @@
 	      return Object.assign({}, state, {
 	        needsTotp: action.data
 	      });
+	    case 'CHANGE_PASSWORD':
+	      return Object.assign({}, state, {
+	        password: action.data
+	      });
 	    default:
 	      return state;
 	  }
@@ -38596,6 +38600,7 @@
 	exports.saveVaultItem = saveVaultItem;
 	exports.login = login;
 	exports.register = register;
+	exports.changePassword = changePassword;
 	
 	var _sjcl = __webpack_require__(/*! sjcl */ 560);
 	
@@ -38728,6 +38733,57 @@
 	          data: ['Successfully Registered! Look for a confirmation email']
 	        });
 	        router.push('/login');
+	      }
+	    });
+	  };
+	}
+	
+	function changePassword(currentPassword, newPassword, confirmPassword) {
+	  return function (dispatch, getState) {
+	    if (newPassword != confirmPassword) {
+	      dispatch({
+	        type: 'ADD_ERRORS',
+	        data: ['The two passwords do not match']
+	      });
+	      return;
+	    }
+	    var state = getState();
+	    if (currentPassword != state.connect.password) {
+	      dispatch({
+	        type: 'ADD_ERRORS',
+	        data: ['Current password is incorrect']
+	      });
+	      return;
+	    }
+	    var jwt = state.connect.jwt;
+	    fetch('/api/v1/changePassword', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json',
+	        'Authorization': 'Bearer ' + jwt
+	      },
+	      method: 'POST',
+	      body: JSON.stringify({
+	        password: newPassword
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      if (response.errors.length) {
+	        dispatch({
+	          type: 'ADD_ERRORS',
+	          data: response.errors
+	        });
+	      } else {
+	        dispatch({
+	          type: 'ADD_ERRORS',
+	          data: ['Successfully changed password!']
+	        });
+	        dispatch({
+	          type: 'CHANGE_PASSWORD',
+	          data: newPassword
+	        });
+	        dispatch(uploadVault());
 	      }
 	    });
 	  };
@@ -42923,7 +42979,8 @@
 	        ),
 	        _react2.default.createElement('input', {
 	          id: 'email',
-	          placeholder: 'email' }),
+	          placeholder: 'email',
+	          autoFocus: true }),
 	        _react2.default.createElement('br', null),
 	        _react2.default.createElement('input', {
 	          id: 'password',
@@ -43008,7 +43065,8 @@
 	      ),
 	      _react2.default.createElement('input', {
 	        id: 'totp',
-	        placeholder: 'TOTP Code' }),
+	        placeholder: 'TOTP Code',
+	        autoFocus: true }),
 	      _react2.default.createElement(
 	        'div',
 	        {
@@ -43369,6 +43427,8 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
 	
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var SettingsView = _react2.default.createClass({
@@ -43419,7 +43479,34 @@
 	        'TOTP'
 	      ),
 	      totpButton,
-	      totpImg
+	      totpImg,
+	      _react2.default.createElement(
+	        'h3',
+	        null,
+	        'Change Password'
+	      ),
+	      _react2.default.createElement('input', {
+	        type: 'password',
+	        id: 'currentPassword',
+	        placeholder: 'Current Password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        type: 'password',
+	        id: 'newPassword',
+	        placeholder: 'New Password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        type: 'password',
+	        id: 'confirmPassword',
+	        placeholder: 'Confirm Password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          className: 'button',
+	          onClick: this.changePassword },
+	        'Change Password'
+	      )
 	    );
 	  },
 	  deleteTotp: function deleteTotp() {
@@ -43459,6 +43546,12 @@
 	      });
 	      _this2.props.setNeedsTotp(true);
 	    });
+	  },
+	  changePassword: function changePassword() {
+	    var currentPassword = document.getElementById('currentPassword').value;
+	    var newPassword = document.getElementById('newPassword').value;
+	    var confirmPassword = document.getElementById('confirmPassword').value;
+	    this.props.changePassword(currentPassword, newPassword, confirmPassword);
 	  }
 	});
 	
@@ -43476,6 +43569,9 @@
 	        type: 'SET_NEEDS_TOTP',
 	        data: bool
 	      });
+	    },
+	    changePassword: function changePassword(currentPassword, newPassword, confirmPassword) {
+	      dispatch((0, _actions.changePassword)(currentPassword, newPassword, confirmPassword));
 	    }
 	  };
 	};

@@ -161,6 +161,39 @@ module.exports = function(options){
     });
   });
 
+  /* User changing password */
+  app.post(prefix+'changePassword', ejwt({secret: process.env.JWT_SECRET}), function(req, res){
+    var resultJson = {
+      errors: []
+    };
+    var password = req.body.password;
+    var email = req.user.email;
+    bcrypt.hash(password, 10, function(err, hash){
+      models.User.findOne({
+        where: {
+          email: email
+        }
+      })
+      .then(function(user) {
+        if (!user){
+          resultJson.errors.push('No user by that email');
+          return;
+        }
+        user.password = hash;
+        return user.save();
+      })
+      .then(function(){
+        res.json(resultJson);
+        res.end();
+      })
+      .catch(function(err){
+        resultJson.errors.push(err);
+        res.json(resultJson);
+        res.end();
+      });
+    });
+  });
+
   /* Gets a confirmation code  */
   app.get(prefix+'confirm/:code', function(req, res){
     let code = req.params.code;

@@ -12,7 +12,8 @@ var TOTPView = withRouter(React.createClass({
         <h2>TOTP</h2>
         <input
           id="totp"
-          placeholder="TOTP Code"/>
+          placeholder="TOTP Code"
+          autoFocus/>
         <div
           onClick={this.login}>Login</div>
       </ModalView>

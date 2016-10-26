@@ -23,6 +23,10 @@ export default function(state = defaultState, action){
       return Object.assign({}, state, {
         needsTotp: action.data
       });
+    case 'CHANGE_PASSWORD':
+      return Object.assign({}, state, {
+        password: action.data
+      });
     default:
       return state;
   }

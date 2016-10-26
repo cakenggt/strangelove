@@ -16,7 +16,8 @@ var LoginView = withRouter(React.createClass({
           <h2>Login</h2>
           <input
             id="email"
-            placeholder="email"/><br/>
+            placeholder="email"
+            autoFocus/><br/>
           <input
             id="password"
             placeholder="password"

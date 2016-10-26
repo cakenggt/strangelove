@@ -141,3 +141,57 @@ export function register(email, password, confirmPassword, router){
     });
   };
 }
+
+export function changePassword(currentPassword, newPassword, confirmPassword){
+  return function(dispatch, getState){
+    if (newPassword != confirmPassword){
+      dispatch({
+        type: 'ADD_ERRORS',
+        data: ['The two passwords do not match']
+      });
+      return;
+    }
+    var state = getState();
+    if (currentPassword != state.connect.password){
+      dispatch({
+        type: 'ADD_ERRORS',
+        data: ['Current password is incorrect']
+      });
+      return;
+    }
+    var jwt = state.connect.jwt;
+    fetch('/api/v1/changePassword', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+jwt
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        password: newPassword
+      })
+    })
+    .then(function(response){
+      return response.json();
+    })
+    .then((response)=>{
+      if (response.errors.length){
+        dispatch({
+          type: 'ADD_ERRORS',
+          data: response.errors
+        });
+      }
+      else{
+        dispatch({
+          type: 'ADD_ERRORS',
+          data: ['Successfully changed password!']
+        });
+        dispatch({
+          type: 'CHANGE_PASSWORD',
+          data: newPassword
+        });
+        dispatch(uploadVault());
+      }
+    });
+  };
+}

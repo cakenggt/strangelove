@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {changePassword} from '../actions';
 
 var SettingsView = React.createClass({
   getInitialState: function(){
@@ -29,6 +30,22 @@ var SettingsView = React.createClass({
         <h3>TOTP</h3>
         {totpButton}
         {totpImg}
+        <h3>Change Password</h3>
+        <input
+          type="password"
+          id="currentPassword"
+          placeholder="Current Password"/><br/>
+        <input
+          type="password"
+          id="newPassword"
+          placeholder="New Password"/><br/>
+        <input
+          type="password"
+          id="confirmPassword"
+          placeholder="Confirm Password"/><br/>
+        <span
+          className="button"
+          onClick={this.changePassword}>Change Password</span>
       </div>
     );
   },
@@ -69,6 +86,16 @@ var SettingsView = React.createClass({
       });
       this.props.setNeedsTotp(true);
     });
+  },
+  changePassword: function(){
+    var currentPassword = document.getElementById('currentPassword').value;
+    var newPassword = document.getElementById('newPassword').value;
+    var confirmPassword = document.getElementById('confirmPassword').value;
+    this.props.changePassword(
+      currentPassword,
+      newPassword,
+      confirmPassword
+    );
   }
 });
 
@@ -81,11 +108,14 @@ var mapStateToProps = function(state){
 
 var mapDispatchToProps = function(dispatch){
   return {
-    setNeedsTotp(bool){
+    setNeedsTotp: function(bool){
       dispatch({
         type: 'SET_NEEDS_TOTP',
         data: bool
       });
+    },
+    changePassword: function(currentPassword, newPassword, confirmPassword){
+      dispatch(changePassword(currentPassword, newPassword, confirmPassword));
     }
   }
 }
