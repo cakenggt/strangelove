@@ -44971,10 +44971,12 @@
 	      ),
 	      _react2.default.createElement('input', {
 	        placeholder: 'New Password',
+	        type: 'password',
 	        onChange: controlComponent('newPassword') }),
 	      _react2.default.createElement('br', null),
 	      _react2.default.createElement('input', {
 	        placeholder: 'Confirm Password',
+	        type: 'password',
 	        onChange: controlComponent('confirmPassword') }),
 	      _react2.default.createElement('br', null),
 	      _react2.default.createElement(

@@ -23,9 +23,11 @@ var PasswordResetView = withRouter(React.createClass({
         <span>If you reset your password, you will lose access to your vault!</span>
         <input
           placeholder="New Password"
+          type="password"
           onChange={controlComponent('newPassword')}/><br/>
         <input
           placeholder="Confirm Password"
+          type="password"
           onChange={controlComponent('confirmPassword')}/><br/>
         <span
           className="button"
