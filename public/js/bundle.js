@@ -44294,6 +44294,7 @@
 	    if (!item) {
 	      item = {
 	        name: '',
+	        site: '',
 	        passwordArray: [],
 	        password: '',
 	        username: ''
@@ -44322,10 +44323,18 @@
 	      _react2.default.createElement(
 	        'div',
 	        null,
-	        'Name',
+	        'Name:',
 	        _react2.default.createElement('input', {
 	          value: this.state.name,
 	          onChange: controlledComponentGenerator('name') })
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        null,
+	        'Site:',
+	        _react2.default.createElement('input', {
+	          value: this.state.name,
+	          onChange: controlledComponentGenerator('site') })
 	      ),
 	      _react2.default.createElement(
 	        'div',

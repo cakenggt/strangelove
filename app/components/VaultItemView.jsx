@@ -14,6 +14,7 @@ var VaultItemView = withRouter(React.createClass({
     if (!item){
       item = {
         name: '',
+        site: '',
         passwordArray: [],
         password: '',
         username: ''
@@ -38,10 +39,16 @@ var VaultItemView = withRouter(React.createClass({
       <ModalView
         key={key}>
         <div>
-          Name
+          Name:
           <input
             value={this.state.name}
             onChange={controlledComponentGenerator('name')}/>
+        </div>
+        <div>
+          Site:
+          <input
+            value={this.state.name}
+            onChange={controlledComponentGenerator('site')}/>
         </div>
         <div>
           Password:
