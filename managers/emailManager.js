@@ -23,3 +23,27 @@ exports.sendRegistrationEmail = function(email, options){
   return sg.API(request);
 
 };
+
+exports.sendPasswordResetEmail = function(email, options){
+
+  var helper = require('sendgrid').mail;
+  var mail = new helper.Mail();
+  mail.setFrom(new helper.Email("noreply@frost-password-manager.com", "Frost Password Manager"));
+  mail.setSubject('Password Reset');
+  mail.setTemplateId("e8f81f04-76c1-48f6-aaf4-2aed7a42fcfa");
+
+  var personalization = new helper.Personalization();
+  personalization.addTo(new helper.Email(email));
+  personalization.addSubstitution(new helper.Substitution("-link-", options.link));
+  mail.addPersonalization(personalization);
+
+  var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
+  var request = sg.emptyRequest({
+    method: 'POST',
+    path: '/v3/mail/send',
+    body: mail.toJSON(),
+  });
+
+  return sg.API(request);
+
+};

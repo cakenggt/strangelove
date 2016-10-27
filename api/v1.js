@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const ejwt = require('express-jwt');
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode-npm');
-const sendRegistrationEmail = require('../managers/emailManager').sendRegistrationEmail;
+const emailManager = require('../managers/emailManager');
 
 function createLoginJWT(email){
   return jwt.sign(
@@ -21,6 +21,14 @@ function createRegistrationJWT(email){
     {email: email},
     process.env.JWT_SECRET,
     { expiresIn: '3h' }
+  );
+}
+
+function createPasswordResetJWT(email){
+  return jwt.sign(
+    {email: email},
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' }
   );
 }
 
@@ -144,7 +152,7 @@ module.exports = function(options){
         }
         let registrationJWT = createRegistrationJWT(email);
         let link = process.env.URL + 'api/v1/confirm/'+registrationJWT;
-        sendRegistrationEmail(email, {
+        emailManager.sendRegistrationEmail(email, {
           link: link
         })
         .catch(function(err){
@@ -303,6 +311,72 @@ module.exports = function(options){
       user.save();
       res.json(resultJson);
       res.end();
+    });
+  });
+
+  /* Sends an email to the user with a link to reset their password */
+  app.post(prefix+'requestReset', function(req, res){
+    var email = req.body.email;
+    var resultJson = {
+      errors: []
+    };
+    models.User.findOne({
+      where: {
+        email: email
+      }
+    })
+    .then(function(user){
+      if (!user){
+        //dont tell the requestor that the user doesn't exist
+        res.json(resultJson);
+        res.end();
+        return;
+      }
+      let passwordResetJWT = createPasswordResetJWT(email);
+      let link = process.env.URL + 'reset/'+passwordResetJWT;
+      emailManager.sendPasswordResetEmail(email, {
+        link: link
+      })
+      .catch(function(err){
+        console.log(err.response.body);
+      });
+      res.json(resultJson);
+      res.end();
+    });
+  });
+
+  /* Resets the user's password and deletes their vault */
+  app.post(prefix+'resetPassword', ejwt({secret: process.env.JWT_SECRET}), function(req, res){
+    var resultJson = {
+      errors: []
+    };
+    var password = req.body.password;
+    var email = req.user.email;
+    bcrypt.hash(password, 10, function(err, hash){
+      models.User.findOne({
+        where: {
+          email: email
+        }
+      })
+      .then(function(user) {
+        if (!user){
+          resultJson.errors.push('No user by that email');
+          return;
+        }
+        user.password = hash;
+        user.store = null;
+        user.totpSecret = null;
+        return user.save();
+      })
+      .then(function(){
+        res.json(resultJson);
+        res.end();
+      })
+      .catch(function(err){
+        resultJson.errors.push(err);
+        res.json(resultJson);
+        res.end();
+      });
     });
   });
 

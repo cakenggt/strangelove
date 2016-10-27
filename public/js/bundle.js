@@ -97,6 +97,14 @@
 	
 	var _MessageComponent2 = _interopRequireDefault(_MessageComponent);
 	
+	var _PasswordResetView = __webpack_require__(/*! ./components/PasswordResetView.jsx */ 601);
+	
+	var _PasswordResetView2 = _interopRequireDefault(_PasswordResetView);
+	
+	var _RequestResetView = __webpack_require__(/*! ./components/RequestResetView.jsx */ 602);
+	
+	var _RequestResetView2 = _interopRequireDefault(_RequestResetView);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -221,7 +229,9 @@
 	    ),
 	    _react2.default.createElement(_reactRouter.Route, { path: 'register', component: _RegisterView2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: 'logout', component: _LogoutView2.default, onEnter: loginCheck }),
-	    _react2.default.createElement(_reactRouter.Route, { path: 'settings', component: _SettingsView2.default, onEnter: loginCheck })
+	    _react2.default.createElement(_reactRouter.Route, { path: 'settings', component: _SettingsView2.default, onEnter: loginCheck }),
+	    _react2.default.createElement(_reactRouter.Route, { path: 'reset', component: _RequestResetView2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: 'reset/:code', component: _PasswordResetView2.default })
 	  )
 	);
 	
@@ -38425,6 +38435,10 @@
 	        jwt: action.data.jwt,
 	        needsTotp: action.data.needsTotp
 	      });
+	    case 'SET_JWT':
+	      return Object.assign({}, state, {
+	        jwt: action.data
+	      });
 	    case 'LOGOUT':
 	      return defaultState;
 	    case 'SET_NEEDS_TOTP':
@@ -38606,6 +38620,8 @@
 	exports.login = login;
 	exports.register = register;
 	exports.changePassword = changePassword;
+	exports.resetPassword = resetPassword;
+	exports.requestReset = requestReset;
 	
 	var _sjcl = __webpack_require__(/*! sjcl */ 560);
 	
@@ -38789,6 +38805,79 @@
 	          data: newPassword
 	        });
 	        dispatch(uploadVault());
+	      }
+	    });
+	  };
+	}
+	
+	function resetPassword(newPassword, confirmPassword, router) {
+	  return function (dispatch, getState) {
+	    if (newPassword != confirmPassword) {
+	      dispatch({
+	        type: 'ADD_MESSAGES',
+	        data: ['The two passwords do not match']
+	      });
+	      return;
+	    }
+	    var state = getState();
+	    var jwt = state.connect.jwt;
+	    fetch('/api/v1/resetPassword', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json',
+	        'Authorization': 'Bearer ' + jwt
+	      },
+	      method: 'POST',
+	      body: JSON.stringify({
+	        password: newPassword
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      if (response.errors.length) {
+	        dispatch({
+	          type: 'ADD_MESSAGES',
+	          data: response.errors
+	        });
+	      } else {
+	        dispatch({
+	          type: 'ADD_MESSAGES',
+	          data: ['Successfully reset password!']
+	        });
+	        dispatch({
+	          type: 'LOGOUT'
+	        });
+	        router.replace('/');
+	      }
+	    });
+	  };
+	}
+	
+	function requestReset(email, router) {
+	  return function (dispatch) {
+	    fetch('/api/v1/requestReset', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json'
+	      },
+	      method: 'POST',
+	      body: JSON.stringify({
+	        email: email
+	      })
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      if (response.errors.length) {
+	        dispatch({
+	          type: 'ADD_MESSAGES',
+	          data: response.errors
+	        });
+	      } else {
+	        dispatch({
+	          type: 'ADD_MESSAGES',
+	          data: ['Request sent successfully!']
+	        });
+	        router.goBack();
 	      }
 	    });
 	  };
@@ -42997,6 +43086,11 @@
 	          {
 	            onClick: this.login },
 	          'Login'
+	        ),
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/reset' },
+	          'Forgot Your Password?'
 	        )
 	      ),
 	      _react2.default.createElement(
@@ -44069,10 +44163,6 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 330);
 	
-	var _sjcl = __webpack_require__(/*! sjcl */ 560);
-	
-	var _sjcl2 = _interopRequireDefault(_sjcl);
-	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
 	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 584);
@@ -44826,6 +44916,171 @@
 	};
 	
 	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(MessageComponent);
+
+/***/ },
+/* 601 */
+/*!**********************************************!*\
+  !*** ./app/components/PasswordResetView.jsx ***!
+  \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var PasswordResetView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'PasswordResetView',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      newPassword: '',
+	      confirmPassword: ''
+	    };
+	  },
+	  render: function render() {
+	    var _this = this;
+	
+	    var controlComponent = function controlComponent(id) {
+	      return function (e) {
+	        var stateChange = {};
+	        stateChange[id] = e.target.value;
+	        _this.setState(stateChange);
+	      };
+	    };
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        'If you reset your password, you will lose access to your vault!'
+	      ),
+	      _react2.default.createElement('input', {
+	        placeholder: 'New Password',
+	        onChange: controlComponent('newPassword') }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        placeholder: 'Confirm Password',
+	        onChange: controlComponent('confirmPassword') }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          className: 'button',
+	          onClick: this.resetPassword },
+	        'Reset'
+	      )
+	    );
+	  },
+	  resetPassword: function resetPassword() {
+	    this.props.setJWT(this.props.params.code);
+	    this.props.resetPassword(this.state.newPassword, this.state.confirmPassword, this.props.router);
+	  }
+	}));
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    resetPassword: function resetPassword(newPassword, confirmPassword, router) {
+	      dispatch((0, _actions.resetPassword)(newPassword, confirmPassword, router));
+	    },
+	    setJWT: function setJWT(code) {
+	      dispatch({
+	        type: 'SET_JWT',
+	        data: code
+	      });
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(PasswordResetView);
+
+/***/ },
+/* 602 */
+/*!*********************************************!*\
+  !*** ./app/components/RequestResetView.jsx ***!
+  \*********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var RequestResetView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'RequestResetView',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      email: ''
+	    };
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        'Type in your email'
+	      ),
+	      _react2.default.createElement('input', {
+	        onChange: this.changeEmail,
+	        placeholder: 'Email' }),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          className: 'button',
+	          onClick: this.requestReset },
+	        'Send Request to Email'
+	      )
+	    );
+	  },
+	  changeEmail: function changeEmail(e) {
+	    this.setState({
+	      email: e.target.value
+	    });
+	  },
+	  requestReset: function requestReset() {
+	    this.props.requestReset(this.state.email, this.props.router);
+	  }
+	}));
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    requestReset: function requestReset(email, router) {
+	      dispatch((0, _actions.requestReset)(email, router));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(RequestResetView);
 
 /***/ }
 /******/ ]);

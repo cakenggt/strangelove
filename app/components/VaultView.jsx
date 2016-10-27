@@ -1,7 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Link, IndexLink, withRouter} from 'react-router';
-import sjcl from 'sjcl';
 import {uploadVault} from '../actions';
 import FocusComponent from './FocusComponent.jsx';
 

@@ -12,6 +12,8 @@ import VaultItemView from './components/VaultItemView.jsx';
 import LogoutView from './components/LogoutView.jsx';
 import SettingsView from './components/SettingsView.jsx';
 import MessageComponent from './components/MessageComponent.jsx';
+import PasswordResetView from './components/PasswordResetView.jsx';
+import RequestResetView from './components/RequestResetView.jsx';
 
 var Index = connect(function(state){
   return {
@@ -117,6 +119,8 @@ var router = (
       <Route path="register" component={RegisterView}/>
       <Route path="logout" component={LogoutView} onEnter={loginCheck}/>
       <Route path="settings" component={SettingsView} onEnter={loginCheck}/>
+      <Route path="reset" component={RequestResetView}/>
+      <Route path="reset/:code" component={PasswordResetView}/>
     </Route>
   </Router>
 );

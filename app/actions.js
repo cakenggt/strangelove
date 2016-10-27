@@ -195,3 +195,82 @@ export function changePassword(currentPassword, newPassword, confirmPassword){
     });
   };
 }
+
+export function resetPassword(newPassword, confirmPassword, router){
+  return function(dispatch, getState){
+    if (newPassword != confirmPassword){
+      dispatch({
+        type: 'ADD_MESSAGES',
+        data: ['The two passwords do not match']
+      });
+      return;
+    }
+    var state = getState();
+    var jwt = state.connect.jwt;
+    fetch('/api/v1/resetPassword', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+jwt
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        password: newPassword
+      })
+    })
+    .then(function(response){
+      return response.json();
+    })
+    .then((response)=>{
+      if (response.errors.length){
+        dispatch({
+          type: 'ADD_MESSAGES',
+          data: response.errors
+        });
+      }
+      else{
+        dispatch({
+          type: 'ADD_MESSAGES',
+          data: ['Successfully reset password!']
+        });
+        dispatch({
+          type: 'LOGOUT'
+        });
+        router.replace('/');
+      }
+    });
+  };
+}
+
+export function requestReset(email, router){
+  return function (dispatch){
+    fetch('/api/v1/requestReset', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        email: email
+      })
+    })
+    .then(function(response){
+      return response.json();
+    })
+    .then((response)=>{
+      if (response.errors.length){
+        dispatch({
+          type: 'ADD_MESSAGES',
+          data: response.errors
+        });
+      }
+      else{
+        dispatch({
+          type: 'ADD_MESSAGES',
+          data: ['Request sent successfully!']
+        });
+        router.goBack();
+      }
+    });
+  };
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {withRouter} from 'react-router';
+import {withRouter, Link} from 'react-router';
 import {connect} from 'react-redux';
 import {login} from '../actions';
 import FocusComponent from './FocusComponent.jsx';
@@ -25,6 +25,7 @@ var LoginView = withRouter(React.createClass({
             type="password"/>
           <div
             onClick={this.login}>Login</div>
+          <Link to="/reset">Forgot Your Password?</Link>
         </div>
         <FocusComponent>
           {this.props.children}

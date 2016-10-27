@@ -17,6 +17,10 @@ export default function(state = defaultState, action){
         jwt: action.data.jwt,
         needsTotp: action.data.needsTotp
       });
+    case 'SET_JWT':
+      return Object.assign({}, state, {
+        jwt: action.data
+      });
     case 'LOGOUT':
       return defaultState;
     case 'SET_NEEDS_TOTP':
