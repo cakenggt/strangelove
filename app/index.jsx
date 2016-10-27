@@ -11,6 +11,7 @@ import VaultView from './components/VaultView.jsx';
 import VaultItemView from './components/VaultItemView.jsx';
 import LogoutView from './components/LogoutView.jsx';
 import SettingsView from './components/SettingsView.jsx';
+import MessageComponent from './components/MessageComponent.jsx';
 
 var Index = connect(function(state){
   return {
@@ -21,11 +22,10 @@ var Index = connect(function(state){
   render: function() {
     var errors = this.props.messages.map(function(elem, i){
       return (
-        <span
-          className="message"
-          key={i}>
-          {elem}
-        </span>
+        <MessageComponent
+          message={elem}
+          index={i}
+          key={i}/>
       )
     });
     var defaultLinks = [

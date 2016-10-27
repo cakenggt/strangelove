@@ -93,6 +93,10 @@
 	
 	var _SettingsView2 = _interopRequireDefault(_SettingsView);
 	
+	var _MessageComponent = __webpack_require__(/*! ./components/MessageComponent.jsx */ 600);
+	
+	var _MessageComponent2 = _interopRequireDefault(_MessageComponent);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -107,13 +111,10 @@
 	
 	  render: function render() {
 	    var errors = this.props.messages.map(function (elem, i) {
-	      return _react2.default.createElement(
-	        'span',
-	        {
-	          className: 'message',
-	          key: i },
-	        elem
-	      );
+	      return _react2.default.createElement(_MessageComponent2.default, {
+	        message: elem,
+	        index: i,
+	        key: i });
 	    });
 	    var defaultLinks = [];
 	    var loggedInLinks = [{
@@ -38499,6 +38500,10 @@
 	  switch (action.type) {
 	    case 'ADD_MESSAGES':
 	      return [].concat(_toConsumableArray(state), _toConsumableArray(action.data));
+	    case 'DELETE_MESSAGE':
+	      var newList = state.slice();
+	      newList.splice(action.data, 1);
+	      return newList;
 	    case 'CLEAR_MESSAGES':
 	      return [];
 	    default:
@@ -44758,6 +44763,69 @@
 	};
 	
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SettingsView);
+
+/***/ },
+/* 600 */
+/*!*********************************************!*\
+  !*** ./app/components/MessageComponent.jsx ***!
+  \*********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var MessageComponent = _react2.default.createClass({
+	  displayName: 'MessageComponent',
+	
+	  propTypes: {
+	    message: _react2.default.PropTypes.string,
+	    index: _react2.default.PropTypes.number
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        this.props.message
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          onClick: this.delete },
+	        'X'
+	      )
+	    );
+	  },
+	  delete: function _delete() {
+	    this.props.delete(this.props.index);
+	  }
+	});
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    delete: function _delete(index) {
+	      dispatch({
+	        type: 'DELETE_MESSAGE',
+	        data: index
+	      });
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(MessageComponent);
 
 /***/ }
 /******/ ]);
