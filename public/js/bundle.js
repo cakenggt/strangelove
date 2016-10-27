@@ -73,23 +73,23 @@
 	
 	var _LoginView2 = _interopRequireDefault(_LoginView);
 	
-	var _TOTPView = __webpack_require__(/*! ./components/TOTPView.jsx */ 584);
+	var _TOTPView = __webpack_require__(/*! ./components/TOTPView.jsx */ 592);
 	
 	var _TOTPView2 = _interopRequireDefault(_TOTPView);
 	
-	var _VaultView = __webpack_require__(/*! ./components/VaultView.jsx */ 585);
+	var _VaultView = __webpack_require__(/*! ./components/VaultView.jsx */ 594);
 	
 	var _VaultView2 = _interopRequireDefault(_VaultView);
 	
-	var _VaultItemView = __webpack_require__(/*! ./components/VaultItemView.jsx */ 586);
+	var _VaultItemView = __webpack_require__(/*! ./components/VaultItemView.jsx */ 595);
 	
 	var _VaultItemView2 = _interopRequireDefault(_VaultItemView);
 	
-	var _LogoutView = __webpack_require__(/*! ./components/LogoutView.jsx */ 587);
+	var _LogoutView = __webpack_require__(/*! ./components/LogoutView.jsx */ 598);
 	
 	var _LogoutView2 = _interopRequireDefault(_LogoutView);
 	
-	var _SettingsView = __webpack_require__(/*! ./components/SettingsView.jsx */ 588);
+	var _SettingsView = __webpack_require__(/*! ./components/SettingsView.jsx */ 599);
 	
 	var _SettingsView2 = _interopRequireDefault(_SettingsView);
 	
@@ -100,17 +100,17 @@
 	var Index = (0, _reactRedux.connect)(function (state) {
 	  return {
 	    login: state.connect.login,
-	    errors: state.errors
+	    messages: state.messages
 	  };
 	})(_react2.default.createClass({
 	  displayName: 'Index',
 	
 	  render: function render() {
-	    var errors = this.props.errors.map(function (elem, i) {
+	    var errors = this.props.messages.map(function (elem, i) {
 	      return _react2.default.createElement(
 	        'span',
 	        {
-	          className: 'error',
+	          className: 'message',
 	          key: i },
 	        elem
 	      );
@@ -38355,15 +38355,15 @@
 	
 	var _vaultReducer2 = _interopRequireDefault(_vaultReducer);
 	
-	var _errorReducer = __webpack_require__(/*! ./reducers/errorReducer */ 557);
+	var _messageReducer = __webpack_require__(/*! ./reducers/messageReducer */ 557);
 	
-	var _errorReducer2 = _interopRequireDefault(_errorReducer);
+	var _messageReducer2 = _interopRequireDefault(_messageReducer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = (0, _redux.createStore)((0, _redux.combineReducers)({
 	    connect: _connectReducer2.default,
-	    errors: _errorReducer2.default,
+	    messages: _messageReducer2.default,
 	    vault: _vaultReducer2.default
 	}), (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
@@ -38481,9 +38481,9 @@
 
 /***/ },
 /* 557 */
-/*!**************************************!*\
-  !*** ./app/reducers/errorReducer.js ***!
-  \**************************************/
+/*!****************************************!*\
+  !*** ./app/reducers/messageReducer.js ***!
+  \****************************************/
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38497,9 +38497,9 @@
 	  var action = arguments[1];
 	
 	  switch (action.type) {
-	    case 'ADD_ERRORS':
+	    case 'ADD_MESSAGES':
 	      return [].concat(_toConsumableArray(state), _toConsumableArray(action.data));
-	    case 'CLEAR_ERRORS':
+	    case 'CLEAR_MESSAGES':
 	      return [];
 	    default:
 	      return state;
@@ -38631,7 +38631,7 @@
 	    }).then(function (response) {
 	      if (response.errors.length) {
 	        dispatch({
-	          type: 'ADD_ERRORS',
+	          type: 'ADD_MESSAGES',
 	          data: response.errors
 	        });
 	      }
@@ -38675,7 +38675,7 @@
 	      var vault = response.store;
 	      if (response.errors.length) {
 	        dispatch({
-	          type: 'ADD_ERRORS',
+	          type: 'ADD_MESSAGES',
 	          data: response.errors
 	        });
 	      } else {
@@ -38704,7 +38704,7 @@
 	  return function (dispatch) {
 	    if (password != confirmPassword) {
 	      dispatch({
-	        type: 'ADD_ERRORS',
+	        type: 'ADD_MESSAGES',
 	        data: ['The two passwords to not match']
 	      });
 	      return;
@@ -38724,12 +38724,12 @@
 	    }).then(function (response) {
 	      if (response.errors.length) {
 	        dispatch({
-	          type: 'ADD_ERRORS',
+	          type: 'ADD_MESSAGES',
 	          data: response.errors
 	        });
 	      } else {
 	        dispatch({
-	          type: 'ADD_ERRORS',
+	          type: 'ADD_MESSAGES',
 	          data: ['Successfully Registered! Look for a confirmation email']
 	        });
 	        router.push('/login');
@@ -38742,7 +38742,7 @@
 	  return function (dispatch, getState) {
 	    if (newPassword != confirmPassword) {
 	      dispatch({
-	        type: 'ADD_ERRORS',
+	        type: 'ADD_MESSAGES',
 	        data: ['The two passwords do not match']
 	      });
 	      return;
@@ -38750,7 +38750,7 @@
 	    var state = getState();
 	    if (currentPassword != state.connect.password) {
 	      dispatch({
-	        type: 'ADD_ERRORS',
+	        type: 'ADD_MESSAGES',
 	        data: ['Current password is incorrect']
 	      });
 	      return;
@@ -38771,12 +38771,12 @@
 	    }).then(function (response) {
 	      if (response.errors.length) {
 	        dispatch({
-	          type: 'ADD_ERRORS',
+	          type: 'ADD_MESSAGES',
 	          data: response.errors
 	        });
 	      } else {
 	        dispatch({
-	          type: 'ADD_ERRORS',
+	          type: 'ADD_MESSAGES',
 	          data: ['Successfully changed password!']
 	        });
 	        dispatch({
@@ -42954,7 +42954,7 @@
 	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
-	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 589);
+	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 584);
 	
 	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
 	
@@ -42967,7 +42967,8 @@
 	    var className = this.props.children ? 'focus blur' : 'focus';
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      {
+	        className: 'modal-container' },
 	      _react2.default.createElement(
 	        'div',
 	        {
@@ -43023,563 +43024,6 @@
 
 /***/ },
 /* 584 */
-/*!*************************************!*\
-  !*** ./app/components/TOTPView.jsx ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 298);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 330);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
-	
-	var _ModalView = __webpack_require__(/*! ./ModalView.jsx */ 599);
-	
-	var _ModalView2 = _interopRequireDefault(_ModalView);
-	
-	var _actions = __webpack_require__(/*! ../actions */ 559);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var TOTPView = (0, _reactRouter.withRouter)(_react2.default.createClass({
-	  displayName: 'TOTPView',
-	
-	  render: function render() {
-	    return _react2.default.createElement(
-	      _ModalView2.default,
-	      {
-	        key: 'totp' },
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'TOTP'
-	      ),
-	      _react2.default.createElement('input', {
-	        id: 'totp',
-	        placeholder: 'TOTP Code',
-	        autoFocus: true }),
-	      _react2.default.createElement(
-	        'div',
-	        {
-	          onClick: this.login },
-	        'Login'
-	      )
-	    );
-	  },
-	  login: function login() {
-	    var email = document.getElementById('email').value;
-	    var password = document.getElementById('password').value;
-	    var totp = document.getElementById('totp').value;
-	    this.props.login(email, password, this.props.router, totp);
-	  }
-	}));
-	
-	var mapStateToProps = function mapStateToProps(state) {
-	  return {};
-	};
-	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    login: function login(email, password, router, totp) {
-	      dispatch((0, _actions.login)(email, password, router, totp));
-	    }
-	  };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TOTPView);
-
-/***/ },
-/* 585 */
-/*!**************************************!*\
-  !*** ./app/components/VaultView.jsx ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 298);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 330);
-	
-	var _sjcl = __webpack_require__(/*! sjcl */ 560);
-	
-	var _sjcl2 = _interopRequireDefault(_sjcl);
-	
-	var _actions = __webpack_require__(/*! ../actions */ 559);
-	
-	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 589);
-	
-	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var VaultView = _react2.default.createClass({
-	  displayName: 'VaultView',
-	
-	  render: function render() {
-	    var _this = this;
-	
-	    var className = this.props.children ? 'focus blur' : 'focus';
-	    var vaultItemIds = Object.keys(this.props.vault);
-	    var vaultEntries = vaultItemIds.map(function (elem) {
-	      var entry = _this.props.vault[elem];
-	      return _react2.default.createElement(VaultEntry, { entry: entry, itemId: elem, key: elem });
-	    });
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'div',
-	        {
-	          className: className },
-	        'Vault',
-	        _react2.default.createElement(
-	          _reactRouter.Link,
-	          { to: '/vault/item/NEW' },
-	          'Add Item'
-	        ),
-	        _react2.default.createElement(
-	          'table',
-	          null,
-	          _react2.default.createElement(
-	            'tbody',
-	            null,
-	            vaultEntries
-	          )
-	        )
-	      ),
-	      _react2.default.createElement(
-	        _FocusComponent2.default,
-	        null,
-	        this.props.children
-	      )
-	    );
-	  }
-	});
-	
-	var VaultEntry = (0, _reactRouter.withRouter)(_react2.default.createClass({
-	  displayName: 'VaultEntry',
-	
-	  render: function render() {
-	    var entry = this.props.entry;
-	    return _react2.default.createElement(
-	      'tr',
-	      {
-	        onClick: this.goToVaultItem },
-	      _react2.default.createElement(
-	        'td',
-	        null,
-	        entry.name
-	      ),
-	      _react2.default.createElement(
-	        'td',
-	        null,
-	        entry.username
-	      )
-	    );
-	  },
-	  goToVaultItem: function goToVaultItem() {
-	    this.props.router.push('/vault/item/' + this.props.itemId);
-	  }
-	}));
-	
-	var mapStateToProps = function mapStateToProps(state) {
-	  return {
-	    vault: state.vault
-	  };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps)(VaultView);
-
-/***/ },
-/* 586 */
-/*!******************************************!*\
-  !*** ./app/components/VaultItemView.jsx ***!
-  \******************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 298);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 330);
-	
-	var _ModalView = __webpack_require__(/*! ./ModalView.jsx */ 599);
-	
-	var _ModalView2 = _interopRequireDefault(_ModalView);
-	
-	var _actions = __webpack_require__(/*! ../actions */ 559);
-	
-	var _uuid = __webpack_require__(/*! uuid */ 597);
-	
-	var _uuid2 = _interopRequireDefault(_uuid);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var VaultItemView = (0, _reactRouter.withRouter)(_react2.default.createClass({
-	  displayName: 'VaultItemView',
-	
-	  propTypes: {
-	    vault: _react2.default.PropTypes.object
-	  },
-	  getInitialState: function getInitialState() {
-	    var item = this.props.vault[this.props.params.itemId];
-	    if (!item) {
-	      item = {
-	        name: '',
-	        passwordArray: [],
-	        password: '',
-	        username: ''
-	      };
-	    } else {
-	      //populate virtual password field
-	      item.password = item.passwordArray[item.passwordArray.length - 1];
-	    }
-	    return item;
-	  },
-	  render: function render() {
-	    var _this = this;
-	
-	    var key = this.props.params.itemId;
-	    var controlledComponentGenerator = function controlledComponentGenerator(stateAttr) {
-	      return function (event) {
-	        var newState = {};
-	        newState[stateAttr] = event.target.value;
-	        _this.setState(newState);
-	      };
-	    };
-	    return _react2.default.createElement(
-	      _ModalView2.default,
-	      {
-	        key: key },
-	      _react2.default.createElement(
-	        'div',
-	        null,
-	        'Name',
-	        _react2.default.createElement('input', {
-	          value: this.state.name,
-	          onChange: controlledComponentGenerator('name') })
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        null,
-	        'Password:',
-	        _react2.default.createElement('input', {
-	          value: this.state.password,
-	          onChange: controlledComponentGenerator('password') })
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        null,
-	        'Password History: ',
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          JSON.stringify(this.state.passwordArray)
-	        )
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        null,
-	        'Username:',
-	        _react2.default.createElement('input', {
-	          value: this.state.username,
-	          onChange: controlledComponentGenerator('username') })
-	      ),
-	      _react2.default.createElement(
-	        'span',
-	        {
-	          onClick: this.cancel },
-	        'Cancel'
-	      ),
-	      _react2.default.createElement(
-	        'span',
-	        {
-	          onClick: this.save },
-	        'Save'
-	      )
-	    );
-	  },
-	  cancel: function cancel() {
-	    this.props.router.goBack();
-	  },
-	  save: function save() {
-	    var itemId = this.props.params.itemId;
-	    var item = Object.assign({}, this.state);
-	    //push password onto passwordArray and delete virtual attribute
-	    var lastPassword = item.passwordArray[item.passwordArray.length - 1];
-	    if (lastPassword != item.password) {
-	      item.passwordArray.push(item.password);
-	    }
-	    delete item.password;
-	    if (itemId == 'NEW') {
-	      itemId = _uuid2.default.v4();
-	    }
-	    this.props.saveVaultItem(itemId, item);
-	    this.props.router.goBack();
-	  }
-	}));
-	
-	var mapStateToProps = function mapStateToProps(state) {
-	  return {
-	    vault: state.vault
-	  };
-	};
-	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    saveVaultItem: function saveVaultItem(itemId, item) {
-	      dispatch((0, _actions.saveVaultItem)(itemId, item));
-	    }
-	  };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(VaultItemView);
-
-/***/ },
-/* 587 */
-/*!***************************************!*\
-  !*** ./app/components/LogoutView.jsx ***!
-  \***************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 298);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 330);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var LoginView = (0, _reactRouter.withRouter)(_react2.default.createClass({
-	  displayName: 'LoginView',
-	
-	  componentDidMount: function componentDidMount() {
-	    this.props.logout();
-	    this.props.router.push('/login');
-	  },
-	  render: function render() {
-	    return null;
-	  }
-	}));
-	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    logout: function logout() {
-	      dispatch({
-	        type: 'LOGOUT'
-	      });
-	    }
-	  };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(LoginView);
-
-/***/ },
-/* 588 */
-/*!*****************************************!*\
-  !*** ./app/components/SettingsView.jsx ***!
-  \*****************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 298);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
-	
-	var _actions = __webpack_require__(/*! ../actions */ 559);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var SettingsView = _react2.default.createClass({
-	  displayName: 'SettingsView',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      imgTag: ''
-	    };
-	  },
-	  render: function render() {
-	    var totpButton = this.props.needsTotp ? _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'span',
-	        {
-	          className: 'button',
-	          onClick: this.requireTotp },
-	        'Show TOTP'
-	      ),
-	      _react2.default.createElement(
-	        'span',
-	        {
-	          className: 'button',
-	          onClick: this.deleteTotp },
-	        'Delete TOTP'
-	      )
-	    ) : _react2.default.createElement(
-	      'span',
-	      {
-	        className: 'button',
-	        onClick: this.requireTotp },
-	      'Require TOTP'
-	    );
-	    var totpImg = this.state.imgTag ? _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.imgTag } }) : null;
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'Settings'
-	      ),
-	      _react2.default.createElement(
-	        'h3',
-	        null,
-	        'TOTP'
-	      ),
-	      totpButton,
-	      totpImg,
-	      _react2.default.createElement(
-	        'h3',
-	        null,
-	        'Change Password'
-	      ),
-	      _react2.default.createElement('input', {
-	        type: 'password',
-	        id: 'currentPassword',
-	        placeholder: 'Current Password' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        type: 'password',
-	        id: 'newPassword',
-	        placeholder: 'New Password' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        type: 'password',
-	        id: 'confirmPassword',
-	        placeholder: 'Confirm Password' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement(
-	        'span',
-	        {
-	          className: 'button',
-	          onClick: this.changePassword },
-	        'Change Password'
-	      )
-	    );
-	  },
-	  deleteTotp: function deleteTotp() {
-	    var _this = this;
-	
-	    fetch('/api/v1/totp', {
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json',
-	        'Authorization': 'Bearer ' + this.props.jwt
-	      },
-	      method: 'DELETE'
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      _this.setState({
-	        imgTag: ''
-	      });
-	      _this.props.setNeedsTotp(false);
-	    });
-	  },
-	  requireTotp: function requireTotp() {
-	    var _this2 = this;
-	
-	    fetch('/api/v1/totp', {
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json',
-	        'Authorization': 'Bearer ' + this.props.jwt
-	      },
-	      method: 'GET'
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      _this2.setState({
-	        imgTag: response.imgTag
-	      });
-	      _this2.props.setNeedsTotp(true);
-	    });
-	  },
-	  changePassword: function changePassword() {
-	    var currentPassword = document.getElementById('currentPassword').value;
-	    var newPassword = document.getElementById('newPassword').value;
-	    var confirmPassword = document.getElementById('confirmPassword').value;
-	    this.props.changePassword(currentPassword, newPassword, confirmPassword);
-	  }
-	});
-	
-	var mapStateToProps = function mapStateToProps(state) {
-	  return {
-	    needsTotp: state.connect.needsTotp,
-	    jwt: state.connect.jwt
-	  };
-	};
-	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    setNeedsTotp: function setNeedsTotp(bool) {
-	      dispatch({
-	        type: 'SET_NEEDS_TOTP',
-	        data: bool
-	      });
-	    },
-	    changePassword: function changePassword(currentPassword, newPassword, confirmPassword) {
-	      dispatch((0, _actions.changePassword)(currentPassword, newPassword, confirmPassword));
-	    }
-	  };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SettingsView);
-
-/***/ },
-/* 589 */
 /*!*******************************************!*\
   !*** ./app/components/FocusComponent.jsx ***!
   \*******************************************/
@@ -43595,7 +43039,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactAddonsCssTransitionGroup = __webpack_require__(/*! react-addons-css-transition-group */ 590);
+	var _reactAddonsCssTransitionGroup = __webpack_require__(/*! react-addons-css-transition-group */ 585);
 	
 	var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 	
@@ -43618,16 +43062,16 @@
 	});
 
 /***/ },
-/* 590 */
+/* 585 */
 /*!******************************************************!*\
   !*** ./~/react-addons-css-transition-group/index.js ***!
   \******************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(/*! react/lib/ReactCSSTransitionGroup */ 591);
+	module.exports = __webpack_require__(/*! react/lib/ReactCSSTransitionGroup */ 586);
 
 /***/ },
-/* 591 */
+/* 586 */
 /*!************************************************!*\
   !*** ./~/react/lib/ReactCSSTransitionGroup.js ***!
   \************************************************/
@@ -43650,8 +43094,8 @@
 	
 	var React = __webpack_require__(/*! ./React */ 299);
 	
-	var ReactTransitionGroup = __webpack_require__(/*! ./ReactTransitionGroup */ 592);
-	var ReactCSSTransitionGroupChild = __webpack_require__(/*! ./ReactCSSTransitionGroupChild */ 594);
+	var ReactTransitionGroup = __webpack_require__(/*! ./ReactTransitionGroup */ 587);
+	var ReactCSSTransitionGroupChild = __webpack_require__(/*! ./ReactCSSTransitionGroupChild */ 589);
 	
 	function createTransitionTimeoutPropValidator(transitionType) {
 	  var timeoutPropName = 'transition' + transitionType + 'Timeout';
@@ -43722,7 +43166,7 @@
 	module.exports = ReactCSSTransitionGroup;
 
 /***/ },
-/* 592 */
+/* 587 */
 /*!*********************************************!*\
   !*** ./~/react/lib/ReactTransitionGroup.js ***!
   \*********************************************/
@@ -43745,7 +43189,7 @@
 	
 	var React = __webpack_require__(/*! ./React */ 299);
 	var ReactInstanceMap = __webpack_require__(/*! ./ReactInstanceMap */ 478);
-	var ReactTransitionChildMapping = __webpack_require__(/*! ./ReactTransitionChildMapping */ 593);
+	var ReactTransitionChildMapping = __webpack_require__(/*! ./ReactTransitionChildMapping */ 588);
 	
 	var emptyFunction = __webpack_require__(/*! fbjs/lib/emptyFunction */ 308);
 	
@@ -43977,7 +43421,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 294)))
 
 /***/ },
-/* 593 */
+/* 588 */
 /*!****************************************************!*\
   !*** ./~/react/lib/ReactTransitionChildMapping.js ***!
   \****************************************************/
@@ -44089,7 +43533,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 294)))
 
 /***/ },
-/* 594 */
+/* 589 */
 /*!*****************************************************!*\
   !*** ./~/react/lib/ReactCSSTransitionGroupChild.js ***!
   \*****************************************************/
@@ -44111,8 +43555,8 @@
 	var React = __webpack_require__(/*! ./React */ 299);
 	var ReactDOM = __webpack_require__(/*! ./ReactDOM */ 394);
 	
-	var CSSCore = __webpack_require__(/*! fbjs/lib/CSSCore */ 595);
-	var ReactTransitionEvents = __webpack_require__(/*! ./ReactTransitionEvents */ 596);
+	var CSSCore = __webpack_require__(/*! fbjs/lib/CSSCore */ 590);
+	var ReactTransitionEvents = __webpack_require__(/*! ./ReactTransitionEvents */ 591);
 	
 	var onlyChild = __webpack_require__(/*! ./onlyChild */ 329);
 	
@@ -44264,7 +43708,7 @@
 	module.exports = ReactCSSTransitionGroupChild;
 
 /***/ },
-/* 595 */
+/* 590 */
 /*!*******************************!*\
   !*** ./~/fbjs/lib/CSSCore.js ***!
   \*******************************/
@@ -44394,7 +43838,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 294)))
 
 /***/ },
-/* 596 */
+/* 591 */
 /*!**********************************************!*\
   !*** ./~/react/lib/ReactTransitionEvents.js ***!
   \**********************************************/
@@ -44475,7 +43919,397 @@
 	module.exports = ReactTransitionEvents;
 
 /***/ },
-/* 597 */
+/* 592 */
+/*!*************************************!*\
+  !*** ./app/components/TOTPView.jsx ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _ModalView = __webpack_require__(/*! ./ModalView.jsx */ 593);
+	
+	var _ModalView2 = _interopRequireDefault(_ModalView);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var TOTPView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'TOTPView',
+	
+	  render: function render() {
+	    return _react2.default.createElement(
+	      _ModalView2.default,
+	      {
+	        key: 'totp' },
+	      _react2.default.createElement(
+	        'h2',
+	        null,
+	        'TOTP'
+	      ),
+	      _react2.default.createElement('input', {
+	        id: 'totp',
+	        placeholder: 'TOTP Code',
+	        autoFocus: true }),
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          onClick: this.login },
+	        'Login'
+	      )
+	    );
+	  },
+	  login: function login() {
+	    var email = document.getElementById('email').value;
+	    var password = document.getElementById('password').value;
+	    var totp = document.getElementById('totp').value;
+	    this.props.login(email, password, this.props.router, totp);
+	  }
+	}));
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {};
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    login: function login(email, password, router, totp) {
+	      dispatch((0, _actions.login)(email, password, router, totp));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TOTPView);
+
+/***/ },
+/* 593 */
+/*!**************************************!*\
+  !*** ./app/components/ModalView.jsx ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ModalView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'ModalView',
+	
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      {
+	        className: 'modal',
+	        onClick: this.goBack },
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: 'modal-content',
+	          onClick: this.stopProp },
+	        this.props.children
+	      )
+	    );
+	  },
+	  goBack: function goBack() {
+	    this.props.router.goBack();
+	  },
+	  stopProp: function stopProp(e) {
+	    e.stopPropagation();
+	  }
+	}));
+	
+	exports.default = ModalView;
+
+/***/ },
+/* 594 */
+/*!**************************************!*\
+  !*** ./app/components/VaultView.jsx ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _sjcl = __webpack_require__(/*! sjcl */ 560);
+	
+	var _sjcl2 = _interopRequireDefault(_sjcl);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
+	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 584);
+	
+	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var VaultView = _react2.default.createClass({
+	  displayName: 'VaultView',
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    var className = this.props.children ? 'focus blur' : 'focus';
+	    var vaultItemIds = Object.keys(this.props.vault);
+	    var vaultEntries = vaultItemIds.map(function (elem) {
+	      var entry = _this.props.vault[elem];
+	      return _react2.default.createElement(VaultEntry, { entry: entry, itemId: elem, key: elem });
+	    });
+	    return _react2.default.createElement(
+	      'div',
+	      {
+	        className: 'modal-container' },
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: className },
+	        'Vault',
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/vault/item/NEW' },
+	          'Add Item'
+	        ),
+	        _react2.default.createElement(
+	          'table',
+	          null,
+	          _react2.default.createElement(
+	            'tbody',
+	            null,
+	            vaultEntries
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        _FocusComponent2.default,
+	        null,
+	        this.props.children
+	      )
+	    );
+	  }
+	});
+	
+	var VaultEntry = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'VaultEntry',
+	
+	  render: function render() {
+	    var entry = this.props.entry;
+	    return _react2.default.createElement(
+	      'tr',
+	      {
+	        onClick: this.goToVaultItem },
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        entry.name
+	      ),
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        entry.username
+	      )
+	    );
+	  },
+	  goToVaultItem: function goToVaultItem() {
+	    this.props.router.push('/vault/item/' + this.props.itemId);
+	  }
+	}));
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    vault: state.vault
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(VaultView);
+
+/***/ },
+/* 595 */
+/*!******************************************!*\
+  !*** ./app/components/VaultItemView.jsx ***!
+  \******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _ModalView = __webpack_require__(/*! ./ModalView.jsx */ 593);
+	
+	var _ModalView2 = _interopRequireDefault(_ModalView);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
+	var _uuid = __webpack_require__(/*! uuid */ 596);
+	
+	var _uuid2 = _interopRequireDefault(_uuid);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var VaultItemView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'VaultItemView',
+	
+	  propTypes: {
+	    vault: _react2.default.PropTypes.object
+	  },
+	  getInitialState: function getInitialState() {
+	    var item = this.props.vault[this.props.params.itemId];
+	    if (!item) {
+	      item = {
+	        name: '',
+	        passwordArray: [],
+	        password: '',
+	        username: ''
+	      };
+	    } else {
+	      //populate virtual password field
+	      item.password = item.passwordArray[item.passwordArray.length - 1];
+	    }
+	    return item;
+	  },
+	  render: function render() {
+	    var _this = this;
+	
+	    var key = this.props.params.itemId;
+	    var controlledComponentGenerator = function controlledComponentGenerator(stateAttr) {
+	      return function (event) {
+	        var newState = {};
+	        newState[stateAttr] = event.target.value;
+	        _this.setState(newState);
+	      };
+	    };
+	    return _react2.default.createElement(
+	      _ModalView2.default,
+	      {
+	        key: key },
+	      _react2.default.createElement(
+	        'div',
+	        null,
+	        'Name',
+	        _react2.default.createElement('input', {
+	          value: this.state.name,
+	          onChange: controlledComponentGenerator('name') })
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        null,
+	        'Password:',
+	        _react2.default.createElement('input', {
+	          value: this.state.password,
+	          onChange: controlledComponentGenerator('password') })
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        null,
+	        'Password History: ',
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          JSON.stringify(this.state.passwordArray)
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        null,
+	        'Username:',
+	        _react2.default.createElement('input', {
+	          value: this.state.username,
+	          onChange: controlledComponentGenerator('username') })
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          onClick: this.cancel },
+	        'Cancel'
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          onClick: this.save },
+	        'Save'
+	      )
+	    );
+	  },
+	  cancel: function cancel() {
+	    this.props.router.goBack();
+	  },
+	  save: function save() {
+	    var itemId = this.props.params.itemId;
+	    var item = Object.assign({}, this.state);
+	    //push password onto passwordArray and delete virtual attribute
+	    var lastPassword = item.passwordArray[item.passwordArray.length - 1];
+	    if (lastPassword != item.password) {
+	      item.passwordArray.push(item.password);
+	    }
+	    delete item.password;
+	    if (itemId == 'NEW') {
+	      itemId = _uuid2.default.v4();
+	    }
+	    this.props.saveVaultItem(itemId, item);
+	    this.props.router.goBack();
+	  }
+	}));
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    vault: state.vault
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    saveVaultItem: function saveVaultItem(itemId, item) {
+	      dispatch((0, _actions.saveVaultItem)(itemId, item));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(VaultItemView);
+
+/***/ },
+/* 596 */
 /*!************************!*\
   !*** ./~/uuid/uuid.js ***!
   \************************/
@@ -44489,7 +44323,7 @@
 	// Unique ID creation requires a high quality random # generator.  We feature
 	// detect to determine the best RNG source, normalizing to a function that
 	// returns 128-bits of randomness, since that's what's usually required
-	var _rng = __webpack_require__(/*! ./rng */ 598);
+	var _rng = __webpack_require__(/*! ./rng */ 597);
 	
 	// Maps for number <-> hex string conversion
 	var _byteToHex = [];
@@ -44667,7 +44501,7 @@
 
 
 /***/ },
-/* 598 */
+/* 597 */
 /*!*******************************!*\
   !*** ./~/uuid/rng-browser.js ***!
   \*******************************/
@@ -44709,10 +44543,10 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 599 */
-/*!**************************************!*\
-  !*** ./app/components/ModalView.jsx ***!
-  \**************************************/
+/* 598 */
+/*!***************************************!*\
+  !*** ./app/components/LogoutView.jsx ***!
+  \***************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44727,35 +44561,203 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 330);
 	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var ModalView = (0, _reactRouter.withRouter)(_react2.default.createClass({
-	  displayName: 'ModalView',
+	var LoginView = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'LoginView',
 	
+	  componentDidMount: function componentDidMount() {
+	    this.props.logout();
+	    this.props.router.push('/login');
+	  },
 	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      {
-	        className: 'modal',
-	        onClick: this.goBack },
-	      _react2.default.createElement(
-	        'div',
-	        {
-	          className: 'modal-content',
-	          onClick: this.stopProp },
-	        this.props.children
-	      )
-	    );
-	  },
-	  goBack: function goBack() {
-	    this.props.router.goBack();
-	  },
-	  stopProp: function stopProp(e) {
-	    e.stopPropagation();
+	    return null;
 	  }
 	}));
 	
-	exports.default = ModalView;
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    logout: function logout() {
+	      dispatch({
+	        type: 'LOGOUT'
+	      });
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(LoginView);
+
+/***/ },
+/* 599 */
+/*!*****************************************!*\
+  !*** ./app/components/SettingsView.jsx ***!
+  \*****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
+	
+	var _actions = __webpack_require__(/*! ../actions */ 559);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var SettingsView = _react2.default.createClass({
+	  displayName: 'SettingsView',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      imgTag: ''
+	    };
+	  },
+	  render: function render() {
+	    var totpButton = this.props.needsTotp ? _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          className: 'button',
+	          onClick: this.requireTotp },
+	        'Show TOTP'
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          className: 'button',
+	          onClick: this.deleteTotp },
+	        'Delete TOTP'
+	      )
+	    ) : _react2.default.createElement(
+	      'span',
+	      {
+	        className: 'button',
+	        onClick: this.requireTotp },
+	      'Require TOTP'
+	    );
+	    var totpImg = this.state.imgTag ? _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.imgTag } }) : null;
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'h2',
+	        null,
+	        'Settings'
+	      ),
+	      _react2.default.createElement(
+	        'h3',
+	        null,
+	        'TOTP'
+	      ),
+	      totpButton,
+	      totpImg,
+	      _react2.default.createElement(
+	        'h3',
+	        null,
+	        'Change Password'
+	      ),
+	      _react2.default.createElement('input', {
+	        type: 'password',
+	        id: 'currentPassword',
+	        placeholder: 'Current Password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        type: 'password',
+	        id: 'newPassword',
+	        placeholder: 'New Password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement('input', {
+	        type: 'password',
+	        id: 'confirmPassword',
+	        placeholder: 'Confirm Password' }),
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement(
+	        'span',
+	        {
+	          className: 'button',
+	          onClick: this.changePassword },
+	        'Change Password'
+	      )
+	    );
+	  },
+	  deleteTotp: function deleteTotp() {
+	    var _this = this;
+	
+	    fetch('/api/v1/totp', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json',
+	        'Authorization': 'Bearer ' + this.props.jwt
+	      },
+	      method: 'DELETE'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      _this.setState({
+	        imgTag: ''
+	      });
+	      _this.props.setNeedsTotp(false);
+	    });
+	  },
+	  requireTotp: function requireTotp() {
+	    var _this2 = this;
+	
+	    fetch('/api/v1/totp', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json',
+	        'Authorization': 'Bearer ' + this.props.jwt
+	      },
+	      method: 'GET'
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      _this2.setState({
+	        imgTag: response.imgTag
+	      });
+	      _this2.props.setNeedsTotp(true);
+	    });
+	  },
+	  changePassword: function changePassword() {
+	    var currentPassword = document.getElementById('currentPassword').value;
+	    var newPassword = document.getElementById('newPassword').value;
+	    var confirmPassword = document.getElementById('confirmPassword').value;
+	    this.props.changePassword(currentPassword, newPassword, confirmPassword);
+	  }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	  return {
+	    needsTotp: state.connect.needsTotp,
+	    jwt: state.connect.jwt
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    setNeedsTotp: function setNeedsTotp(bool) {
+	      dispatch({
+	        type: 'SET_NEEDS_TOTP',
+	        data: bool
+	      });
+	    },
+	    changePassword: function changePassword(currentPassword, newPassword, confirmPassword) {
+	      dispatch((0, _actions.changePassword)(currentPassword, newPassword, confirmPassword));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(SettingsView);
 
 /***/ }
 /******/ ]);

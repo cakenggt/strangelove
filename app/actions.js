@@ -28,7 +28,7 @@ export function uploadVault(){
     .then((response)=>{
       if (response.errors.length){
         dispatch({
-          type: 'ADD_ERRORS',
+          type: 'ADD_MESSAGES',
           data: response.errors
         });
       }
@@ -74,7 +74,7 @@ export function login(email, password, router, totp){
       let vault = response.store;
       if (response.errors.length){
         dispatch({
-          type: 'ADD_ERRORS',
+          type: 'ADD_MESSAGES',
           data: response.errors
         });
       }
@@ -105,7 +105,7 @@ export function register(email, password, confirmPassword, router){
   return function(dispatch){
     if (password != confirmPassword){
       dispatch({
-        type: 'ADD_ERRORS',
+        type: 'ADD_MESSAGES',
         data: ['The two passwords to not match']
       });
       return;
@@ -127,13 +127,13 @@ export function register(email, password, confirmPassword, router){
     .then((response)=>{
       if (response.errors.length){
         dispatch({
-          type: 'ADD_ERRORS',
+          type: 'ADD_MESSAGES',
           data: response.errors
         });
       }
       else{
         dispatch({
-          type: 'ADD_ERRORS',
+          type: 'ADD_MESSAGES',
           data: ['Successfully Registered! Look for a confirmation email']
         });
         router.push('/login');
@@ -146,7 +146,7 @@ export function changePassword(currentPassword, newPassword, confirmPassword){
   return function(dispatch, getState){
     if (newPassword != confirmPassword){
       dispatch({
-        type: 'ADD_ERRORS',
+        type: 'ADD_MESSAGES',
         data: ['The two passwords do not match']
       });
       return;
@@ -154,7 +154,7 @@ export function changePassword(currentPassword, newPassword, confirmPassword){
     var state = getState();
     if (currentPassword != state.connect.password){
       dispatch({
-        type: 'ADD_ERRORS',
+        type: 'ADD_MESSAGES',
         data: ['Current password is incorrect']
       });
       return;
@@ -177,13 +177,13 @@ export function changePassword(currentPassword, newPassword, confirmPassword){
     .then((response)=>{
       if (response.errors.length){
         dispatch({
-          type: 'ADD_ERRORS',
+          type: 'ADD_MESSAGES',
           data: response.errors
         });
       }
       else{
         dispatch({
-          type: 'ADD_ERRORS',
+          type: 'ADD_MESSAGES',
           data: ['Successfully changed password!']
         });
         dispatch({

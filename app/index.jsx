@@ -15,14 +15,14 @@ import SettingsView from './components/SettingsView.jsx';
 var Index = connect(function(state){
   return {
     login: state.connect.login,
-    errors: state.errors
+    messages: state.messages
   }
 })(React.createClass({
   render: function() {
-    var errors = this.props.errors.map(function(elem, i){
+    var errors = this.props.messages.map(function(elem, i){
       return (
         <span
-          className="error"
+          className="message"
           key={i}>
           {elem}
         </span>

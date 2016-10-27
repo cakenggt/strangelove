@@ -7,6 +7,9 @@ h1 {
   max-width: 960px;
   margin: 0 auto;
 }
+.modal-container {
+  position: relative;
+}
 .focus {
   transition: all 500ms ease;
   filter: blur(0px) opacity(100%);

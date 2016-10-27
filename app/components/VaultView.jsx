@@ -16,7 +16,8 @@ var VaultView = React.createClass({
       return <VaultEntry entry={entry} itemId={elem} key={elem}/>
     });
     return (
-      <div>
+      <div
+        className="modal-container">
         <div
           className={className}>
           Vault

@@ -10,7 +10,8 @@ var LoginView = withRouter(React.createClass({
       'focus blur' :
       'focus';
     return (
-      <div>
+      <div
+        className="modal-container">
         <div
           className={className}>
           <h2>Login</h2>
