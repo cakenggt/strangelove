@@ -190,7 +190,7 @@
 	      _react2.default.createElement(
 	        'div',
 	        {
-	          className: 'nav' },
+	          className: 'nav center' },
 	        _react2.default.createElement(
 	          'div',
 	          {
@@ -38563,31 +38563,32 @@
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'Register'
-	      ),
-	      _react2.default.createElement('input', {
-	        id: 'email',
-	        placeholder: 'email' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        id: 'password',
-	        type: 'password',
-	        placeholder: 'password' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        id: 'confirmPassword',
-	        type: 'password',
-	        placeholder: 'confirm password' }),
+	      {
+	        className: 'center' },
 	      _react2.default.createElement(
 	        'div',
 	        {
-	          className: 'button',
-	          onClick: this.register },
-	        'Register'
+	          className: 'bordered' },
+	        _react2.default.createElement('input', {
+	          id: 'email',
+	          placeholder: 'email' }),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement('input', {
+	          id: 'password',
+	          type: 'password',
+	          placeholder: 'password' }),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement('input', {
+	          id: 'confirmPassword',
+	          type: 'password',
+	          placeholder: 'confirm password' }),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            className: 'button',
+	            onClick: this.register },
+	          'Register'
+	        )
 	      )
 	    );
 	  },
@@ -43064,20 +43065,15 @@
 	  displayName: 'LoginView',
 	
 	  render: function render() {
-	    var className = this.props.children ? 'focus blur' : 'focus';
+	    var className = this.props.children ? 'center focus blur' : 'center focus';
 	    return _react2.default.createElement(
 	      'div',
 	      {
-	        className: 'modal-container' },
+	        className: "modal-container " + className },
 	      _react2.default.createElement(
 	        'div',
 	        {
-	          className: className },
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Login'
-	        ),
+	          className: 'bordered' },
 	        _react2.default.createElement('input', {
 	          id: 'email',
 	          placeholder: 'email',
@@ -44788,21 +44784,17 @@
 	    var totpImg = this.state.imgTag ? _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.imgTag } }) : null;
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      {
+	        className: 'bordered' },
 	      _react2.default.createElement(
 	        'h2',
-	        null,
-	        'Settings'
-	      ),
-	      _react2.default.createElement(
-	        'h3',
 	        null,
 	        'TOTP'
 	      ),
 	      totpButton,
 	      totpImg,
 	      _react2.default.createElement(
-	        'h3',
+	        'h2',
 	        null,
 	        'Change Password'
 	      ),

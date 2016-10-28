@@ -25,12 +25,12 @@ var SettingsView = React.createClass({
       <div dangerouslySetInnerHTML={{__html: this.state.imgTag}}></div> :
       null;
     return (
-      <div>
-        <h2>Settings</h2>
-        <h3>TOTP</h3>
+      <div
+        className="bordered">
+        <h2>TOTP</h2>
         {totpButton}
         {totpImg}
-        <h3>Change Password</h3>
+        <h2>Change Password</h2>
         <input
           type="password"
           id="currentPassword"

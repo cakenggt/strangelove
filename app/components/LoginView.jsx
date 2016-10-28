@@ -7,14 +7,13 @@ import FocusComponent from './FocusComponent.jsx';
 var LoginView = withRouter(React.createClass({
   render: function() {
     var className = this.props.children ?
-      'focus blur' :
-      'focus';
+      'center focus blur' :
+      'center focus';
     return (
       <div
-        className="modal-container">
+        className={"modal-container "+className}>
         <div
-          className={className}>
-          <h2>Login</h2>
+          className="bordered">
           <input
             id="email"
             placeholder="email"
@@ -26,7 +25,7 @@ var LoginView = withRouter(React.createClass({
           <div
             className="button"
             onClick={this.login}>Login</div>
-          <Link 
+          <Link
             to="/reset"
             className="button">Forgot Your Password?</Link>
         </div>

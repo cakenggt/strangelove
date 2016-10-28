@@ -6,22 +6,25 @@ import {register} from '../actions';
 var RegisterView = withRouter(React.createClass({
   render: function() {
     return (
-      <div>
-        <h2>Register</h2>
-        <input
-          id="email"
-          placeholder="email"/><br/>
-        <input
-          id="password"
-          type="password"
-          placeholder="password"/><br/>
-        <input
-          id="confirmPassword"
-          type="password"
-          placeholder="confirm password"/>
+      <div
+        className="center">
         <div
-          className="button"
-          onClick={this.register}>Register</div>
+          className="bordered">
+          <input
+            id="email"
+            placeholder="email"/><br/>
+          <input
+            id="password"
+            type="password"
+            placeholder="password"/><br/>
+          <input
+            id="confirmPassword"
+            type="password"
+            placeholder="confirm password"/>
+          <div
+            className="button"
+            onClick={this.register}>Register</div>
+        </div>
       </div>
     );
   },

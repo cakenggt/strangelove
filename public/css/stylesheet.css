@@ -14,7 +14,6 @@ body {
 }
 .modal-container {
   position: relative;
-  margin-top: 10px;
 }
 .focus {
   transition: all 500ms ease;
@@ -33,7 +32,7 @@ body {
   align-items: center;
   justify-content: center;
 }
-.modal-content {
+.modal-content, .bordered {
   border: 2px black solid;
   border-radius: 5px;
   padding: 10px;
@@ -58,8 +57,7 @@ a {
 }
 .nav {
   text-align: center;
-  display: flex;
-  justify-content: center;
+  margin-bottom: 10px;
 }
 .nav-links {
   display: inline;
@@ -81,6 +79,7 @@ a {
 }
 .button {
   cursor: pointer;
+  padding: 3px;
 }
 .fright {
   float: right;
@@ -108,4 +107,8 @@ a {
 }
 .vault-entry:hover {
   filter: blur(0px);
+}
+.center {
+  display: flex;
+  justify-content: center;
 }

@@ -87,7 +87,7 @@ var Index = connect(function(state){
         className="content">
         <h1>Frost</h1>
         <div
-          className="nav">
+          className="nav center">
           <div
             className="nav-links">
             {links}
