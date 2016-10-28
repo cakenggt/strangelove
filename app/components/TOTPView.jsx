@@ -5,14 +5,39 @@ import ModalView from './ModalView.jsx';
 import {login} from '../actions';
 
 var TOTPView = withRouter(React.createClass({
+  propTypes: {
+    email: React.PropTypes.string.isRequired,
+    password: React.PropTypes.string.isRequired
+  },
+  getInitialState: function(){
+    return {
+      totp: ''
+    };
+  },
   render: function() {
+    var controlledComponentChangeGenerator = (stateAttr) => {
+      return (event) => {
+        let newState = {};
+        newState[stateAttr] = event.target.value;
+        this.setState(newState);
+      };
+    };
+    var controlledComponentKeyDownGenerator = (stateAttr) => {
+      return (event) => {
+        if (event.key == 'Enter'){
+          event.preventDefault();
+          this.login();
+        }
+      };
+    };
     return (
       <ModalView
         key="totp">
-        <h2>TOTP</h2>
         <input
-          id="totp"
           placeholder="TOTP Code"
+          onChange={controlledComponentChangeGenerator('totp')}
+          onKeyDown={controlledComponentKeyDownGenerator('totp')}
+          value={this.state.totp}
           autoFocus/>
         <div
           className="button"
@@ -21,9 +46,9 @@ var TOTPView = withRouter(React.createClass({
     );
   },
   login: function(){
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
-    var totp = document.getElementById('totp').value;
+    var email = this.props.email;
+    var password = this.props.password;
+    var totp = this.state.totp;
     this.props.login(email, password, this.props.router, totp);
   }
 }));

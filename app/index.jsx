@@ -39,12 +39,12 @@ var Index = connect(function(state){
         value: '/vault'
       },
       {
-        display: 'Logout',
-        value: '/logout'
-      },
-      {
         display: 'Settings',
         value: '/settings'
+      },
+      {
+        display: 'Logout',
+        value: '/logout'
       }
     ];
     var loggedOutLinks = [

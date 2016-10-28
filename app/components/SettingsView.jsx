@@ -5,8 +5,11 @@ import {changePassword} from '../actions';
 var SettingsView = React.createClass({
   getInitialState: function(){
     return {
-      imgTag: ''
-    }
+      imgTag: '',
+      password: '',
+      newPassword: '',
+      confirmPassword: ''
+    };
   },
   render: function(){
     let totpButton = this.props.needsTotp?
@@ -24,6 +27,13 @@ var SettingsView = React.createClass({
     let totpImg = this.state.imgTag ?
       <div dangerouslySetInnerHTML={{__html: this.state.imgTag}}></div> :
       null;
+    var controlledComponentChangeGenerator = (stateAttr) => {
+      return (event) => {
+        let newState = {};
+        newState[stateAttr] = event.target.value;
+        this.setState(newState);
+      };
+    };
     return (
       <div
         className="bordered">
@@ -33,15 +43,18 @@ var SettingsView = React.createClass({
         <h2>Change Password</h2>
         <input
           type="password"
-          id="currentPassword"
+          onChange={controlledComponentChangeGenerator('password')}
+          value={this.state.password}
           placeholder="Current Password"/><br/>
         <input
           type="password"
-          id="newPassword"
+          onChange={controlledComponentChangeGenerator('newPassword')}
+          value={this.state.newPassword}
           placeholder="New Password"/><br/>
         <input
           type="password"
-          id="confirmPassword"
+          onChange={controlledComponentChangeGenerator('confirmPassword')}
+          value={this.state.confirmPassword}
           placeholder="Confirm Password"/><br/>
         <span
           className="button"
@@ -88,9 +101,9 @@ var SettingsView = React.createClass({
     });
   },
   changePassword: function(){
-    var currentPassword = document.getElementById('currentPassword').value;
-    var newPassword = document.getElementById('newPassword').value;
-    var confirmPassword = document.getElementById('confirmPassword').value;
+    var currentPassword = this.state.password;
+    var newPassword = this.state.newPassword;
+    var confirmPassword = this.state.confirmPassword;
     this.props.changePassword(
       currentPassword,
       newPassword,

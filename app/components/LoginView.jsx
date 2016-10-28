@@ -5,22 +5,47 @@ import {login} from '../actions';
 import FocusComponent from './FocusComponent.jsx';
 
 var LoginView = withRouter(React.createClass({
+  getInitialState: function(){
+    return {
+      email: '',
+      password: ''
+    };
+  },
   render: function() {
     var className = this.props.children ?
-      'center focus blur' :
-      'center focus';
+      'focus blur' :
+      'focus';
+    var controlledComponentChangeGenerator = (stateAttr) => {
+      return (event) => {
+        let newState = {};
+        newState[stateAttr] = event.target.value;
+        this.setState(newState);
+      };
+    };
+    var controlledComponentKeyDownGenerator = (stateAttr) => {
+      return (event) => {
+        if (event.key == 'Enter'){
+          event.preventDefault();
+          this.login();
+        }
+      };
+    };
     return (
       <div
-        className={"modal-container "+className}>
+        className={"modal-container center"}>
         <div
-          className="bordered">
+          className={"bordered "+className}>
           <input
-            id="email"
             placeholder="email"
+            onChange={controlledComponentChangeGenerator('email')}
+            onKeyDown={controlledComponentKeyDownGenerator('email')}
+            value={this.state.email}
             autoFocus/><br/>
           <input
-            id="password"
             placeholder="password"
+            onChange={controlledComponentChangeGenerator('password')}
+            onKeyDown={controlledComponentKeyDownGenerator('password')}
+            value={this.state.password}
             type="password"/>
           <div
             className="button"
@@ -30,14 +55,19 @@ var LoginView = withRouter(React.createClass({
             className="button">Forgot Your Password?</Link>
         </div>
         <FocusComponent>
-          {this.props.children}
+          {React.Children.map(this.props.children, child => {
+            return React.cloneElement(child, {
+              email: this.state.email,
+              password: this.state.password
+            });
+          })}
         </FocusComponent>
       </div>
     );
   },
   login: function(){
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
+    var email = this.state.email;
+    var password = this.state.password;
     this.props.login(email, password, this.props.router);
   }
 }));

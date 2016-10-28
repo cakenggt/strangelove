@@ -4,23 +4,51 @@ import {withRouter} from 'react-router';
 import {register} from '../actions';
 
 var RegisterView = withRouter(React.createClass({
+  getInitialState: function(){
+    return {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    };
+  },
   render: function() {
+    var controlledComponentChangeGenerator = (stateAttr) => {
+      return (event) => {
+        let newState = {};
+        newState[stateAttr] = event.target.value;
+        this.setState(newState);
+      };
+    };
+    var controlledComponentKeyDownGenerator = (stateAttr) => {
+      return (event) => {
+        if (event.key == 'Enter'){
+          event.preventDefault();
+          this.login();
+        }
+      };
+    };
     return (
       <div
         className="center">
         <div
           className="bordered">
           <input
-            id="email"
-            placeholder="email"/><br/>
+            placeholder="email"
+            onChange={controlledComponentChangeGenerator('email')}
+            onKeyDown={controlledComponentKeyDownGenerator('email')}
+            value={this.state.email}/><br/>
           <input
-            id="password"
             type="password"
-            placeholder="password"/><br/>
+            placeholder="password"
+            onChange={controlledComponentChangeGenerator('password')}
+            onKeyDown={controlledComponentKeyDownGenerator('password')}
+            value={this.state.password}/><br/>
           <input
-            id="confirmPassword"
             type="password"
-            placeholder="confirm password"/>
+            placeholder="confirm password"
+            onChange={controlledComponentChangeGenerator('confirmPassword')}
+            onKeyDown={controlledComponentKeyDownGenerator('confirmPassword')}
+            value={this.state.confirmPassword}/>
           <div
             className="button"
             onClick={this.register}>Register</div>
@@ -29,9 +57,9 @@ var RegisterView = withRouter(React.createClass({
     );
   },
   register: function(){
-    var email = document.getElementById('email').value;
-    var password = document.getElementById('password').value;
-    var confirmPassword = document.getElementById('confirmPassword').value;
+    var email = this.state.email;
+    var password = this.state.password;
+    var confirmPassword = this.state.confirmPassword;
     this.props.register(email, password, confirmPassword, this.props.router);
   }
 }));

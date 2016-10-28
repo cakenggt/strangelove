@@ -11,14 +11,20 @@ var RequestResetView = withRouter(React.createClass({
   },
   render: function(){
     return (
-      <div>
-        <span>Type in your email</span>
-        <input
-          onChange={this.changeEmail}
-          placeholder="Email"/>
-        <span
-          className="button"
-          onClick={this.requestReset}>Send Request to Email</span>
+      <div
+        className="center">
+        <div
+          className="bordered">
+          <div>
+            <input
+              onChange={this.changeEmail}
+              value={this.state.email}
+              placeholder="Email"/>
+          </div>
+          <span
+            className="button"
+            onClick={this.requestReset}>Send Request to Email</span>
+        </div>
       </div>
     )
   },

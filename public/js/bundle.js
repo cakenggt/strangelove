@@ -129,11 +129,11 @@
 	      display: 'Vault',
 	      value: '/vault'
 	    }, {
-	      display: 'Logout',
-	      value: '/logout'
-	    }, {
 	      display: 'Settings',
 	      value: '/settings'
+	    }, {
+	      display: 'Logout',
+	      value: '/logout'
 	    }];
 	    var loggedOutLinks = [{
 	      display: 'Login',
@@ -38560,7 +38560,31 @@
 	var RegisterView = (0, _reactRouter.withRouter)(_react2.default.createClass({
 	  displayName: 'RegisterView',
 	
+	  getInitialState: function getInitialState() {
+	    return {
+	      email: '',
+	      password: '',
+	      confirmPassword: ''
+	    };
+	  },
 	  render: function render() {
+	    var _this = this;
+	
+	    var controlledComponentChangeGenerator = function controlledComponentChangeGenerator(stateAttr) {
+	      return function (event) {
+	        var newState = {};
+	        newState[stateAttr] = event.target.value;
+	        _this.setState(newState);
+	      };
+	    };
+	    var controlledComponentKeyDownGenerator = function controlledComponentKeyDownGenerator(stateAttr) {
+	      return function (event) {
+	        if (event.key == 'Enter') {
+	          event.preventDefault();
+	          _this.login();
+	        }
+	      };
+	    };
 	    return _react2.default.createElement(
 	      'div',
 	      {
@@ -38570,18 +38594,24 @@
 	        {
 	          className: 'bordered' },
 	        _react2.default.createElement('input', {
-	          id: 'email',
-	          placeholder: 'email' }),
+	          placeholder: 'email',
+	          onChange: controlledComponentChangeGenerator('email'),
+	          onKeyDown: controlledComponentKeyDownGenerator('email'),
+	          value: this.state.email }),
 	        _react2.default.createElement('br', null),
 	        _react2.default.createElement('input', {
-	          id: 'password',
 	          type: 'password',
-	          placeholder: 'password' }),
+	          placeholder: 'password',
+	          onChange: controlledComponentChangeGenerator('password'),
+	          onKeyDown: controlledComponentKeyDownGenerator('password'),
+	          value: this.state.password }),
 	        _react2.default.createElement('br', null),
 	        _react2.default.createElement('input', {
-	          id: 'confirmPassword',
 	          type: 'password',
-	          placeholder: 'confirm password' }),
+	          placeholder: 'confirm password',
+	          onChange: controlledComponentChangeGenerator('confirmPassword'),
+	          onKeyDown: controlledComponentKeyDownGenerator('confirmPassword'),
+	          value: this.state.confirmPassword }),
 	        _react2.default.createElement(
 	          'div',
 	          {
@@ -38593,9 +38623,9 @@
 	    );
 	  },
 	  register: function register() {
-	    var email = document.getElementById('email').value;
-	    var password = document.getElementById('password').value;
-	    var confirmPassword = document.getElementById('confirmPassword').value;
+	    var email = this.state.email;
+	    var password = this.state.password;
+	    var confirmPassword = this.state.confirmPassword;
 	    this.props.register(email, password, confirmPassword, this.props.router);
 	  }
 	}));
@@ -43064,24 +43094,51 @@
 	var LoginView = (0, _reactRouter.withRouter)(_react2.default.createClass({
 	  displayName: 'LoginView',
 	
+	  getInitialState: function getInitialState() {
+	    return {
+	      email: '',
+	      password: ''
+	    };
+	  },
 	  render: function render() {
-	    var className = this.props.children ? 'center focus blur' : 'center focus';
+	    var _this = this;
+	
+	    var className = this.props.children ? 'focus blur' : 'focus';
+	    var controlledComponentChangeGenerator = function controlledComponentChangeGenerator(stateAttr) {
+	      return function (event) {
+	        var newState = {};
+	        newState[stateAttr] = event.target.value;
+	        _this.setState(newState);
+	      };
+	    };
+	    var controlledComponentKeyDownGenerator = function controlledComponentKeyDownGenerator(stateAttr) {
+	      return function (event) {
+	        if (event.key == 'Enter') {
+	          event.preventDefault();
+	          _this.login();
+	        }
+	      };
+	    };
 	    return _react2.default.createElement(
 	      'div',
 	      {
-	        className: "modal-container " + className },
+	        className: "modal-container center" },
 	      _react2.default.createElement(
 	        'div',
 	        {
-	          className: 'bordered' },
+	          className: "bordered " + className },
 	        _react2.default.createElement('input', {
-	          id: 'email',
 	          placeholder: 'email',
+	          onChange: controlledComponentChangeGenerator('email'),
+	          onKeyDown: controlledComponentKeyDownGenerator('email'),
+	          value: this.state.email,
 	          autoFocus: true }),
 	        _react2.default.createElement('br', null),
 	        _react2.default.createElement('input', {
-	          id: 'password',
 	          placeholder: 'password',
+	          onChange: controlledComponentChangeGenerator('password'),
+	          onKeyDown: controlledComponentKeyDownGenerator('password'),
+	          value: this.state.password,
 	          type: 'password' }),
 	        _react2.default.createElement(
 	          'div',
@@ -43101,13 +43158,18 @@
 	      _react2.default.createElement(
 	        _FocusComponent2.default,
 	        null,
-	        this.props.children
+	        _react2.default.Children.map(this.props.children, function (child) {
+	          return _react2.default.cloneElement(child, {
+	            email: _this.state.email,
+	            password: _this.state.password
+	          });
+	        })
 	      )
 	    );
 	  },
 	  login: function login() {
-	    var email = document.getElementById('email').value;
-	    var password = document.getElementById('password').value;
+	    var email = this.state.email;
+	    var password = this.state.password;
 	    this.props.login(email, password, this.props.router);
 	  }
 	}));
@@ -44054,19 +44116,42 @@
 	var TOTPView = (0, _reactRouter.withRouter)(_react2.default.createClass({
 	  displayName: 'TOTPView',
 	
+	  propTypes: {
+	    email: _react2.default.PropTypes.string.isRequired,
+	    password: _react2.default.PropTypes.string.isRequired
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      totp: ''
+	    };
+	  },
 	  render: function render() {
+	    var _this = this;
+	
+	    var controlledComponentChangeGenerator = function controlledComponentChangeGenerator(stateAttr) {
+	      return function (event) {
+	        var newState = {};
+	        newState[stateAttr] = event.target.value;
+	        _this.setState(newState);
+	      };
+	    };
+	    var controlledComponentKeyDownGenerator = function controlledComponentKeyDownGenerator(stateAttr) {
+	      return function (event) {
+	        if (event.key == 'Enter') {
+	          event.preventDefault();
+	          _this.login();
+	        }
+	      };
+	    };
 	    return _react2.default.createElement(
 	      _ModalView2.default,
 	      {
 	        key: 'totp' },
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'TOTP'
-	      ),
 	      _react2.default.createElement('input', {
-	        id: 'totp',
 	        placeholder: 'TOTP Code',
+	        onChange: controlledComponentChangeGenerator('totp'),
+	        onKeyDown: controlledComponentKeyDownGenerator('totp'),
+	        value: this.state.totp,
 	        autoFocus: true }),
 	      _react2.default.createElement(
 	        'div',
@@ -44078,9 +44163,9 @@
 	    );
 	  },
 	  login: function login() {
-	    var email = document.getElementById('email').value;
-	    var password = document.getElementById('password').value;
-	    var totp = document.getElementById('totp').value;
+	    var email = this.props.email;
+	    var password = this.props.password;
+	    var totp = this.state.totp;
 	    this.props.login(email, password, this.props.router, totp);
 	  }
 	}));
@@ -44753,10 +44838,15 @@
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      imgTag: ''
+	      imgTag: '',
+	      password: '',
+	      newPassword: '',
+	      confirmPassword: ''
 	    };
 	  },
 	  render: function render() {
+	    var _this = this;
+	
 	    var totpButton = this.props.needsTotp ? _react2.default.createElement(
 	      'div',
 	      null,
@@ -44782,6 +44872,13 @@
 	      'Require TOTP'
 	    );
 	    var totpImg = this.state.imgTag ? _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.imgTag } }) : null;
+	    var controlledComponentChangeGenerator = function controlledComponentChangeGenerator(stateAttr) {
+	      return function (event) {
+	        var newState = {};
+	        newState[stateAttr] = event.target.value;
+	        _this.setState(newState);
+	      };
+	    };
 	    return _react2.default.createElement(
 	      'div',
 	      {
@@ -44800,17 +44897,20 @@
 	      ),
 	      _react2.default.createElement('input', {
 	        type: 'password',
-	        id: 'currentPassword',
+	        onChange: controlledComponentChangeGenerator('password'),
+	        value: this.state.password,
 	        placeholder: 'Current Password' }),
 	      _react2.default.createElement('br', null),
 	      _react2.default.createElement('input', {
 	        type: 'password',
-	        id: 'newPassword',
+	        onChange: controlledComponentChangeGenerator('newPassword'),
+	        value: this.state.newPassword,
 	        placeholder: 'New Password' }),
 	      _react2.default.createElement('br', null),
 	      _react2.default.createElement('input', {
 	        type: 'password',
-	        id: 'confirmPassword',
+	        onChange: controlledComponentChangeGenerator('confirmPassword'),
+	        value: this.state.confirmPassword,
 	        placeholder: 'Confirm Password' }),
 	      _react2.default.createElement('br', null),
 	      _react2.default.createElement(
@@ -44823,7 +44923,7 @@
 	    );
 	  },
 	  deleteTotp: function deleteTotp() {
-	    var _this = this;
+	    var _this2 = this;
 	
 	    fetch('/api/v1/totp', {
 	      headers: {
@@ -44835,14 +44935,14 @@
 	    }).then(function (response) {
 	      return response.json();
 	    }).then(function (response) {
-	      _this.setState({
+	      _this2.setState({
 	        imgTag: ''
 	      });
-	      _this.props.setNeedsTotp(false);
+	      _this2.props.setNeedsTotp(false);
 	    });
 	  },
 	  requireTotp: function requireTotp() {
-	    var _this2 = this;
+	    var _this3 = this;
 	
 	    fetch('/api/v1/totp', {
 	      headers: {
@@ -44854,16 +44954,16 @@
 	    }).then(function (response) {
 	      return response.json();
 	    }).then(function (response) {
-	      _this2.setState({
+	      _this3.setState({
 	        imgTag: response.imgTag
 	      });
-	      _this2.props.setNeedsTotp(true);
+	      _this3.props.setNeedsTotp(true);
 	    });
 	  },
 	  changePassword: function changePassword() {
-	    var currentPassword = document.getElementById('currentPassword').value;
-	    var newPassword = document.getElementById('newPassword').value;
-	    var confirmPassword = document.getElementById('confirmPassword').value;
+	    var currentPassword = this.state.password;
+	    var newPassword = this.state.newPassword;
+	    var confirmPassword = this.state.confirmPassword;
 	    this.props.changePassword(currentPassword, newPassword, confirmPassword);
 	  }
 	});
@@ -45084,21 +45184,27 @@
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      {
+	        className: 'center' },
 	      _react2.default.createElement(
-	        'span',
-	        null,
-	        'Type in your email'
-	      ),
-	      _react2.default.createElement('input', {
-	        onChange: this.changeEmail,
-	        placeholder: 'Email' }),
-	      _react2.default.createElement(
-	        'span',
+	        'div',
 	        {
-	          className: 'button',
-	          onClick: this.requestReset },
-	        'Send Request to Email'
+	          className: 'bordered' },
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement('input', {
+	            onChange: this.changeEmail,
+	            value: this.state.email,
+	            placeholder: 'Email' })
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          {
+	            className: 'button',
+	            onClick: this.requestReset },
+	          'Send Request to Email'
+	        )
 	      )
 	    );
 	  },
