@@ -10,17 +10,15 @@ var VaultItemView = withRouter(React.createClass({
     vault: React.PropTypes.object
   },
   getInitialState: function(){
-    var item = this.props.vault[this.props.params.itemId];
-    if (!item){
-      item = {
-        name: '',
-        site: '',
-        passwordArray: [],
-        password: '',
-        username: ''
-      };
-    }
-    else{
+    var defaultItem = {
+      name: '',
+      site: '',
+      passwordArray: [],
+      password: '',
+      username: ''
+    };
+    var item = Object.assign(defaultItem, this.props.vault[this.props.params.itemId]);
+    if (item.passwordArray.length){
       //populate virtual password field
       item.password = item.passwordArray[item.passwordArray.length-1];
     }
@@ -47,7 +45,7 @@ var VaultItemView = withRouter(React.createClass({
         <div>
           Site:
           <input
-            value={this.state.name}
+            value={this.state.site}
             onChange={controlledComponentGenerator('site')}/>
         </div>
         <div>
@@ -66,8 +64,10 @@ var VaultItemView = withRouter(React.createClass({
             onChange={controlledComponentGenerator('username')}/>
         </div>
         <span
+          className="button fleft"
           onClick={this.cancel}>Cancel</span>
         <span
+          className="button fright"
           onClick={this.save}>Save</span>
       </ModalView>
     );

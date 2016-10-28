@@ -19,9 +19,23 @@ var VaultView = React.createClass({
         className="modal-container">
         <div
           className={className}>
-          Vault
-          <Link to="/vault/item/NEW">Add Item</Link>
-          <table>
+          <Link
+            className="button"
+            to="/vault/item/NEW">Add Item</Link>
+          <table
+            className="vault-table">
+            <thead>
+              <tr>
+                <th
+                  className="aleft">
+                  Site
+                </th>
+                <th
+                  className="aright">
+                  Username
+                </th>
+              </tr>
+            </thead>
             <tbody>
               {vaultEntries}
             </tbody>
@@ -40,11 +54,14 @@ var VaultEntry = withRouter(React.createClass({
     var entry = this.props.entry;
     return (
       <tr
-        onClick={this.goToVaultItem}>
-        <td>
-          {entry.name}
+        onClick={this.goToVaultItem}
+        className="vault-entry">
+        <td
+          className="aleft">
+          {entry.site}
         </td>
-        <td>
+        <td
+          className="aright">
           {entry.username}
         </td>
       </tr>

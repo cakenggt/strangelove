@@ -127,7 +127,7 @@
 	    var defaultLinks = [];
 	    var loggedInLinks = [{
 	      display: 'Vault',
-	      value: '/'
+	      value: '/vault'
 	    }, {
 	      display: 'Logout',
 	      value: '/logout'
@@ -191,7 +191,12 @@
 	        'div',
 	        {
 	          className: 'nav' },
-	        links
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            className: 'nav-links' },
+	          links
+	        )
 	      ),
 	      _react2.default.createElement(
 	        'div',
@@ -38580,6 +38585,7 @@
 	      _react2.default.createElement(
 	        'div',
 	        {
+	          className: 'button',
 	          onClick: this.register },
 	        'Register'
 	      )
@@ -43084,12 +43090,15 @@
 	        _react2.default.createElement(
 	          'div',
 	          {
+	            className: 'button',
 	            onClick: this.login },
 	          'Login'
 	        ),
 	        _react2.default.createElement(
 	          _reactRouter.Link,
-	          { to: '/reset' },
+	          {
+	            to: '/reset',
+	            className: 'button' },
 	          'Forgot Your Password?'
 	        )
 	      ),
@@ -44066,6 +44075,7 @@
 	      _react2.default.createElement(
 	        'div',
 	        {
+	          className: 'button',
 	          onClick: this.login },
 	        'Login'
 	      )
@@ -44191,15 +44201,37 @@
 	        'div',
 	        {
 	          className: className },
-	        'Vault',
 	        _react2.default.createElement(
 	          _reactRouter.Link,
-	          { to: '/vault/item/NEW' },
+	          {
+	            className: 'button',
+	            to: '/vault/item/NEW' },
 	          'Add Item'
 	        ),
 	        _react2.default.createElement(
 	          'table',
-	          null,
+	          {
+	            className: 'vault-table' },
+	          _react2.default.createElement(
+	            'thead',
+	            null,
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'th',
+	                {
+	                  className: 'aleft' },
+	                'Site'
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                {
+	                  className: 'aright' },
+	                'Username'
+	              )
+	            )
+	          ),
 	          _react2.default.createElement(
 	            'tbody',
 	            null,
@@ -44224,15 +44256,18 @@
 	    return _react2.default.createElement(
 	      'tr',
 	      {
-	        onClick: this.goToVaultItem },
+	        onClick: this.goToVaultItem,
+	        className: 'vault-entry' },
 	      _react2.default.createElement(
 	        'td',
-	        null,
-	        entry.name
+	        {
+	          className: 'aleft' },
+	        entry.site
 	      ),
 	      _react2.default.createElement(
 	        'td',
-	        null,
+	        {
+	          className: 'aright' },
 	        entry.username
 	      )
 	    );
@@ -44290,16 +44325,15 @@
 	    vault: _react2.default.PropTypes.object
 	  },
 	  getInitialState: function getInitialState() {
-	    var item = this.props.vault[this.props.params.itemId];
-	    if (!item) {
-	      item = {
-	        name: '',
-	        site: '',
-	        passwordArray: [],
-	        password: '',
-	        username: ''
-	      };
-	    } else {
+	    var defaultItem = {
+	      name: '',
+	      site: '',
+	      passwordArray: [],
+	      password: '',
+	      username: ''
+	    };
+	    var item = Object.assign(defaultItem, this.props.vault[this.props.params.itemId]);
+	    if (item.passwordArray.length) {
 	      //populate virtual password field
 	      item.password = item.passwordArray[item.passwordArray.length - 1];
 	    }
@@ -44333,7 +44367,7 @@
 	        null,
 	        'Site:',
 	        _react2.default.createElement('input', {
-	          value: this.state.name,
+	          value: this.state.site,
 	          onChange: controlledComponentGenerator('site') })
 	      ),
 	      _react2.default.createElement(
@@ -44365,12 +44399,14 @@
 	      _react2.default.createElement(
 	        'span',
 	        {
+	          className: 'button fleft',
 	          onClick: this.cancel },
 	        'Cancel'
 	      ),
 	      _react2.default.createElement(
 	        'span',
 	        {
+	          className: 'button fright',
 	          onClick: this.save },
 	        'Save'
 	      )
@@ -44903,6 +44939,7 @@
 	      _react2.default.createElement(
 	        'span',
 	        {
+	          className: 'button',
 	          onClick: this.delete },
 	        'X'
 	      )

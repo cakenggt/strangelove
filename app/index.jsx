@@ -36,7 +36,7 @@ var Index = connect(function(state){
     var loggedInLinks = [
       {
         display: 'Vault',
-        value: '/'
+        value: '/vault'
       },
       {
         display: 'Logout',
@@ -88,7 +88,10 @@ var Index = connect(function(state){
         <h1>Frost</h1>
         <div
           className="nav">
-          {links}
+          <div
+            className="nav-links">
+            {links}
+          </div>
         </div>
         <div
           className="errors">

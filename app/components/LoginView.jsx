@@ -24,8 +24,11 @@ var LoginView = withRouter(React.createClass({
             placeholder="password"
             type="password"/>
           <div
+            className="button"
             onClick={this.login}>Login</div>
-          <Link to="/reset">Forgot Your Password?</Link>
+          <Link 
+            to="/reset"
+            className="button">Forgot Your Password?</Link>
         </div>
         <FocusComponent>
           {this.props.children}

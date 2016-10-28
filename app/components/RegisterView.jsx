@@ -20,6 +20,7 @@ var RegisterView = withRouter(React.createClass({
           type="password"
           placeholder="confirm password"/>
         <div
+          className="button"
           onClick={this.register}>Register</div>
       </div>
     );

@@ -11,6 +11,7 @@ var MessageComponent = React.createClass({
       <div>
         <span>{this.props.message}</span>
         <span
+          className="button"
           onClick={this.delete}>X</span>
       </div>
     )

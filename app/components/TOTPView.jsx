@@ -15,6 +15,7 @@ var TOTPView = withRouter(React.createClass({
           placeholder="TOTP Code"
           autoFocus/>
         <div
+          className="button"
           onClick={this.login}>Login</div>
       </ModalView>
     );
