@@ -14,6 +14,7 @@ import SettingsView from './components/SettingsView.jsx';
 import MessageComponent from './components/MessageComponent.jsx';
 import PasswordResetView from './components/PasswordResetView.jsx';
 import RequestResetView from './components/RequestResetView.jsx';
+import FocusComponent from './components/FocusComponent.jsx';
 
 var Index = connect(function(state){
   return {
@@ -97,7 +98,16 @@ var Index = connect(function(state){
           className="errors">
           {errors}
         </div>
-        {this.props.children}
+        <div
+          className="route-container">
+          <FocusComponent>
+            <div
+              className="route-content"
+              key={this.props.location.pathname}>
+              {this.props.children}
+            </div>
+          </FocusComponent>
+        </div>
       </div>
     );
   }

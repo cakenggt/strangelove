@@ -31,6 +31,11 @@ export default function(state = defaultState, action){
       return Object.assign({}, state, {
         password: action.data
       });
+    case 'NEEDS_TOTP':
+      return Object.assign({}, state, {
+        email: action.data.email,
+        password: action.data.password
+      });
     default:
       return state;
   }

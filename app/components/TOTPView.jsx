@@ -2,13 +2,9 @@ import React from 'react';
 import {withRouter} from 'react-router';
 import {connect} from 'react-redux';
 import ModalView from './ModalView.jsx';
-import {login} from '../actions';
+import {loginTOTP} from '../actions';
 
 var TOTPView = withRouter(React.createClass({
-  propTypes: {
-    email: React.PropTypes.string.isRequired,
-    password: React.PropTypes.string.isRequired
-  },
   getInitialState: function(){
     return {
       totp: ''
@@ -46,10 +42,8 @@ var TOTPView = withRouter(React.createClass({
     );
   },
   login: function(){
-    var email = this.props.email;
-    var password = this.props.password;
     var totp = this.state.totp;
-    this.props.login(email, password, this.props.router, totp);
+    this.props.loginTOTP(totp, this.props.router);
   }
 }));
 
@@ -61,8 +55,8 @@ var mapStateToProps = (state) => {
 
 var mapDispatchToProps = (dispatch) => {
   return {
-    login: function(email, password, router, totp){
-      dispatch(login(email, password, router, totp));
+    loginTOTP: function(totp, router){
+      dispatch(loginTOTP(totp, router));
     }
   }
 }

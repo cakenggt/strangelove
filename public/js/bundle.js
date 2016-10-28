@@ -105,6 +105,10 @@
 	
 	var _RequestResetView2 = _interopRequireDefault(_RequestResetView);
 	
+	var _FocusComponent = __webpack_require__(/*! ./components/FocusComponent.jsx */ 584);
+	
+	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -204,7 +208,22 @@
 	          className: 'errors' },
 	        errors
 	      ),
-	      this.props.children
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: 'route-container' },
+	        _react2.default.createElement(
+	          _FocusComponent2.default,
+	          null,
+	          _react2.default.createElement(
+	            'div',
+	            {
+	              className: 'route-content',
+	              key: this.props.location.pathname },
+	            this.props.children
+	          )
+	        )
+	      )
 	    );
 	  }
 	}));
@@ -38454,6 +38473,11 @@
 	      return Object.assign({}, state, {
 	        password: action.data
 	      });
+	    case 'NEEDS_TOTP':
+	      return Object.assign({}, state, {
+	        email: action.data.email,
+	        password: action.data.password
+	      });
 	    default:
 	      return state;
 	  }
@@ -38655,6 +38679,7 @@
 	exports.uploadVault = uploadVault;
 	exports.saveVaultItem = saveVaultItem;
 	exports.login = login;
+	exports.loginTOTP = loginTOTP;
 	exports.register = register;
 	exports.changePassword = changePassword;
 	exports.resetPassword = resetPassword;
@@ -38727,6 +38752,13 @@
 	    }).then(function (response) {
 	      if (response.needsTotp && !totp) {
 	        //need to get TOTP
+	        dispatch({
+	          type: 'NEEDS_TOTP',
+	          data: {
+	            email: email,
+	            password: password
+	          }
+	        });
 	        router.push('/login/totp');
 	        return;
 	      }
@@ -38755,6 +38787,13 @@
 	        router.push('/');
 	      }
 	    });
+	  };
+	}
+	
+	function loginTOTP(totp, router) {
+	  return function (dispatch, getState) {
+	    var state = getState();
+	    dispatch(login(state.connect.email, state.connect.password, router, totp));
 	  };
 	}
 	
@@ -43122,7 +43161,8 @@
 	    return _react2.default.createElement(
 	      'div',
 	      {
-	        className: "modal-container center" },
+	        className: "modal-container center",
+	        key: 'login' },
 	      _react2.default.createElement(
 	        'div',
 	        {
@@ -43158,12 +43198,7 @@
 	      _react2.default.createElement(
 	        _FocusComponent2.default,
 	        null,
-	        _react2.default.Children.map(this.props.children, function (child) {
-	          return _react2.default.cloneElement(child, {
-	            email: _this.state.email,
-	            password: _this.state.password
-	          });
-	        })
+	        this.props.children
 	      )
 	    );
 	  },
@@ -44116,10 +44151,6 @@
 	var TOTPView = (0, _reactRouter.withRouter)(_react2.default.createClass({
 	  displayName: 'TOTPView',
 	
-	  propTypes: {
-	    email: _react2.default.PropTypes.string.isRequired,
-	    password: _react2.default.PropTypes.string.isRequired
-	  },
 	  getInitialState: function getInitialState() {
 	    return {
 	      totp: ''
@@ -44163,10 +44194,8 @@
 	    );
 	  },
 	  login: function login() {
-	    var email = this.props.email;
-	    var password = this.props.password;
 	    var totp = this.state.totp;
-	    this.props.login(email, password, this.props.router, totp);
+	    this.props.loginTOTP(totp, this.props.router);
 	  }
 	}));
 	
@@ -44176,8 +44205,8 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
-	    login: function login(email, password, router, totp) {
-	      dispatch((0, _actions.login)(email, password, router, totp));
+	    loginTOTP: function loginTOTP(totp, router) {
+	      dispatch((0, _actions.loginTOTP)(totp, router));
 	    }
 	  };
 	};

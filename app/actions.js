@@ -68,6 +68,13 @@ export function login(email, password, router, totp){
     .then((response)=>{
       if (response.needsTotp && !totp){
         //need to get TOTP
+        dispatch({
+          type: 'NEEDS_TOTP',
+          data: {
+            email: email,
+            password: password
+          }
+        });
         router.push('/login/totp');
         return;
       }
@@ -98,6 +105,18 @@ export function login(email, password, router, totp){
         router.push('/');
       }
     });
+  };
+}
+
+export function loginTOTP(totp, router){
+  return function(dispatch, getState){
+    var state = getState();
+    dispatch(login(
+      state.connect.email,
+      state.connect.password,
+      router,
+      totp
+    ));
   };
 }
 

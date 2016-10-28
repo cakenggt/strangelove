@@ -32,7 +32,8 @@ var LoginView = withRouter(React.createClass({
     };
     return (
       <div
-        className={"modal-container center"}>
+        className={"modal-container center"}
+        key="login">
         <div
           className={"bordered "+className}>
           <input
@@ -55,12 +56,7 @@ var LoginView = withRouter(React.createClass({
             className="button">Forgot Your Password?</Link>
         </div>
         <FocusComponent>
-          {React.Children.map(this.props.children, child => {
-            return React.cloneElement(child, {
-              email: this.state.email,
-              password: this.state.password
-            });
-          })}
+          {this.props.children}
         </FocusComponent>
       </div>
     );
