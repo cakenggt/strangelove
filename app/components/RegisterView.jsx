@@ -48,10 +48,10 @@ var RegisterView = withRouter(React.createClass({
             placeholder="confirm password"
             onChange={controlledComponentChangeGenerator('confirmPassword')}
             onKeyDown={controlledComponentKeyDownGenerator('confirmPassword')}
-            value={this.state.confirmPassword}/>
-          <div
+            value={this.state.confirmPassword}/><br/>
+          <span
             className="button"
-            onClick={this.register}>Register</div>
+            onClick={this.register}>Register</span>
         </div>
       </div>
     );

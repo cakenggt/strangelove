@@ -34,10 +34,10 @@ var TOTPView = withRouter(React.createClass({
           onChange={controlledComponentChangeGenerator('totp')}
           onKeyDown={controlledComponentKeyDownGenerator('totp')}
           value={this.state.totp}
-          autoFocus/>
-        <div
+          autoFocus/><br/>
+        <span
           className="button"
-          onClick={this.login}>Login</div>
+          onClick={this.login}>Login</span>
       </ModalView>
     );
   },

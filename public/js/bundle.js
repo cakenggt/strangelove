@@ -38643,8 +38643,9 @@
 	          onChange: controlledComponentChangeGenerator('confirmPassword'),
 	          onKeyDown: controlledComponentKeyDownGenerator('confirmPassword'),
 	          value: this.state.confirmPassword }),
+	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(
-	          'div',
+	          'span',
 	          {
 	            className: 'button',
 	            onClick: this.register },
@@ -43187,13 +43188,15 @@
 	          onKeyDown: controlledComponentKeyDownGenerator('password'),
 	          value: this.state.password,
 	          type: 'password' }),
+	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(
-	          'div',
+	          'span',
 	          {
 	            className: 'button',
 	            onClick: this.login },
 	          'Login'
 	        ),
+	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(
 	          _reactRouter.Link,
 	          {
@@ -44191,8 +44194,9 @@
 	        onKeyDown: controlledComponentKeyDownGenerator('totp'),
 	        value: this.state.totp,
 	        autoFocus: true }),
+	      _react2.default.createElement('br', null),
 	      _react2.default.createElement(
-	        'div',
+	        'span',
 	        {
 	          className: 'button',
 	          onClick: this.login },

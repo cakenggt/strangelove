@@ -47,10 +47,10 @@ var LoginView = withRouter(React.createClass({
             onChange={controlledComponentChangeGenerator('password')}
             onKeyDown={controlledComponentKeyDownGenerator('password')}
             value={this.state.password}
-            type="password"/>
-          <div
+            type="password"/><br/>
+          <span
             className="button"
-            onClick={this.login}>Login</div>
+            onClick={this.login}>Login</span><br/>
           <Link
             to="/reset"
             className="button">Forgot Your Password?</Link>
