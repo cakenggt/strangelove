@@ -115,8 +115,6 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
 	var Index = (0, _reactRedux.connect)(function (state) {
 	  return {
 	    login: state.connect.login,
@@ -153,19 +151,9 @@
 	      display: 'Register',
 	      value: '/register'
 	    }];
-	    var links = defaultLinks.map(function (elem, i) {
-	      return _react2.default.createElement(
-	        _reactRouter.Link,
-	        {
-	          to: elem.value,
-	          key: i,
-	          className: 'link',
-	          activeClassName: 'active' },
-	        elem.display
-	      );
-	    });
 	    var arr = this.props.login ? loggedInLinks : loggedOutLinks;
-	    var additionalLinks = arr.map(function (elem, i) {
+	    var links = [].concat(arr, defaultLinks);
+	    links = links.map(function (elem, i) {
 	      if (elem.value == '/') {
 	        return _react2.default.createElement(
 	          _reactRouter.IndexLink,
@@ -188,7 +176,6 @@
 	        );
 	      }
 	    });
-	    links = [].concat(_toConsumableArray(additionalLinks), _toConsumableArray(links));
 	    return _react2.default.createElement(
 	      'div',
 	      {

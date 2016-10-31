@@ -62,15 +62,9 @@ var Index = connect(function(state){
         value: '/register'
       }
     ];
-    var links = defaultLinks.map(function(elem, i){
-      return <Link
-        to={elem.value}
-        key={i}
-        className="link"
-        activeClassName="active">{elem.display}</Link>;
-    });
     var arr = this.props.login ? loggedInLinks : loggedOutLinks;
-    var additionalLinks = arr.map(function(elem, i){
+    var links = [...arr, ...defaultLinks];
+    links = links.map(function(elem, i){
       if (elem.value == '/'){
         return <IndexLink
           to={elem.value}
@@ -86,7 +80,6 @@ var Index = connect(function(state){
           activeClassName="active">{elem.display}</Link>;
       }
     });
-    links = [...additionalLinks, ...links];
     return (
       <div
         className="content">
