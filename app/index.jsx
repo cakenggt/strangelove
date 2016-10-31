@@ -24,14 +24,14 @@ var Index = connect(function(state){
   }
 })(React.createClass({
   render: function() {
-    var errors = this.props.messages.map(function(elem, i){
-      return (
-        <MessageComponent
-          message={elem}
-          index={i}
-          key={i}/>
-      )
-    });
+    var className = 'focus ';
+    var message;
+    if (this.props.messages.length){
+      message = <MessageComponent
+        key={'message'}
+        messages={this.props.messages}/>;
+      className += 'blur';
+    }
     var defaultLinks = [
       {
         display: 'About',
@@ -81,19 +81,17 @@ var Index = connect(function(state){
       }
     });
     return (
-      <div
-        className="content">
-        <h1>Frost</h1>
+      <div>
         <div
-          className="nav center">
+          className={className}>
+          <h1>Frost</h1>
           <div
-            className="nav-links">
-            {links}
+            className="nav center">
+            <div
+              className="nav-links">
+              {links}
+            </div>
           </div>
-        </div>
-        <div
-          className="errors">
-          {errors}
         </div>
         <div
           className="route-container">
@@ -101,7 +99,16 @@ var Index = connect(function(state){
             <div
               className="route-content"
               key={this.props.location.pathname}>
-              {this.props.children}
+              <div
+                className="modal-container">
+                <div
+                  className={className}>
+                  {this.props.children}
+                </div>
+                <FocusComponent>
+                  {message}
+                </FocusComponent>
+              </div>
             </div>
           </FocusComponent>
         </div>

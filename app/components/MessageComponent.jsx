@@ -1,19 +1,22 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import ModalView from './ModalView.jsx';
 
 var MessageComponent = React.createClass({
-  propTypes: {
-    message: React.PropTypes.string,
-    index: React.PropTypes.number
-  },
   render: function(){
+    var spans = this.props.messages.map(function(elem, i){
+      return (
+        <div
+          key={i}>
+          <span>{elem}</span>
+        </div>
+        );
+    });
     return (
-      <div>
-        <span>{this.props.message}</span>
-        <span
-          className="button"
-          onClick={this.delete}>X</span>
-      </div>
+      <ModalView
+        onLeave={this.props.clearMessages}>
+        {spans}
+      </ModalView>
     )
   },
   delete: function(){
@@ -23,10 +26,9 @@ var MessageComponent = React.createClass({
 
 var mapDispatchToProps = function(dispatch){
   return {
-    delete: function(index){
+    clearMessages: function(){
       dispatch({
-        type: 'DELETE_MESSAGE',
-        data: index
+        type: 'CLEAR_MESSAGES'
       });
     }
   }

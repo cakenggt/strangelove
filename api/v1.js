@@ -162,7 +162,7 @@ module.exports = function(options){
         res.end();
       })
       .catch(function(err){
-        resultJson.errors.push(err);
+        resultJson.errors.push(err.message);
         res.json(resultJson);
         res.end();
       });
@@ -195,7 +195,7 @@ module.exports = function(options){
         res.end();
       })
       .catch(function(err){
-        resultJson.errors.push(err);
+        resultJson.errors.push(err.message);
         res.json(resultJson);
         res.end();
       });
@@ -373,7 +373,7 @@ module.exports = function(options){
         res.end();
       })
       .catch(function(err){
-        resultJson.errors.push(err);
+        resultJson.errors.push(err.message);
         res.json(resultJson);
         res.end();
       });

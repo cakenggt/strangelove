@@ -124,8 +124,8 @@ export function register(email, password, confirmPassword, router){
   return function(dispatch){
     if (password != confirmPassword){
       dispatch({
-        type: 'ADD_MESSAGES',
-        data: ['The two passwords to not match']
+        type: 'ADD_MESSAGE',
+        data: 'The two passwords to not match'
       });
       return;
     }
@@ -152,8 +152,8 @@ export function register(email, password, confirmPassword, router){
       }
       else{
         dispatch({
-          type: 'ADD_MESSAGES',
-          data: ['Successfully Registered! Look for a confirmation email']
+          type: 'ADD_MESSAGE',
+          data: 'Successfully Registered! Look for a confirmation email'
         });
         router.push('/login');
       }
@@ -165,16 +165,16 @@ export function changePassword(currentPassword, newPassword, confirmPassword){
   return function(dispatch, getState){
     if (newPassword != confirmPassword){
       dispatch({
-        type: 'ADD_MESSAGES',
-        data: ['The two passwords do not match']
+        type: 'ADD_MESSAGE',
+        data: 'The two passwords do not match'
       });
       return;
     }
     var state = getState();
     if (currentPassword != state.connect.password){
       dispatch({
-        type: 'ADD_MESSAGES',
-        data: ['Current password is incorrect']
+        type: 'ADD_MESSAGE',
+        data: 'Current password is incorrect'
       });
       return;
     }
@@ -202,8 +202,8 @@ export function changePassword(currentPassword, newPassword, confirmPassword){
       }
       else{
         dispatch({
-          type: 'ADD_MESSAGES',
-          data: ['Successfully changed password!']
+          type: 'ADD_MESSAGE',
+          data: 'Successfully changed password!'
         });
         dispatch({
           type: 'CHANGE_PASSWORD',
@@ -219,8 +219,8 @@ export function resetPassword(newPassword, confirmPassword, router){
   return function(dispatch, getState){
     if (newPassword != confirmPassword){
       dispatch({
-        type: 'ADD_MESSAGES',
-        data: ['The two passwords do not match']
+        type: 'ADD_MESSAGE',
+        data: 'The two passwords do not match'
       });
       return;
     }
@@ -249,8 +249,8 @@ export function resetPassword(newPassword, confirmPassword, router){
       }
       else{
         dispatch({
-          type: 'ADD_MESSAGES',
-          data: ['Successfully reset password!']
+          type: 'ADD_MESSAGE',
+          data: 'Successfully reset password!'
         });
         dispatch({
           type: 'LOGOUT'
@@ -285,8 +285,8 @@ export function requestReset(email, router){
       }
       else{
         dispatch({
-          type: 'ADD_MESSAGES',
-          data: ['Request sent successfully!']
+          type: 'ADD_MESSAGE',
+          data: 'Request sent successfully!'
         });
         router.goBack();
       }

@@ -2,6 +2,9 @@ import React from 'react';
 import {withRouter} from 'react-router';
 
 var ModalView = withRouter(React.createClass({
+  propTypes: {
+    onLeave: React.PropTypes.func
+  },
   render: function(){
     return (
       <div
@@ -16,7 +19,12 @@ var ModalView = withRouter(React.createClass({
     );
   },
   goBack: function(){
-    this.props.router.goBack();
+    if (this.props.onLeave){
+      this.props.onLeave();
+    }
+    else{
+      this.props.router.goBack();
+    }
   },
   stopProp: function(e){
     e.stopPropagation();

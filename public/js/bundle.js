@@ -124,12 +124,14 @@
 	  displayName: 'Index',
 	
 	  render: function render() {
-	    var errors = this.props.messages.map(function (elem, i) {
-	      return _react2.default.createElement(_MessageComponent2.default, {
-	        message: elem,
-	        index: i,
-	        key: i });
-	    });
+	    var className = 'focus ';
+	    var message;
+	    if (this.props.messages.length) {
+	      message = _react2.default.createElement(_MessageComponent2.default, {
+	        key: 'message',
+	        messages: this.props.messages });
+	      className += 'blur';
+	    }
 	    var defaultLinks = [{
 	      display: 'About',
 	      value: '/'
@@ -178,29 +180,27 @@
 	    });
 	    return _react2.default.createElement(
 	      'div',
-	      {
-	        className: 'content' },
-	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        'Frost'
-	      ),
+	      null,
 	      _react2.default.createElement(
 	        'div',
 	        {
-	          className: 'nav center' },
+	          className: className },
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Frost'
+	        ),
 	        _react2.default.createElement(
 	          'div',
 	          {
-	            className: 'nav-links' },
-	          links
+	            className: 'nav center' },
+	          _react2.default.createElement(
+	            'div',
+	            {
+	              className: 'nav-links' },
+	            links
+	          )
 	        )
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        {
-	          className: 'errors' },
-	        errors
 	      ),
 	      _react2.default.createElement(
 	        'div',
@@ -214,7 +214,22 @@
 	            {
 	              className: 'route-content',
 	              key: this.props.location.pathname },
-	            this.props.children
+	            _react2.default.createElement(
+	              'div',
+	              {
+	                className: 'modal-container' },
+	              _react2.default.createElement(
+	                'div',
+	                {
+	                  className: className },
+	                this.props.children
+	              ),
+	              _react2.default.createElement(
+	                _FocusComponent2.default,
+	                null,
+	                message
+	              )
+	            )
 	          )
 	        )
 	      )
@@ -38536,19 +38551,13 @@
 	
 	  switch (action.type) {
 	    case 'ADD_MESSAGES':
-	      return [].concat(_toConsumableArray(state), _toConsumableArray(action.data));
-	    case 'DELETE_MESSAGE':
-	      var newList = state.slice();
-	      newList.splice(action.data, 1);
-	      return newList;
+	      return action.data;
 	    case 'CLEAR_MESSAGES':
 	      return [];
 	    default:
 	      return state;
 	  }
 	};
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /* jshint -W138 */
 
 /***/ },
 /* 558 */
@@ -38796,8 +38805,8 @@
 	  return function (dispatch) {
 	    if (password != confirmPassword) {
 	      dispatch({
-	        type: 'ADD_MESSAGES',
-	        data: ['The two passwords to not match']
+	        type: 'ADD_MESSAGE',
+	        data: 'The two passwords to not match'
 	      });
 	      return;
 	    }
@@ -38821,8 +38830,8 @@
 	        });
 	      } else {
 	        dispatch({
-	          type: 'ADD_MESSAGES',
-	          data: ['Successfully Registered! Look for a confirmation email']
+	          type: 'ADD_MESSAGE',
+	          data: 'Successfully Registered! Look for a confirmation email'
 	        });
 	        router.push('/login');
 	      }
@@ -38834,16 +38843,16 @@
 	  return function (dispatch, getState) {
 	    if (newPassword != confirmPassword) {
 	      dispatch({
-	        type: 'ADD_MESSAGES',
-	        data: ['The two passwords do not match']
+	        type: 'ADD_MESSAGE',
+	        data: 'The two passwords do not match'
 	      });
 	      return;
 	    }
 	    var state = getState();
 	    if (currentPassword != state.connect.password) {
 	      dispatch({
-	        type: 'ADD_MESSAGES',
-	        data: ['Current password is incorrect']
+	        type: 'ADD_MESSAGE',
+	        data: 'Current password is incorrect'
 	      });
 	      return;
 	    }
@@ -38868,8 +38877,8 @@
 	        });
 	      } else {
 	        dispatch({
-	          type: 'ADD_MESSAGES',
-	          data: ['Successfully changed password!']
+	          type: 'ADD_MESSAGE',
+	          data: 'Successfully changed password!'
 	        });
 	        dispatch({
 	          type: 'CHANGE_PASSWORD',
@@ -38885,8 +38894,8 @@
 	  return function (dispatch, getState) {
 	    if (newPassword != confirmPassword) {
 	      dispatch({
-	        type: 'ADD_MESSAGES',
-	        data: ['The two passwords do not match']
+	        type: 'ADD_MESSAGE',
+	        data: 'The two passwords do not match'
 	      });
 	      return;
 	    }
@@ -38912,8 +38921,8 @@
 	        });
 	      } else {
 	        dispatch({
-	          type: 'ADD_MESSAGES',
-	          data: ['Successfully reset password!']
+	          type: 'ADD_MESSAGE',
+	          data: 'Successfully reset password!'
 	        });
 	        dispatch({
 	          type: 'LOGOUT'
@@ -38945,8 +38954,8 @@
 	        });
 	      } else {
 	        dispatch({
-	          type: 'ADD_MESSAGES',
-	          data: ['Request sent successfully!']
+	          type: 'ADD_MESSAGE',
+	          data: 'Request sent successfully!'
 	        });
 	        router.goBack();
 	      }
@@ -44235,6 +44244,9 @@
 	var ModalView = (0, _reactRouter.withRouter)(_react2.default.createClass({
 	  displayName: 'ModalView',
 	
+	  propTypes: {
+	    onLeave: _react2.default.PropTypes.func
+	  },
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
@@ -44251,7 +44263,11 @@
 	    );
 	  },
 	  goBack: function goBack() {
-	    this.props.router.goBack();
+	    if (this.props.onLeave) {
+	      this.props.onLeave();
+	    } else {
+	      this.props.router.goBack();
+	    }
 	  },
 	  stopProp: function stopProp(e) {
 	    e.stopPropagation();
@@ -45037,31 +45053,33 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
 	
+	var _ModalView = __webpack_require__(/*! ./ModalView.jsx */ 593);
+	
+	var _ModalView2 = _interopRequireDefault(_ModalView);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var MessageComponent = _react2.default.createClass({
 	  displayName: 'MessageComponent',
 	
-	  propTypes: {
-	    message: _react2.default.PropTypes.string,
-	    index: _react2.default.PropTypes.number
-	  },
 	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'span',
-	        null,
-	        this.props.message
-	      ),
-	      _react2.default.createElement(
-	        'span',
+	    var spans = this.props.messages.map(function (elem, i) {
+	      return _react2.default.createElement(
+	        'div',
 	        {
-	          className: 'button',
-	          onClick: this.delete },
-	        'X'
-	      )
+	          key: i },
+	        _react2.default.createElement(
+	          'span',
+	          null,
+	          elem
+	        )
+	      );
+	    });
+	    return _react2.default.createElement(
+	      _ModalView2.default,
+	      {
+	        onLeave: this.props.clearMessages },
+	      spans
 	    );
 	  },
 	  delete: function _delete() {
@@ -45071,10 +45089,9 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
-	    delete: function _delete(index) {
+	    clearMessages: function clearMessages() {
 	      dispatch({
-	        type: 'DELETE_MESSAGE',
-	        data: index
+	        type: 'CLEAR_MESSAGES'
 	      });
 	    }
 	  };
