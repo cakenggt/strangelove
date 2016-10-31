@@ -64,8 +64,7 @@ module.exports = function(options){
     var totp = req.body.totp;
     models.User.findOne({
       where: {
-        email: auth[0],
-        status: 'ACTIVE'
+        email: auth[0]
       }
     })
     .then(function(user){
@@ -82,47 +81,52 @@ module.exports = function(options){
       if (plainUser.lastLoginFail && now-plainUser.lastLoginFail < 3000){
         resultJson.errors.push('Too rapid login');
         res.json(resultJson);
+        res.end();
         return;
       }
       bcrypt.compare(auth[1], plainUser.password, function(err, result){
         if (result){
-          //correct, check for existence of totpSecret
-          if (plainUser.totpSecret){
-            resultJson.needsTotp = true;
-            if (totp){
-              //check totp for correctness
-              var verified = speakeasy.totp.verify({
-                secret: plainUser.totpSecret,
-                encoding: 'base32',
-                token: totp,
-                window: 5
-              });
-              if (verified){
-                //verified totp
-                resultJson.store = plainUser.store;
-                resultJson.jwt = createLoginJWT(auth[0]);
+          if (plainUser.status == 'ACTIVE'){
+            //correct, check for existence of totpSecret
+            if (plainUser.totpSecret){
+              resultJson.needsTotp = true;
+              if (totp){
+                //check totp for correctness
+                var verified = speakeasy.totp.verify({
+                  secret: plainUser.totpSecret,
+                  encoding: 'base32',
+                  token: totp,
+                  window: 5
+                });
+                if (verified){
+                  //verified totp
+                  resultJson.store = plainUser.store;
+                  resultJson.jwt = createLoginJWT(auth[0]);
+                }
+                else{
+                  //incorrect totp
+                  resultJson.errors.push('Incorrect totp code');
+                }
               }
-              else{
-                //incorrect totp
-                resultJson.errors.push('Incorrect totp code');
-              }
+            }
+            else{
+              //no totpSecret
+              resultJson.store = plainUser.store;
+              resultJson.jwt = createLoginJWT(auth[0]);
+              resultJson.needsTotp = false;
             }
           }
           else{
-            //no totpSecret
-            resultJson.store = plainUser.store;
-            resultJson.jwt = createLoginJWT(auth[0]);
-            resultJson.needsTotp = false;
+            resultJson.errors.push('You have not confirmed your email address yet.');
           }
-          res.json(resultJson);
         }
         else{
           //incorrect, give error json
           resultJson.errors.push('Incorrect password');
-          res.json(resultJson);
           user.lastLoginFail = new Date();
           user.save();
         }
+        res.json(resultJson);
         res.end();
       });
     });

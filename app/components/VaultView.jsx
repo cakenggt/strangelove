@@ -18,10 +18,7 @@ var VaultView = React.createClass({
       <div
         className="modal-container">
         <div
-          className={className}>
-          <Link
-            className="button"
-            to="/vault/item/NEW">Add Item</Link>
+          className={'vault-view bordered '+className}>
           <table
             className="vault-table">
             <thead>
@@ -40,6 +37,9 @@ var VaultView = React.createClass({
               {vaultEntries}
             </tbody>
           </table>
+          <Link
+            className="button"
+            to="/vault/item/NEW">Add Item</Link>
         </div>
         <FocusComponent>
           {this.props.children}

@@ -81,7 +81,8 @@ var Index = connect(function(state){
       }
     });
     return (
-      <div>
+      <div
+        className='content'>
         <div
           className={className}>
           <h1>Frost</h1>

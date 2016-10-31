@@ -180,7 +180,8 @@
 	    });
 	    return _react2.default.createElement(
 	      'div',
-	      null,
+	      {
+	        className: 'content' },
 	      _react2.default.createElement(
 	        'div',
 	        {
@@ -44324,14 +44325,7 @@
 	      _react2.default.createElement(
 	        'div',
 	        {
-	          className: className },
-	        _react2.default.createElement(
-	          _reactRouter.Link,
-	          {
-	            className: 'button',
-	            to: '/vault/item/NEW' },
-	          'Add Item'
-	        ),
+	          className: 'vault-view bordered ' + className },
 	        _react2.default.createElement(
 	          'table',
 	          {
@@ -44361,6 +44355,13 @@
 	            null,
 	            vaultEntries
 	          )
+	        ),
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          {
+	            className: 'button',
+	            to: '/vault/item/NEW' },
+	          'Add Item'
 	        )
 	      ),
 	      _react2.default.createElement(
