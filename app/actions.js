@@ -102,7 +102,7 @@ export function login(email, password, router, totp){
             needsTotp: response.needsTotp
           }
         });
-        router.push('/');
+        router.push('/vault');
       }
     });
   };
@@ -255,7 +255,7 @@ export function resetPassword(newPassword, confirmPassword, router){
         dispatch({
           type: 'LOGOUT'
         });
-        router.replace('/');
+        router.replace('/login');
       }
     });
   };

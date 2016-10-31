@@ -109,6 +109,10 @@
 	
 	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
 	
+	var _AboutView = __webpack_require__(/*! ./components/AboutView.jsx */ 603);
+	
+	var _AboutView2 = _interopRequireDefault(_AboutView);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -128,7 +132,10 @@
 	        index: i,
 	        key: i });
 	    });
-	    var defaultLinks = [];
+	    var defaultLinks = [{
+	      display: 'About',
+	      value: '/'
+	    }];
 	    var loggedInLinks = [{
 	      display: 'Vault',
 	      value: '/vault'
@@ -240,7 +247,7 @@
 	  _react2.default.createElement(
 	    _reactRouter.Route,
 	    { path: '/', component: Index },
-	    _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/vault' }),
+	    _react2.default.createElement(_reactRouter.IndexRoute, { component: _AboutView2.default }),
 	    _react2.default.createElement(
 	      _reactRouter.Route,
 	      { path: 'vault', component: _VaultView2.default, onEnter: loginCheck },
@@ -38784,7 +38791,7 @@
 	            needsTotp: response.needsTotp
 	          }
 	        });
-	        router.push('/');
+	        router.push('/vault');
 	      }
 	    });
 	  };
@@ -38923,7 +38930,7 @@
 	        dispatch({
 	          type: 'LOGOUT'
 	        });
-	        router.replace('/');
+	        router.replace('/login');
 	      }
 	    });
 	  };
@@ -45256,6 +45263,49 @@
 	};
 	
 	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(RequestResetView);
+
+/***/ },
+/* 603 */
+/*!**************************************!*\
+  !*** ./app/components/AboutView.jsx ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var AboutView = _react2.default.createClass({
+	  displayName: "AboutView",
+	
+	  render: function render() {
+	    return _react2.default.createElement(
+	      "div",
+	      {
+	        className: "bordered" },
+	      _react2.default.createElement(
+	        "h2",
+	        null,
+	        "What is Frost?"
+	      ),
+	      _react2.default.createElement(
+	        "p",
+	        null,
+	        "Frost is a password manager."
+	      )
+	    );
+	  }
+	});
+	
+	exports.default = AboutView;
 
 /***/ }
 /******/ ]);

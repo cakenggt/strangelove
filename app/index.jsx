@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import React from 'react';
-import {Router, Route, IndexRedirect, browserHistory, Link, IndexLink} from 'react-router';
+import {Router, Route, IndexRoute, browserHistory, Link, IndexLink} from 'react-router';
 import {render} from 'react-dom';
 import {Provider, connect} from 'react-redux';
 import store from './store';
@@ -15,6 +15,7 @@ import MessageComponent from './components/MessageComponent.jsx';
 import PasswordResetView from './components/PasswordResetView.jsx';
 import RequestResetView from './components/RequestResetView.jsx';
 import FocusComponent from './components/FocusComponent.jsx';
+import AboutView from './components/AboutView.jsx';
 
 var Index = connect(function(state){
   return {
@@ -32,7 +33,10 @@ var Index = connect(function(state){
       )
     });
     var defaultLinks = [
-
+      {
+        display: 'About',
+        value: '/'
+      }
     ];
     var loggedInLinks = [
       {
@@ -122,7 +126,7 @@ const loginCheck = function(nextState, replace){
 var router = (
   <Router history={browserHistory}>
     <Route path="/" component={Index}>
-      <IndexRedirect to="/vault" />
+      <IndexRoute component={AboutView}/>
       <Route path="vault" component={VaultView} onEnter={loginCheck}>
         <Route path="item/:itemId" component={VaultItemView}/>
       </Route>
