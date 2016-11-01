@@ -151,6 +151,7 @@ input[type="checkbox"] + label span {
   width: 20px;
   height: 20px;
   border-radius: 2px;
+  cursor: pointer;
 }
 input[type="checkbox"] + label > span {
   border: 1px black solid;
