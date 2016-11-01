@@ -6,9 +6,6 @@ import ModalContainer from './ModalContainer.jsx';
 
 var VaultView = React.createClass({
   render: function() {
-    var className = this.props.children ?
-      'focus blur' :
-      'focus';
     var vaultItemIds = Object.keys(this.props.vault);
     var vaultEntries = vaultItemIds.map((elem)=>{
       var entry = this.props.vault[elem];

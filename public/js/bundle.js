@@ -44291,7 +44291,6 @@
 	  render: function render() {
 	    var _this = this;
 	
-	    var className = this.props.children ? 'focus blur' : 'focus';
 	    var vaultItemIds = Object.keys(this.props.vault);
 	    var vaultEntries = vaultItemIds.map(function (elem) {
 	      var entry = _this.props.vault[elem];
