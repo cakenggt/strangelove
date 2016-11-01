@@ -1,7 +1,6 @@
 import React from 'react';
 import {withRouter} from 'react-router';
 import {connect} from 'react-redux';
-import ModalView from './ModalView.jsx';
 import {loginTOTP} from '../actions';
 
 var TOTPView = withRouter(React.createClass({
@@ -27,8 +26,7 @@ var TOTPView = withRouter(React.createClass({
       };
     };
     return (
-      <ModalView
-        key="totp">
+      <div>
         <input
           placeholder="TOTP Code"
           onChange={controlledComponentChangeGenerator('totp')}
@@ -38,7 +36,7 @@ var TOTPView = withRouter(React.createClass({
         <span
           className="button"
           onClick={this.login}>Login</span>
-      </ModalView>
+      </div>
     );
   },
   login: function(){

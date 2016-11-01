@@ -1,11 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {changePassword} from '../actions';
+import ModalContainer from './ModalContainer.jsx';
+import {changePassword, setNeedsTotp} from '../actions';
 
 var SettingsView = React.createClass({
   getInitialState: function(){
     return {
-      imgTag: '',
       password: '',
       newPassword: '',
       confirmPassword: ''
@@ -16,16 +16,11 @@ var SettingsView = React.createClass({
       <div>
         <span
           className="button"
-          onClick={this.requireTotp}>Show TOTP</span>
-        <span
-          className="button"
-          onClick={this.deleteTotp}>Delete TOTP</span>
+          onClick={this.showTotp}>Show QR Code</span>
       </div>:
-      <span
-        className="button"
-        onClick={this.requireTotp}>Require TOTP</span>;
-    let totpImg = this.state.imgTag ?
-      <div dangerouslySetInnerHTML={{__html: this.state.imgTag}}></div> :
+      null;
+    let totpImg = this.props.imgTag ?
+      <div dangerouslySetInnerHTML={{__html: this.props.imgTag}}></div>:
       null;
     var controlledComponentChangeGenerator = (stateAttr) => {
       return (event) => {
@@ -35,70 +30,48 @@ var SettingsView = React.createClass({
       };
     };
     return (
-      <div
-        className="bordered">
-        <h2>TOTP</h2>
-        {totpButton}
-        {totpImg}
-        <h2>Change Password</h2>
-        <input
-          type="password"
-          onChange={controlledComponentChangeGenerator('password')}
-          value={this.state.password}
-          placeholder="Current Password"/><br/>
-        <input
-          type="password"
-          onChange={controlledComponentChangeGenerator('newPassword')}
-          value={this.state.newPassword}
-          placeholder="New Password"/><br/>
-        <input
-          type="password"
-          onChange={controlledComponentChangeGenerator('confirmPassword')}
-          value={this.state.confirmPassword}
-          placeholder="Confirm Password"/><br/>
-        <span
-          className="button"
-          onClick={this.changePassword}>Change Password</span>
-      </div>
+
+      <ModalContainer
+        modal={totpImg}
+        onLeave={this.props.removeTotpImg}>
+        <div
+          className="bordered">
+          <h2>Multifactor</h2>
+          <input
+            type="checkbox"
+            id="totpCheck"
+            checked={this.props.needsTotp}
+            onChange={this.toggleTotp}/>
+          <label htmlFor="totpCheck"><span><span/></span>Require Multifactor</label>
+          {totpButton}
+          <h2>Change Password</h2>
+          <input
+            type="password"
+            onChange={controlledComponentChangeGenerator('password')}
+            value={this.state.password}
+            placeholder="Current Password"/><br/>
+          <input
+            type="password"
+            onChange={controlledComponentChangeGenerator('newPassword')}
+            value={this.state.newPassword}
+            placeholder="New Password"/><br/>
+          <input
+            type="password"
+            onChange={controlledComponentChangeGenerator('confirmPassword')}
+            value={this.state.confirmPassword}
+            placeholder="Confirm Password"/><br/>
+          <span
+            className="button"
+            onClick={this.changePassword}>Change Password</span>
+        </div>
+      </ModalContainer>
     );
   },
-  deleteTotp: function(){
-    fetch('/api/v1/totp', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+this.props.jwt
-      },
-      method: 'DELETE'
-    })
-    .then(function(response){
-      return response.json();
-    })
-    .then((response)=>{
-      this.setState({
-        imgTag: ''
-      });
-      this.props.setNeedsTotp(false);
-    });
+  toggleTotp: function(e){
+    this.props.setNeedsTotp(e.target.checked);
   },
-  requireTotp: function(){
-    fetch('/api/v1/totp', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+this.props.jwt
-      },
-      method: 'GET'
-    })
-    .then(function(response){
-      return response.json();
-    })
-    .then((response)=>{
-      this.setState({
-        imgTag: response.imgTag
-      });
-      this.props.setNeedsTotp(true);
-    });
+  showTotp: function(){
+    this.props.setNeedsTotp(true);
   },
   changePassword: function(){
     var currentPassword = this.state.password;
@@ -115,20 +88,23 @@ var SettingsView = React.createClass({
 var mapStateToProps = function(state){
   return {
     needsTotp: state.connect.needsTotp,
-    jwt: state.connect.jwt
+    jwt: state.connect.jwt,
+    imgTag: state.connect.imgTag
   }
 }
 
 var mapDispatchToProps = function(dispatch){
   return {
     setNeedsTotp: function(bool){
-      dispatch({
-        type: 'SET_NEEDS_TOTP',
-        data: bool
-      });
+      dispatch(setNeedsTotp(bool));
     },
     changePassword: function(currentPassword, newPassword, confirmPassword){
       dispatch(changePassword(currentPassword, newPassword, confirmPassword));
+    },
+    removeTotpImg: function(){
+      dispatch({
+        type: 'REMOVE_TOTP_IMG'
+      });
     }
   }
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import ModalView from './ModalView.jsx';
 import {saveVaultItem} from '../actions';
 import uuid from 'uuid';
 
@@ -34,8 +33,7 @@ var VaultItemView = withRouter(React.createClass({
       };
     };
     return (
-      <ModalView
-        key={key}>
+      <div>
         <div>
           Name:
           <input
@@ -69,7 +67,7 @@ var VaultItemView = withRouter(React.createClass({
         <span
           className="button fright"
           onClick={this.save}>Save</span>
-      </ModalView>
+      </div>
     );
   },
   cancel: function(){

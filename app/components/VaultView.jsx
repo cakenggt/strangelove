@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Link, IndexLink, withRouter} from 'react-router';
 import {uploadVault} from '../actions';
-import FocusComponent from './FocusComponent.jsx';
+import ModalContainer from './ModalContainer.jsx';
 
 var VaultView = React.createClass({
   render: function() {
@@ -14,11 +14,17 @@ var VaultView = React.createClass({
       var entry = this.props.vault[elem];
       return <VaultEntry entry={entry} itemId={elem} key={elem}/>
     });
-    return (
+    var child = this.props.children ?
       <div
-        className="modal-container">
+        key={this.props.location.pathname}>
+        {this.props.children}
+      </div>:
+      null;
+    return (
+      <ModalContainer
+        modal={child}>
         <div
-          className={'vault-view bordered '+className}>
+          className="vault-view bordered">
           <table
             className="vault-table">
             <thead>
@@ -41,10 +47,7 @@ var VaultView = React.createClass({
             className="button"
             to="/vault/item/NEW">Add Item</Link>
         </div>
-        <FocusComponent>
-          {this.props.children}
-        </FocusComponent>
-      </div>
+      </ModalContainer>
     );
   }
 });

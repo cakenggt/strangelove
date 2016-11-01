@@ -1,6 +1,4 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import ModalView from './ModalView.jsx';
 
 var MessageComponent = React.createClass({
   render: function(){
@@ -13,28 +11,11 @@ var MessageComponent = React.createClass({
         );
     });
     return (
-      <ModalView
-        onLeave={this.props.clearMessages}>
+      <div>
         {spans}
-      </ModalView>
+      </div>
     )
-  },
-  delete: function(){
-    this.props.delete(this.props.index);
   }
 });
 
-var mapDispatchToProps = function(dispatch){
-  return {
-    clearMessages: function(){
-      dispatch({
-        type: 'CLEAR_MESSAGES'
-      });
-    }
-  }
-}
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(MessageComponent);
+export default MessageComponent;

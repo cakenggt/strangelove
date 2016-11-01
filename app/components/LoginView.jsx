@@ -2,7 +2,7 @@ import React from 'react';
 import {withRouter, Link} from 'react-router';
 import {connect} from 'react-redux';
 import {login} from '../actions';
-import FocusComponent from './FocusComponent.jsx';
+import ModalContainer from './ModalContainer.jsx';
 
 var LoginView = withRouter(React.createClass({
   getInitialState: function(){
@@ -12,9 +12,6 @@ var LoginView = withRouter(React.createClass({
     };
   },
   render: function() {
-    var className = this.props.children ?
-      'focus blur' :
-      'focus';
     var controlledComponentChangeGenerator = (stateAttr) => {
       return (event) => {
         let newState = {};
@@ -30,35 +27,40 @@ var LoginView = withRouter(React.createClass({
         }
       };
     };
-    return (
+    var child = this.props.children ?
       <div
-        className={"modal-container center"}
-        key="login">
+        key={this.props.location.pathname}>
+        {this.props.children}
+      </div>:
+      null;
+    return (
+      <ModalContainer
+        modal={child}>
         <div
-          className={"bordered "+className}>
-          <input
-            placeholder="email"
-            onChange={controlledComponentChangeGenerator('email')}
-            onKeyDown={controlledComponentKeyDownGenerator('email')}
-            value={this.state.email}
-            autoFocus/><br/>
-          <input
-            placeholder="password"
-            onChange={controlledComponentChangeGenerator('password')}
-            onKeyDown={controlledComponentKeyDownGenerator('password')}
-            value={this.state.password}
-            type="password"/><br/>
-          <span
-            className="button"
-            onClick={this.login}>Login</span><br/>
-          <Link
-            to="/reset"
-            className="button">Forgot Your Password?</Link>
+          className="center">
+          <div
+            className="bordered">
+            <input
+              placeholder="email"
+              onChange={controlledComponentChangeGenerator('email')}
+              onKeyDown={controlledComponentKeyDownGenerator('email')}
+              value={this.state.email}
+              autoFocus/><br/>
+            <input
+              placeholder="password"
+              onChange={controlledComponentChangeGenerator('password')}
+              onKeyDown={controlledComponentKeyDownGenerator('password')}
+              value={this.state.password}
+              type="password"/><br/>
+            <span
+              className="button"
+              onClick={this.login}>Login</span><br/>
+            <Link
+              to="/reset"
+              className="button">Forgot Your Password?</Link>
+          </div>
         </div>
-        <FocusComponent>
-          {this.props.children}
-        </FocusComponent>
-      </div>
+      </ModalContainer>
     );
   },
   login: function(){

@@ -293,3 +293,32 @@ export function requestReset(email, router){
     });
   };
 }
+
+export function setNeedsTotp(needsTotp){
+  return function(dispatch, getState){
+    var state = getState();
+    var method = needsTotp ?
+      'GET':
+      'DELETE';
+    fetch('/api/v1/totp', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+state.connect.jwt
+      },
+      method: method
+    })
+    .then(function(response){
+      return response.json();
+    })
+    .then((response)=>{
+      dispatch({
+        type: 'SET_NEEDS_TOTP',
+        data: {
+          imgTag: response.imgTag,
+          needsTotp: needsTotp
+        }
+      });
+    });
+  };
+}

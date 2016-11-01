@@ -113,12 +113,24 @@
 	
 	var _AboutView2 = _interopRequireDefault(_AboutView);
 	
+	var _ModalContainer = __webpack_require__(/*! ./components/ModalContainer.jsx */ 604);
+	
+	var _ModalContainer2 = _interopRequireDefault(_ModalContainer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var Index = (0, _reactRedux.connect)(function (state) {
 	  return {
 	    login: state.connect.login,
 	    messages: state.messages
+	  };
+	}, function (dispatch) {
+	  return {
+	    clearMessages: function clearMessages() {
+	      dispatch({
+	        type: 'CLEAR_MESSAGES'
+	      });
+	    }
 	  };
 	})(_react2.default.createClass({
 	  displayName: 'Index',
@@ -216,20 +228,11 @@
 	              className: 'route-content',
 	              key: this.props.location.pathname },
 	            _react2.default.createElement(
-	              'div',
+	              _ModalContainer2.default,
 	              {
-	                className: 'modal-container' },
-	              _react2.default.createElement(
-	                'div',
-	                {
-	                  className: className },
-	                this.props.children
-	              ),
-	              _react2.default.createElement(
-	                _FocusComponent2.default,
-	                null,
-	                message
-	              )
+	                onLeave: this.props.clearMessages,
+	                modal: message },
+	              this.props.children
 	            )
 	          )
 	        )
@@ -38477,7 +38480,8 @@
 	      return defaultState;
 	    case 'SET_NEEDS_TOTP':
 	      return Object.assign({}, state, {
-	        needsTotp: action.data
+	        needsTotp: action.data.needsTotp,
+	        imgTag: action.data.imgTag
 	      });
 	    case 'CHANGE_PASSWORD':
 	      return Object.assign({}, state, {
@@ -38487,6 +38491,10 @@
 	      return Object.assign({}, state, {
 	        email: action.data.email,
 	        password: action.data.password
+	      });
+	    case 'REMOVE_TOTP_IMG':
+	      return Object.assign({}, state, {
+	        imgTag: ''
 	      });
 	    default:
 	      return state;
@@ -38499,7 +38507,8 @@
 	  password: '',
 	  login: false,
 	  jwt: '',
-	  needsTotp: false
+	  needsTotp: false,
+	  imgTag: ''
 	};
 
 /***/ },
@@ -38689,6 +38698,7 @@
 	exports.changePassword = changePassword;
 	exports.resetPassword = resetPassword;
 	exports.requestReset = requestReset;
+	exports.setNeedsTotp = setNeedsTotp;
 	
 	var _sjcl = __webpack_require__(/*! sjcl */ 560);
 	
@@ -38960,6 +38970,31 @@
 	        });
 	        router.goBack();
 	      }
+	    });
+	  };
+	}
+	
+	function setNeedsTotp(needsTotp) {
+	  return function (dispatch, getState) {
+	    var state = getState();
+	    var method = needsTotp ? 'GET' : 'DELETE';
+	    fetch('/api/v1/totp', {
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json',
+	        'Authorization': 'Bearer ' + state.connect.jwt
+	      },
+	      method: method
+	    }).then(function (response) {
+	      return response.json();
+	    }).then(function (response) {
+	      dispatch({
+	        type: 'SET_NEEDS_TOTP',
+	        data: {
+	          imgTag: response.imgTag,
+	          needsTotp: needsTotp
+	        }
+	      });
 	    });
 	  };
 	}
@@ -43129,9 +43164,9 @@
 	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
-	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 584);
+	var _ModalContainer = __webpack_require__(/*! ./ModalContainer.jsx */ 604);
 	
-	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
+	var _ModalContainer2 = _interopRequireDefault(_ModalContainer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -43147,7 +43182,6 @@
 	  render: function render() {
 	    var _this = this;
 	
-	    var className = this.props.children ? 'focus blur' : 'focus';
 	    var controlledComponentChangeGenerator = function controlledComponentChangeGenerator(stateAttr) {
 	      return function (event) {
 	        var newState = {};
@@ -43163,49 +43197,54 @@
 	        }
 	      };
 	    };
-	    return _react2.default.createElement(
+	    var child = this.props.children ? _react2.default.createElement(
 	      'div',
 	      {
-	        className: "modal-container center",
-	        key: 'login' },
+	        key: this.props.location.pathname },
+	      this.props.children
+	    ) : null;
+	    return _react2.default.createElement(
+	      _ModalContainer2.default,
+	      {
+	        modal: child },
 	      _react2.default.createElement(
 	        'div',
 	        {
-	          className: "bordered " + className },
-	        _react2.default.createElement('input', {
-	          placeholder: 'email',
-	          onChange: controlledComponentChangeGenerator('email'),
-	          onKeyDown: controlledComponentKeyDownGenerator('email'),
-	          value: this.state.email,
-	          autoFocus: true }),
-	        _react2.default.createElement('br', null),
-	        _react2.default.createElement('input', {
-	          placeholder: 'password',
-	          onChange: controlledComponentChangeGenerator('password'),
-	          onKeyDown: controlledComponentKeyDownGenerator('password'),
-	          value: this.state.password,
-	          type: 'password' }),
-	        _react2.default.createElement('br', null),
+	          className: 'center' },
 	        _react2.default.createElement(
-	          'span',
+	          'div',
 	          {
-	            className: 'button',
-	            onClick: this.login },
-	          'Login'
-	        ),
-	        _react2.default.createElement('br', null),
-	        _react2.default.createElement(
-	          _reactRouter.Link,
-	          {
-	            to: '/reset',
-	            className: 'button' },
-	          'Forgot Your Password?'
+	            className: 'bordered' },
+	          _react2.default.createElement('input', {
+	            placeholder: 'email',
+	            onChange: controlledComponentChangeGenerator('email'),
+	            onKeyDown: controlledComponentKeyDownGenerator('email'),
+	            value: this.state.email,
+	            autoFocus: true }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement('input', {
+	            placeholder: 'password',
+	            onChange: controlledComponentChangeGenerator('password'),
+	            onKeyDown: controlledComponentKeyDownGenerator('password'),
+	            value: this.state.password,
+	            type: 'password' }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(
+	            'span',
+	            {
+	              className: 'button',
+	              onClick: this.login },
+	            'Login'
+	          ),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            {
+	              to: '/reset',
+	              className: 'button' },
+	            'Forgot Your Password?'
+	          )
 	        )
-	      ),
-	      _react2.default.createElement(
-	        _FocusComponent2.default,
-	        null,
-	        this.props.children
 	      )
 	    );
 	  },
@@ -44147,10 +44186,6 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
 	
-	var _ModalView = __webpack_require__(/*! ./ModalView.jsx */ 593);
-	
-	var _ModalView2 = _interopRequireDefault(_ModalView);
-	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -44182,9 +44217,8 @@
 	      };
 	    };
 	    return _react2.default.createElement(
-	      _ModalView2.default,
-	      {
-	        key: 'totp' },
+	      'div',
+	      null,
 	      _react2.default.createElement('input', {
 	        placeholder: 'TOTP Code',
 	        onChange: controlledComponentChangeGenerator('totp'),
@@ -44222,62 +44256,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TOTPView);
 
 /***/ },
-/* 593 */
-/*!**************************************!*\
-  !*** ./app/components/ModalView.jsx ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 298);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 330);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var ModalView = (0, _reactRouter.withRouter)(_react2.default.createClass({
-	  displayName: 'ModalView',
-	
-	  propTypes: {
-	    onLeave: _react2.default.PropTypes.func
-	  },
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      {
-	        className: 'modal',
-	        onClick: this.goBack },
-	      _react2.default.createElement(
-	        'div',
-	        {
-	          className: 'modal-content',
-	          onClick: this.stopProp },
-	        this.props.children
-	      )
-	    );
-	  },
-	  goBack: function goBack() {
-	    if (this.props.onLeave) {
-	      this.props.onLeave();
-	    } else {
-	      this.props.router.goBack();
-	    }
-	  },
-	  stopProp: function stopProp(e) {
-	    e.stopPropagation();
-	  }
-	}));
-	
-	exports.default = ModalView;
-
-/***/ },
+/* 593 */,
 /* 594 */
 /*!**************************************!*\
   !*** ./app/components/VaultView.jsx ***!
@@ -44300,9 +44279,9 @@
 	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
-	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 584);
+	var _ModalContainer = __webpack_require__(/*! ./ModalContainer.jsx */ 604);
 	
-	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
+	var _ModalContainer2 = _interopRequireDefault(_ModalContainer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -44318,14 +44297,20 @@
 	      var entry = _this.props.vault[elem];
 	      return _react2.default.createElement(VaultEntry, { entry: entry, itemId: elem, key: elem });
 	    });
-	    return _react2.default.createElement(
+	    var child = this.props.children ? _react2.default.createElement(
 	      'div',
 	      {
-	        className: 'modal-container' },
+	        key: this.props.location.pathname },
+	      this.props.children
+	    ) : null;
+	    return _react2.default.createElement(
+	      _ModalContainer2.default,
+	      {
+	        modal: child },
 	      _react2.default.createElement(
 	        'div',
 	        {
-	          className: 'vault-view bordered ' + className },
+	          className: 'vault-view bordered' },
 	        _react2.default.createElement(
 	          'table',
 	          {
@@ -44363,11 +44348,6 @@
 	            to: '/vault/item/NEW' },
 	          'Add Item'
 	        )
-	      ),
-	      _react2.default.createElement(
-	        _FocusComponent2.default,
-	        null,
-	        this.props.children
 	      )
 	    );
 	  }
@@ -44431,10 +44411,6 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 330);
 	
-	var _ModalView = __webpack_require__(/*! ./ModalView.jsx */ 593);
-	
-	var _ModalView2 = _interopRequireDefault(_ModalView);
-	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
 	var _uuid = __webpack_require__(/*! uuid */ 596);
@@ -44476,9 +44452,8 @@
 	      };
 	    };
 	    return _react2.default.createElement(
-	      _ModalView2.default,
-	      {
-	        key: key },
+	      'div',
+	      null,
 	      _react2.default.createElement(
 	        'div',
 	        null,
@@ -44873,6 +44848,10 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
 	
+	var _ModalContainer = __webpack_require__(/*! ./ModalContainer.jsx */ 604);
+	
+	var _ModalContainer2 = _interopRequireDefault(_ModalContainer);
+	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -44882,7 +44861,6 @@
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      imgTag: '',
 	      password: '',
 	      newPassword: '',
 	      confirmPassword: ''
@@ -44898,24 +44876,11 @@
 	        'span',
 	        {
 	          className: 'button',
-	          onClick: this.requireTotp },
-	        'Show TOTP'
-	      ),
-	      _react2.default.createElement(
-	        'span',
-	        {
-	          className: 'button',
-	          onClick: this.deleteTotp },
-	        'Delete TOTP'
+	          onClick: this.showTotp },
+	        'Show QR Code'
 	      )
-	    ) : _react2.default.createElement(
-	      'span',
-	      {
-	        className: 'button',
-	        onClick: this.requireTotp },
-	      'Require TOTP'
-	    );
-	    var totpImg = this.state.imgTag ? _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: this.state.imgTag } }) : null;
+	    ) : null;
+	    var totpImg = this.props.imgTag ? _react2.default.createElement('div', { dangerouslySetInnerHTML: { __html: this.props.imgTag } }) : null;
 	    var controlledComponentChangeGenerator = function controlledComponentChangeGenerator(stateAttr) {
 	      return function (event) {
 	        var newState = {};
@@ -44924,85 +44889,73 @@
 	      };
 	    };
 	    return _react2.default.createElement(
-	      'div',
+	      _ModalContainer2.default,
 	      {
-	        className: 'bordered' },
+	        modal: totpImg,
+	        onLeave: this.props.removeTotpImg },
 	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'TOTP'
-	      ),
-	      totpButton,
-	      totpImg,
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'Change Password'
-	      ),
-	      _react2.default.createElement('input', {
-	        type: 'password',
-	        onChange: controlledComponentChangeGenerator('password'),
-	        value: this.state.password,
-	        placeholder: 'Current Password' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        type: 'password',
-	        onChange: controlledComponentChangeGenerator('newPassword'),
-	        value: this.state.newPassword,
-	        placeholder: 'New Password' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement('input', {
-	        type: 'password',
-	        onChange: controlledComponentChangeGenerator('confirmPassword'),
-	        value: this.state.confirmPassword,
-	        placeholder: 'Confirm Password' }),
-	      _react2.default.createElement('br', null),
-	      _react2.default.createElement(
-	        'span',
+	        'div',
 	        {
-	          className: 'button',
-	          onClick: this.changePassword },
-	        'Change Password'
+	          className: 'bordered' },
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Multifactor'
+	        ),
+	        _react2.default.createElement('input', {
+	          type: 'checkbox',
+	          id: 'totpCheck',
+	          checked: this.props.needsTotp,
+	          onChange: this.toggleTotp }),
+	        _react2.default.createElement(
+	          'label',
+	          { htmlFor: 'totpCheck' },
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            _react2.default.createElement('span', null)
+	          ),
+	          'Require Multifactor'
+	        ),
+	        totpButton,
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Change Password'
+	        ),
+	        _react2.default.createElement('input', {
+	          type: 'password',
+	          onChange: controlledComponentChangeGenerator('password'),
+	          value: this.state.password,
+	          placeholder: 'Current Password' }),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement('input', {
+	          type: 'password',
+	          onChange: controlledComponentChangeGenerator('newPassword'),
+	          value: this.state.newPassword,
+	          placeholder: 'New Password' }),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement('input', {
+	          type: 'password',
+	          onChange: controlledComponentChangeGenerator('confirmPassword'),
+	          value: this.state.confirmPassword,
+	          placeholder: 'Confirm Password' }),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'span',
+	          {
+	            className: 'button',
+	            onClick: this.changePassword },
+	          'Change Password'
+	        )
 	      )
 	    );
 	  },
-	  deleteTotp: function deleteTotp() {
-	    var _this2 = this;
-	
-	    fetch('/api/v1/totp', {
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json',
-	        'Authorization': 'Bearer ' + this.props.jwt
-	      },
-	      method: 'DELETE'
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      _this2.setState({
-	        imgTag: ''
-	      });
-	      _this2.props.setNeedsTotp(false);
-	    });
+	  toggleTotp: function toggleTotp(e) {
+	    this.props.setNeedsTotp(e.target.checked);
 	  },
-	  requireTotp: function requireTotp() {
-	    var _this3 = this;
-	
-	    fetch('/api/v1/totp', {
-	      headers: {
-	        'Accept': 'application/json',
-	        'Content-Type': 'application/json',
-	        'Authorization': 'Bearer ' + this.props.jwt
-	      },
-	      method: 'GET'
-	    }).then(function (response) {
-	      return response.json();
-	    }).then(function (response) {
-	      _this3.setState({
-	        imgTag: response.imgTag
-	      });
-	      _this3.props.setNeedsTotp(true);
-	    });
+	  showTotp: function showTotp() {
+	    this.props.setNeedsTotp(true);
 	  },
 	  changePassword: function changePassword() {
 	    var currentPassword = this.state.password;
@@ -45015,20 +44968,23 @@
 	var mapStateToProps = function mapStateToProps(state) {
 	  return {
 	    needsTotp: state.connect.needsTotp,
-	    jwt: state.connect.jwt
+	    jwt: state.connect.jwt,
+	    imgTag: state.connect.imgTag
 	  };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
 	    setNeedsTotp: function setNeedsTotp(bool) {
-	      dispatch({
-	        type: 'SET_NEEDS_TOTP',
-	        data: bool
-	      });
+	      dispatch((0, _actions.setNeedsTotp)(bool));
 	    },
 	    changePassword: function changePassword(currentPassword, newPassword, confirmPassword) {
 	      dispatch((0, _actions.changePassword)(currentPassword, newPassword, confirmPassword));
+	    },
+	    removeTotpImg: function removeTotpImg() {
+	      dispatch({
+	        type: 'REMOVE_TOTP_IMG'
+	      });
 	    }
 	  };
 	};
@@ -45052,12 +45008,6 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
-	
-	var _ModalView = __webpack_require__(/*! ./ModalView.jsx */ 593);
-	
-	var _ModalView2 = _interopRequireDefault(_ModalView);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var MessageComponent = _react2.default.createClass({
@@ -45077,28 +45027,14 @@
 	      );
 	    });
 	    return _react2.default.createElement(
-	      _ModalView2.default,
-	      {
-	        onLeave: this.props.clearMessages },
+	      'div',
+	      null,
 	      spans
 	    );
-	  },
-	  delete: function _delete() {
-	    this.props.delete(this.props.index);
 	  }
 	});
 	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	  return {
-	    clearMessages: function clearMessages() {
-	      dispatch({
-	        type: 'CLEAR_MESSAGES'
-	      });
-	    }
-	  };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(MessageComponent);
+	exports.default = MessageComponent;
 
 /***/ },
 /* 601 */
@@ -45315,6 +45251,84 @@
 	});
 	
 	exports.default = AboutView;
+
+/***/ },
+/* 604 */
+/*!*******************************************!*\
+  !*** ./app/components/ModalContainer.jsx ***!
+  \*******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 584);
+	
+	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ModalContainer = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'ModalContainer',
+	
+	  propTypes: {
+	    onLeave: _react2.default.PropTypes.func,
+	    modal: _react2.default.PropTypes.node
+	  },
+	  render: function render() {
+	    var className = this.props.modal ? 'focus blur' : 'focus';
+	    var modal = this.props.modal ? _react2.default.createElement(
+	      'div',
+	      {
+	        className: 'modal',
+	        onClick: this.goBack },
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: 'modal-content',
+	          onClick: this.stopProp },
+	        this.props.modal
+	      )
+	    ) : null;
+	    return _react2.default.createElement(
+	      'div',
+	      {
+	        className: 'modal-container' },
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: className },
+	        this.props.children
+	      ),
+	      _react2.default.createElement(
+	        _FocusComponent2.default,
+	        null,
+	        modal
+	      )
+	    );
+	  },
+	  goBack: function goBack() {
+	    if (this.props.onLeave) {
+	      this.props.onLeave();
+	    } else {
+	      this.props.router.goBack();
+	    }
+	  },
+	  stopProp: function stopProp(e) {
+	    e.stopPropagation();
+	  }
+	}));
+	
+	exports.default = ModalContainer;
 
 /***/ }
 /******/ ]);

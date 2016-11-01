@@ -16,13 +16,25 @@ import PasswordResetView from './components/PasswordResetView.jsx';
 import RequestResetView from './components/RequestResetView.jsx';
 import FocusComponent from './components/FocusComponent.jsx';
 import AboutView from './components/AboutView.jsx';
+import ModalContainer from './components/ModalContainer.jsx';
 
-var Index = connect(function(state){
-  return {
-    login: state.connect.login,
-    messages: state.messages
+var Index = connect(
+  function(state){
+    return {
+      login: state.connect.login,
+      messages: state.messages
+    }
+  },
+  function(dispatch){
+    return {
+      clearMessages: function(){
+        dispatch({
+          type: 'CLEAR_MESSAGES'
+        });
+      }
+    }
   }
-})(React.createClass({
+)(React.createClass({
   render: function() {
     var className = 'focus ';
     var message;
@@ -100,16 +112,11 @@ var Index = connect(function(state){
             <div
               className="route-content"
               key={this.props.location.pathname}>
-              <div
-                className="modal-container">
-                <div
-                  className={className}>
-                  {this.props.children}
-                </div>
-                <FocusComponent>
-                  {message}
-                </FocusComponent>
-              </div>
+              <ModalContainer
+                onLeave={this.props.clearMessages}
+                modal={message}>
+                {this.props.children}
+              </ModalContainer>
             </div>
           </FocusComponent>
         </div>
