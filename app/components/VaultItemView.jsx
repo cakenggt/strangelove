@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import {saveVaultItem} from '../actions';
 import uuid from 'uuid';
+import ModalContainer from './ModalContainer.jsx';
 
 var VaultItemView = withRouter(React.createClass({
   propTypes: {
@@ -14,7 +15,9 @@ var VaultItemView = withRouter(React.createClass({
       site: '',
       passwordArray: [],
       password: '',
-      username: ''
+      username: '',
+      showPassword: false,
+      showHistory: false
     };
     var item = Object.assign(defaultItem, this.props.vault[this.props.params.itemId]);
     if (item.passwordArray.length){
@@ -32,42 +35,85 @@ var VaultItemView = withRouter(React.createClass({
         this.setState(newState);
       };
     };
-    return (
+    var password = this.state.showPassword ?
+      {
+        type: 'text',
+        icon: 'visibility'
+      } :
+      {
+        type: 'password',
+        icon: 'visibility_off'
+      };
+    var history = this.state.showHistory ?
       <div>
-        <div>
-          Name:
-          <input
-            value={this.state.name}
-            onChange={controlledComponentGenerator('name')}/>
+        {this.state.passwordArray.map(function(elem, i){
+          return <div key={i}>{elem}</div>
+        })}
+      </div>:
+      null;
+    return (
+      <ModalContainer
+        modal={history}
+        onLeave={this.toggleHistory}>
+        <div
+          className="vault-item-row">
+          <div
+            className="vault-item-entry aleft">
+            <div>Name</div>
+            <input
+              value={this.state.name}
+              onChange={controlledComponentGenerator('name')}/>
+          </div>
+          <div
+            className="vault-item-entry aright">
+            <div>Site</div>
+            <input
+              value={this.state.site}
+              onChange={controlledComponentGenerator('site')}/>
+          </div>
         </div>
-        <div>
-          Site:
-          <input
-            value={this.state.site}
-            onChange={controlledComponentGenerator('site')}/>
+        <div
+          className="vault-item-row">
+          <div
+            className="vault-item-entry aleft">
+            <div>Username</div>
+            <input
+              value={this.state.username}
+              onChange={controlledComponentGenerator('username')}/>
+          </div>
+          <div
+            className="vault-item-entry aright">
+            <div>Password</div>
+            <div
+              className="buttoned-input">
+              <input
+                type={password.type}
+                value={this.state.password}
+                onChange={controlledComponentGenerator('password')}/>
+              <span
+                className="material-icons"
+                onClick={this.togglePassword}>{password.icon}</span>
+            </div><br/>
+            <span
+              onClick={this.toggleHistory}
+              className="button">
+              Password History
+            </span>
+          </div>
         </div>
-        <div>
-          Password:
-          <input
-            value={this.state.password}
-            onChange={controlledComponentGenerator('password')}/>
+        <div
+          className="vault-item-row">
+          <span
+            className="button"
+            onClick={this.cancel}>Cancel</span>
+          <span
+            className="button"
+            onClick={this.save}>Save</span>
         </div>
-        <div>
-          Password History: <span>{JSON.stringify(this.state.passwordArray)}</span>
-        </div>
-        <div>
-          Username:
-          <input
-            value={this.state.username}
-            onChange={controlledComponentGenerator('username')}/>
-        </div>
-        <span
-          className="button fleft"
-          onClick={this.cancel}>Cancel</span>
-        <span
-          className="button fright"
-          onClick={this.save}>Save</span>
-      </div>
+
+
+
+      </ModalContainer>
     );
   },
   cancel: function(){
@@ -82,11 +128,23 @@ var VaultItemView = withRouter(React.createClass({
       item.passwordArray.push(item.password);
     }
     delete item.password;
+    delete item.showPassword;
+    delete item.showHistory;
     if (itemId == 'NEW'){
       itemId = uuid.v4();
     }
     this.props.saveVaultItem(itemId, item);
     this.props.router.goBack();
+  },
+  togglePassword: function(){
+    this.setState({
+      showPassword: !this.state.showPassword
+    });
+  },
+  toggleHistory: function(){
+    this.setState({
+      showHistory: !this.state.showHistory
+    });
   }
 }));
 

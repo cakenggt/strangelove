@@ -73,7 +73,7 @@
 	
 	var _LoginView2 = _interopRequireDefault(_LoginView);
 	
-	var _TOTPView = __webpack_require__(/*! ./components/TOTPView.jsx */ 592);
+	var _TOTPView = __webpack_require__(/*! ./components/TOTPView.jsx */ 593);
 	
 	var _TOTPView2 = _interopRequireDefault(_TOTPView);
 	
@@ -105,7 +105,7 @@
 	
 	var _RequestResetView2 = _interopRequireDefault(_RequestResetView);
 	
-	var _FocusComponent = __webpack_require__(/*! ./components/FocusComponent.jsx */ 584);
+	var _FocusComponent = __webpack_require__(/*! ./components/FocusComponent.jsx */ 585);
 	
 	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
 	
@@ -113,7 +113,7 @@
 	
 	var _AboutView2 = _interopRequireDefault(_AboutView);
 	
-	var _ModalContainer = __webpack_require__(/*! ./components/ModalContainer.jsx */ 604);
+	var _ModalContainer = __webpack_require__(/*! ./components/ModalContainer.jsx */ 584);
 	
 	var _ModalContainer2 = _interopRequireDefault(_ModalContainer);
 	
@@ -43164,7 +43164,7 @@
 	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
-	var _ModalContainer = __webpack_require__(/*! ./ModalContainer.jsx */ 604);
+	var _ModalContainer = __webpack_require__(/*! ./ModalContainer.jsx */ 584);
 	
 	var _ModalContainer2 = _interopRequireDefault(_ModalContainer);
 	
@@ -43272,6 +43272,84 @@
 /***/ },
 /* 584 */
 /*!*******************************************!*\
+  !*** ./app/components/ModalContainer.jsx ***!
+  \*******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 298);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 330);
+	
+	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 585);
+	
+	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ModalContainer = (0, _reactRouter.withRouter)(_react2.default.createClass({
+	  displayName: 'ModalContainer',
+	
+	  propTypes: {
+	    onLeave: _react2.default.PropTypes.func,
+	    modal: _react2.default.PropTypes.node
+	  },
+	  render: function render() {
+	    var className = this.props.modal ? 'focus blur' : 'focus';
+	    var modal = this.props.modal ? _react2.default.createElement(
+	      'div',
+	      {
+	        className: 'modal',
+	        onClick: this.goBack },
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: 'modal-content',
+	          onClick: this.stopProp },
+	        this.props.modal
+	      )
+	    ) : null;
+	    return _react2.default.createElement(
+	      'div',
+	      {
+	        className: 'modal-container' },
+	      _react2.default.createElement(
+	        'div',
+	        {
+	          className: className },
+	        this.props.children
+	      ),
+	      _react2.default.createElement(
+	        _FocusComponent2.default,
+	        null,
+	        modal
+	      )
+	    );
+	  },
+	  goBack: function goBack() {
+	    if (this.props.onLeave) {
+	      this.props.onLeave();
+	    } else {
+	      this.props.router.goBack();
+	    }
+	  },
+	  stopProp: function stopProp(e) {
+	    e.stopPropagation();
+	  }
+	}));
+	
+	exports.default = ModalContainer;
+
+/***/ },
+/* 585 */
+/*!*******************************************!*\
   !*** ./app/components/FocusComponent.jsx ***!
   \*******************************************/
 /***/ function(module, exports, __webpack_require__) {
@@ -43286,7 +43364,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactAddonsCssTransitionGroup = __webpack_require__(/*! react-addons-css-transition-group */ 585);
+	var _reactAddonsCssTransitionGroup = __webpack_require__(/*! react-addons-css-transition-group */ 586);
 	
 	var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 	
@@ -43309,16 +43387,16 @@
 	});
 
 /***/ },
-/* 585 */
+/* 586 */
 /*!******************************************************!*\
   !*** ./~/react-addons-css-transition-group/index.js ***!
   \******************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(/*! react/lib/ReactCSSTransitionGroup */ 586);
+	module.exports = __webpack_require__(/*! react/lib/ReactCSSTransitionGroup */ 587);
 
 /***/ },
-/* 586 */
+/* 587 */
 /*!************************************************!*\
   !*** ./~/react/lib/ReactCSSTransitionGroup.js ***!
   \************************************************/
@@ -43341,8 +43419,8 @@
 	
 	var React = __webpack_require__(/*! ./React */ 299);
 	
-	var ReactTransitionGroup = __webpack_require__(/*! ./ReactTransitionGroup */ 587);
-	var ReactCSSTransitionGroupChild = __webpack_require__(/*! ./ReactCSSTransitionGroupChild */ 589);
+	var ReactTransitionGroup = __webpack_require__(/*! ./ReactTransitionGroup */ 588);
+	var ReactCSSTransitionGroupChild = __webpack_require__(/*! ./ReactCSSTransitionGroupChild */ 590);
 	
 	function createTransitionTimeoutPropValidator(transitionType) {
 	  var timeoutPropName = 'transition' + transitionType + 'Timeout';
@@ -43413,7 +43491,7 @@
 	module.exports = ReactCSSTransitionGroup;
 
 /***/ },
-/* 587 */
+/* 588 */
 /*!*********************************************!*\
   !*** ./~/react/lib/ReactTransitionGroup.js ***!
   \*********************************************/
@@ -43436,7 +43514,7 @@
 	
 	var React = __webpack_require__(/*! ./React */ 299);
 	var ReactInstanceMap = __webpack_require__(/*! ./ReactInstanceMap */ 478);
-	var ReactTransitionChildMapping = __webpack_require__(/*! ./ReactTransitionChildMapping */ 588);
+	var ReactTransitionChildMapping = __webpack_require__(/*! ./ReactTransitionChildMapping */ 589);
 	
 	var emptyFunction = __webpack_require__(/*! fbjs/lib/emptyFunction */ 308);
 	
@@ -43668,7 +43746,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 294)))
 
 /***/ },
-/* 588 */
+/* 589 */
 /*!****************************************************!*\
   !*** ./~/react/lib/ReactTransitionChildMapping.js ***!
   \****************************************************/
@@ -43780,7 +43858,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 294)))
 
 /***/ },
-/* 589 */
+/* 590 */
 /*!*****************************************************!*\
   !*** ./~/react/lib/ReactCSSTransitionGroupChild.js ***!
   \*****************************************************/
@@ -43802,8 +43880,8 @@
 	var React = __webpack_require__(/*! ./React */ 299);
 	var ReactDOM = __webpack_require__(/*! ./ReactDOM */ 394);
 	
-	var CSSCore = __webpack_require__(/*! fbjs/lib/CSSCore */ 590);
-	var ReactTransitionEvents = __webpack_require__(/*! ./ReactTransitionEvents */ 591);
+	var CSSCore = __webpack_require__(/*! fbjs/lib/CSSCore */ 591);
+	var ReactTransitionEvents = __webpack_require__(/*! ./ReactTransitionEvents */ 592);
 	
 	var onlyChild = __webpack_require__(/*! ./onlyChild */ 329);
 	
@@ -43955,7 +44033,7 @@
 	module.exports = ReactCSSTransitionGroupChild;
 
 /***/ },
-/* 590 */
+/* 591 */
 /*!*******************************!*\
   !*** ./~/fbjs/lib/CSSCore.js ***!
   \*******************************/
@@ -44085,7 +44163,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 294)))
 
 /***/ },
-/* 591 */
+/* 592 */
 /*!**********************************************!*\
   !*** ./~/react/lib/ReactTransitionEvents.js ***!
   \**********************************************/
@@ -44166,7 +44244,7 @@
 	module.exports = ReactTransitionEvents;
 
 /***/ },
-/* 592 */
+/* 593 */
 /*!*************************************!*\
   !*** ./app/components/TOTPView.jsx ***!
   \*************************************/
@@ -44256,7 +44334,6 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TOTPView);
 
 /***/ },
-/* 593 */,
 /* 594 */
 /*!**************************************!*\
   !*** ./app/components/VaultView.jsx ***!
@@ -44279,7 +44356,7 @@
 	
 	var _actions = __webpack_require__(/*! ../actions */ 559);
 	
-	var _ModalContainer = __webpack_require__(/*! ./ModalContainer.jsx */ 604);
+	var _ModalContainer = __webpack_require__(/*! ./ModalContainer.jsx */ 584);
 	
 	var _ModalContainer2 = _interopRequireDefault(_ModalContainer);
 	
@@ -44416,6 +44493,10 @@
 	
 	var _uuid2 = _interopRequireDefault(_uuid);
 	
+	var _ModalContainer = __webpack_require__(/*! ./ModalContainer.jsx */ 584);
+	
+	var _ModalContainer2 = _interopRequireDefault(_ModalContainer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var VaultItemView = (0, _reactRouter.withRouter)(_react2.default.createClass({
@@ -44430,7 +44511,9 @@
 	      site: '',
 	      passwordArray: [],
 	      password: '',
-	      username: ''
+	      username: '',
+	      showPassword: false,
+	      showHistory: false
 	    };
 	    var item = Object.assign(defaultItem, this.props.vault[this.props.params.itemId]);
 	    if (item.passwordArray.length) {
@@ -44450,64 +44533,130 @@
 	        _this.setState(newState);
 	      };
 	    };
-	    return _react2.default.createElement(
+	    var password = this.state.showPassword ? {
+	      type: 'text',
+	      icon: 'visibility'
+	    } : {
+	      type: 'password',
+	      icon: 'visibility_off'
+	    };
+	    var history = this.state.showHistory ? _react2.default.createElement(
 	      'div',
 	      null,
+	      this.state.passwordArray.map(function (elem, i) {
+	        return _react2.default.createElement(
+	          'div',
+	          { key: i },
+	          elem
+	        );
+	      })
+	    ) : null;
+	    return _react2.default.createElement(
+	      _ModalContainer2.default,
+	      {
+	        modal: history,
+	        onLeave: this.toggleHistory },
 	      _react2.default.createElement(
 	        'div',
-	        null,
-	        'Name:',
-	        _react2.default.createElement('input', {
-	          value: this.state.name,
-	          onChange: controlledComponentGenerator('name') })
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        null,
-	        'Site:',
-	        _react2.default.createElement('input', {
-	          value: this.state.site,
-	          onChange: controlledComponentGenerator('site') })
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        null,
-	        'Password:',
-	        _react2.default.createElement('input', {
-	          value: this.state.password,
-	          onChange: controlledComponentGenerator('password') })
-	      ),
-	      _react2.default.createElement(
-	        'div',
-	        null,
-	        'Password History: ',
+	        {
+	          className: 'vault-item-row' },
 	        _react2.default.createElement(
-	          'span',
-	          null,
-	          JSON.stringify(this.state.passwordArray)
+	          'div',
+	          {
+	            className: 'vault-item-entry aleft' },
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            'Name'
+	          ),
+	          _react2.default.createElement('input', {
+	            value: this.state.name,
+	            onChange: controlledComponentGenerator('name') })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            className: 'vault-item-entry aright' },
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            'Site'
+	          ),
+	          _react2.default.createElement('input', {
+	            value: this.state.site,
+	            onChange: controlledComponentGenerator('site') })
 	        )
 	      ),
 	      _react2.default.createElement(
 	        'div',
-	        null,
-	        'Username:',
-	        _react2.default.createElement('input', {
-	          value: this.state.username,
-	          onChange: controlledComponentGenerator('username') })
+	        {
+	          className: 'vault-item-row' },
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            className: 'vault-item-entry aleft' },
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            'Username'
+	          ),
+	          _react2.default.createElement('input', {
+	            value: this.state.username,
+	            onChange: controlledComponentGenerator('username') })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            className: 'vault-item-entry aright' },
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            'Password'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            {
+	              className: 'buttoned-input' },
+	            _react2.default.createElement('input', {
+	              type: password.type,
+	              value: this.state.password,
+	              onChange: controlledComponentGenerator('password') }),
+	            _react2.default.createElement(
+	              'span',
+	              {
+	                className: 'material-icons',
+	                onClick: this.togglePassword },
+	              password.icon
+	            )
+	          ),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(
+	            'span',
+	            {
+	              onClick: this.toggleHistory,
+	              className: 'button' },
+	            'Password History'
+	          )
+	        )
 	      ),
 	      _react2.default.createElement(
-	        'span',
+	        'div',
 	        {
-	          className: 'button fleft',
-	          onClick: this.cancel },
-	        'Cancel'
-	      ),
-	      _react2.default.createElement(
-	        'span',
-	        {
-	          className: 'button fright',
-	          onClick: this.save },
-	        'Save'
+	          className: 'vault-item-row' },
+	        _react2.default.createElement(
+	          'span',
+	          {
+	            className: 'button',
+	            onClick: this.cancel },
+	          'Cancel'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          {
+	            className: 'button',
+	            onClick: this.save },
+	          'Save'
+	        )
 	      )
 	    );
 	  },
@@ -44523,11 +44672,23 @@
 	      item.passwordArray.push(item.password);
 	    }
 	    delete item.password;
+	    delete item.showPassword;
+	    delete item.showHistory;
 	    if (itemId == 'NEW') {
 	      itemId = _uuid2.default.v4();
 	    }
 	    this.props.saveVaultItem(itemId, item);
 	    this.props.router.goBack();
+	  },
+	  togglePassword: function togglePassword() {
+	    this.setState({
+	      showPassword: !this.state.showPassword
+	    });
+	  },
+	  toggleHistory: function toggleHistory() {
+	    this.setState({
+	      showHistory: !this.state.showHistory
+	    });
 	  }
 	}));
 	
@@ -44847,7 +45008,7 @@
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 531);
 	
-	var _ModalContainer = __webpack_require__(/*! ./ModalContainer.jsx */ 604);
+	var _ModalContainer = __webpack_require__(/*! ./ModalContainer.jsx */ 584);
 	
 	var _ModalContainer2 = _interopRequireDefault(_ModalContainer);
 	
@@ -45250,84 +45411,6 @@
 	});
 	
 	exports.default = AboutView;
-
-/***/ },
-/* 604 */
-/*!*******************************************!*\
-  !*** ./app/components/ModalContainer.jsx ***!
-  \*******************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 298);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 330);
-	
-	var _FocusComponent = __webpack_require__(/*! ./FocusComponent.jsx */ 584);
-	
-	var _FocusComponent2 = _interopRequireDefault(_FocusComponent);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var ModalContainer = (0, _reactRouter.withRouter)(_react2.default.createClass({
-	  displayName: 'ModalContainer',
-	
-	  propTypes: {
-	    onLeave: _react2.default.PropTypes.func,
-	    modal: _react2.default.PropTypes.node
-	  },
-	  render: function render() {
-	    var className = this.props.modal ? 'focus blur' : 'focus';
-	    var modal = this.props.modal ? _react2.default.createElement(
-	      'div',
-	      {
-	        className: 'modal',
-	        onClick: this.goBack },
-	      _react2.default.createElement(
-	        'div',
-	        {
-	          className: 'modal-content',
-	          onClick: this.stopProp },
-	        this.props.modal
-	      )
-	    ) : null;
-	    return _react2.default.createElement(
-	      'div',
-	      {
-	        className: 'modal-container' },
-	      _react2.default.createElement(
-	        'div',
-	        {
-	          className: className },
-	        this.props.children
-	      ),
-	      _react2.default.createElement(
-	        _FocusComponent2.default,
-	        null,
-	        modal
-	      )
-	    );
-	  },
-	  goBack: function goBack() {
-	    if (this.props.onLeave) {
-	      this.props.onLeave();
-	    } else {
-	      this.props.router.goBack();
-	    }
-	  },
-	  stopProp: function stopProp(e) {
-	    e.stopPropagation();
-	  }
-	}));
-	
-	exports.default = ModalContainer;
 
 /***/ }
 /******/ ]);
